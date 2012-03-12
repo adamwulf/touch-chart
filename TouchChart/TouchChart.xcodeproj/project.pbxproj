@@ -23,6 +23,7 @@
 		6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA63150DCFBD00D4A47A /* TouchChartTests.m */; };
 		6691AA7E150DD02300D4A47A /* UITouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA78150DD00900D4A47A /* UITouchableView.m */; };
 		6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA7A150DD00900D4A47A /* UITouchableWindow.m */; };
+		6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA83150DD1A400D4A47A /* TCChartView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		6691AA7A150DD00900D4A47A /* UITouchableWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITouchableWindow.m; sourceTree = "<group>"; };
 		6691AA7D150DD01700D4A47A /* UITouchableWindowDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITouchableWindowDelegate.h; sourceTree = "<group>"; };
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		6691AA82150DD1A400D4A47A /* TCChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCChartView.h; sourceTree = "<group>"; };
+		6691AA83150DD1A400D4A47A /* TCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCChartView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,13 +124,10 @@
 		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
 			isa = PBXGroup;
 			children = (
-				6691AA7D150DD01700D4A47A /* UITouchableWindowDelegate.h */,
-				6691AA77150DD00900D4A47A /* UITouchableView.h */,
-				6691AA78150DD00900D4A47A /* UITouchableView.m */,
-				6691AA79150DD00900D4A47A /* UITouchableWindow.h */,
-				6691AA7A150DD00900D4A47A /* UITouchableWindow.m */,
-				6691AA44150DCFBC00D4A47A /* TCAppDelegate.h */,
-				6691AA45150DCFBC00D4A47A /* TCAppDelegate.m */,
+				6691AA85150DD1AB00D4A47A /* AppDelegate */,
+				6691AA81150DD16900D4A47A /* Touchables */,
+				6691AA82150DD1A400D4A47A /* TCChartView.h */,
+				6691AA83150DD1A400D4A47A /* TCChartView.m */,
 				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
 				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
 				6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */,
@@ -166,6 +166,27 @@
 				6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6691AA81150DD16900D4A47A /* Touchables */ = {
+			isa = PBXGroup;
+			children = (
+				6691AA7D150DD01700D4A47A /* UITouchableWindowDelegate.h */,
+				6691AA77150DD00900D4A47A /* UITouchableView.h */,
+				6691AA78150DD00900D4A47A /* UITouchableView.m */,
+				6691AA79150DD00900D4A47A /* UITouchableWindow.h */,
+				6691AA7A150DD00900D4A47A /* UITouchableWindow.m */,
+			);
+			name = Touchables;
+			sourceTree = "<group>";
+		};
+		6691AA85150DD1AB00D4A47A /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				6691AA44150DCFBC00D4A47A /* TCAppDelegate.h */,
+				6691AA45150DCFBC00D4A47A /* TCAppDelegate.m */,
+			);
+			name = AppDelegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,6 +302,7 @@
 				6691AA49150DCFBC00D4A47A /* TCViewController.m in Sources */,
 				6691AA7E150DD02300D4A47A /* UITouchableView.m in Sources */,
 				6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */,
+				6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
