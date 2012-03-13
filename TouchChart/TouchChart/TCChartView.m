@@ -72,6 +72,7 @@ End Function
 
 -(void) cleanPointsALot{
     if([points count] < 3) return;
+    [self cleanPoints];
     debug_NSLog(@"===== cleaning %d points", [points count]);
     
     for(int i=0;i<[points count];i++){
@@ -84,7 +85,7 @@ End Function
         // check how far away the point is from straight across
         CGPoint p3 = CGPointMake(p2.x, p1.y);
         CGFloat angle = GetAngle(p1, p2, p3);
-        if(angle / M_PI < 0.08){
+        if(angle / M_PI < 0.04){
             // pretty straight!
             [points removeObjectAtIndex:i];
             [points insertObject:[NSValue valueWithCGPoint:p3] atIndex:i];
@@ -93,7 +94,7 @@ End Function
         // check up/down
         p3 = CGPointMake(p1.x, p2.y);
         angle = GetAngle(p1, p2, p3);
-        if(angle / M_PI < 0.08){
+        if(angle / M_PI < 0.04){
             // pretty straight!
             [points removeObjectAtIndex:i];
             [points insertObject:[NSValue valueWithCGPoint:p3] atIndex:i];
