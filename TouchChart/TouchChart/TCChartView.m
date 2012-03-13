@@ -70,37 +70,58 @@ End Function
 
 
 
+-(void) cleanPointsALot{
+    if([points count] < 3) return;
+    debug_NSLog(@"===== cleaning %d points", [points count]);
+    
+    for(int i=0;i<[points count];i++){
+        int prev = ([points count] + i - 1) % [points count];
+        NSValue* v1 = [points objectAtIndex:prev];
+        CGPoint p1 = [v1 CGPointValue];
+        NSValue* v2 = [points objectAtIndex:i];
+        CGPoint p2 = [v2 CGPointValue];
+        
+        // check how far away the point is from straight across
+        CGPoint p3 = CGPointMake(p2.x, p1.y);
+        CGFloat angle = GetAngle(p1, p2, p3);
+        if(angle / M_PI < 0.08){
+            // pretty straight!
+            [points removeObjectAtIndex:i];
+            [points insertObject:[NSValue valueWithCGPoint:p3] atIndex:i];
+        }
+        
+        // check up/down
+        p3 = CGPointMake(p1.x, p2.y);
+        angle = GetAngle(p1, p2, p3);
+        if(angle / M_PI < 0.08){
+            // pretty straight!
+            [points removeObjectAtIndex:i];
+            [points insertObject:[NSValue valueWithCGPoint:p3] atIndex:i];
+        }
+    }
+    [self cleanPoints];
+}
+
 
 
 -(IBAction) cleanPoints{
     if([points count] < 3) return;
     debug_NSLog(@"===== cleaning %d points", [points count]);
-    CGFloat prevSlope;
-    for(int i=1;i<[points count];i++){
-        NSValue* v1 = [points objectAtIndex:i-1];
+    for(int i=2;i<[points count];i++){
+        
+        NSValue* v1 = [points objectAtIndex:i-2];
         CGPoint p1 = [v1 CGPointValue];
-        NSValue* v2 = [points objectAtIndex:i];
+        NSValue* v2 = [points objectAtIndex:i-1];
         CGPoint p2 = [v2 CGPointValue];
-        CGFloat slope = (p2.y - p1.y) / (p2.x - p1.x);
-        if(slope < .1 && slope > -.1) slope = 0;
-        if(slope < -20) slope = -20;
-        if(slope > 20) slope = 20;
-        if(i != 1){
-            CGFloat diff = ABS(slope) - ABS(prevSlope);
-//            if(prevSlope == 0){
-//                diff = slope;
-//            }
-            if(diff > -5 && diff < 5){
-                // same slope, basically
-                // remove a point
-                [points removeObjectAtIndex:i-1];
-                i--;
-            }else if(DistanceBetweenTwoPoints(p1, p2) < 30){
-                [points removeObjectAtIndex:i-1];
-                i--;
-            }
+        NSValue* v3 = [points objectAtIndex:i];
+        CGPoint p3 = [v3 CGPointValue];
+        
+        CGFloat angle = GetAngle(p2, p1, p3);
+        
+        if(angle / M_PI > 0.80){
+            [points removeObjectAtIndex:i-1];
+            i--;
         }
-        prevSlope = slope;
     }
     debug_NSLog(@"===== done cleaning %d points", [points count]);
     [self setNeedsDisplay];
@@ -227,7 +248,7 @@ End Function
     [pointsInThisLine removeAllObjects];
 	debug_NSLog(@"touch ended");
 	[super touchesEnded:touches withEvent:event];
-    [self cleanPoints];
+    [self cleanPointsALot];
     [self setNeedsDisplay];
 }
 
