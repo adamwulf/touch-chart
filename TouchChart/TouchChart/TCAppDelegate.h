@@ -15,7 +15,6 @@
 @interface TCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UITouchableWindow *window;
-
 @property (strong, nonatomic) TCViewController *viewController;
 
 @end

@@ -24,6 +24,15 @@
 		6691AA7E150DD02300D4A47A /* UITouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA78150DD00900D4A47A /* UITouchableView.m */; };
 		6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA7A150DD00900D4A47A /* UITouchableWindow.m */; };
 		6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA83150DD1A400D4A47A /* TCChartView.m */; };
+		ED9233391561778A00B0F505 /* SYFreePaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9233381561778A00B0F505 /* SYFreePaintView.m */; };
+		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
+		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
+		ED923342156185FF00B0F505 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = ED923341156185FF00B0F505 /* Particle.png */; };
+		ED923343156185FF00B0F505 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = ED923341156185FF00B0F505 /* Particle.png */; };
+		ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
+		ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
+		ED92334A15619F0800B0F505 /* SYGeometricMathController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334915619F0800B0F505 /* SYGeometricMathController.m */; };
+		ED92334B15619F0800B0F505 /* SYGeometricMathController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334915619F0800B0F505 /* SYGeometricMathController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +74,15 @@
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		6691AA82150DD1A400D4A47A /* TCChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCChartView.h; sourceTree = "<group>"; };
 		6691AA83150DD1A400D4A47A /* TCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCChartView.m; sourceTree = "<group>"; };
+		ED9233371561778A00B0F505 /* SYFreePaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYFreePaintView.h; path = Classes/Views/SYFreePaintView.h; sourceTree = "<group>"; };
+		ED9233381561778A00B0F505 /* SYFreePaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYFreePaintView.m; path = Classes/Views/SYFreePaintView.m; sourceTree = "<group>"; };
+		ED92333A156177A600B0F505 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		ED92333C156180F600B0F505 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		ED923341156185FF00B0F505 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Particle.png; path = TouchChart/Images/Particle.png; sourceTree = SOURCE_ROOT; };
+		ED92334415618F9E00B0F505 /* SYVectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYVectorView.h; path = Classes/Views/SYVectorView.h; sourceTree = "<group>"; };
+		ED92334515618F9F00B0F505 /* SYVectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYVectorView.m; path = Classes/Views/SYVectorView.m; sourceTree = "<group>"; };
+		ED92334815619F0800B0F505 /* SYGeometricMathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometricMathController.h; path = Classes/NSObject/SYGeometricMathController.h; sourceTree = "<group>"; };
+		ED92334915619F0800B0F505 /* SYGeometricMathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometricMathController.m; path = Classes/NSObject/SYGeometricMathController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +90,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */,
+				ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */,
 				6691AA36150DCFBC00D4A47A /* UIKit.framework in Frameworks */,
 				6691AA38150DCFBC00D4A47A /* Foundation.framework in Frameworks */,
 				6691AA3A150DCFBC00D4A47A /* CoreGraphics.framework in Frameworks */,
@@ -94,6 +114,7 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
+				ED92333C156180F600B0F505 /* QuartzCore.framework */,
 				6691AA3B150DCFBC00D4A47A /* TouchChart */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -113,6 +134,7 @@
 		6691AA34150DCFBC00D4A47A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED92333A156177A600B0F505 /* OpenGLES.framework */,
 				6691AA35150DCFBC00D4A47A /* UIKit.framework */,
 				6691AA37150DCFBC00D4A47A /* Foundation.framework */,
 				6691AA39150DCFBC00D4A47A /* CoreGraphics.framework */,
@@ -124,14 +146,13 @@
 		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
 			isa = PBXGroup;
 			children = (
+				ED9233351561774000B0F505 /* Views */,
+				ED92333E1561825D00B0F505 /* View Controllers */,
 				6691AA85150DD1AB00D4A47A /* AppDelegate */,
 				6691AA81150DD16900D4A47A /* Touchables */,
 				6691AA82150DD1A400D4A47A /* TCChartView.h */,
 				6691AA83150DD1A400D4A47A /* TCChartView.m */,
-				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
-				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
-				6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */,
-				6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */,
+				ED92333F1561827C00B0F505 /* XIB */,
 				6691AA3C150DCFBC00D4A47A /* Supporting Files */,
 				6691AA80150DD0BA00D4A47A /* Constants.h */,
 			);
@@ -154,6 +175,7 @@
 			children = (
 				6691AA62150DCFBD00D4A47A /* TouchChartTests.h */,
 				6691AA63150DCFBD00D4A47A /* TouchChartTests.m */,
+				ED923340156185D100B0F505 /* Images */,
 				6691AA5D150DCFBD00D4A47A /* Supporting Files */,
 			);
 			path = TouchChartTests;
@@ -187,6 +209,45 @@
 				6691AA45150DCFBC00D4A47A /* TCAppDelegate.m */,
 			);
 			name = AppDelegate;
+			sourceTree = "<group>";
+		};
+		ED9233351561774000B0F505 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				ED9233371561778A00B0F505 /* SYFreePaintView.h */,
+				ED9233381561778A00B0F505 /* SYFreePaintView.m */,
+				ED92334415618F9E00B0F505 /* SYVectorView.h */,
+				ED92334515618F9F00B0F505 /* SYVectorView.m */,
+				ED92334815619F0800B0F505 /* SYGeometricMathController.h */,
+				ED92334915619F0800B0F505 /* SYGeometricMathController.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		ED92333E1561825D00B0F505 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
+				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		ED92333F1561827C00B0F505 /* XIB */ = {
+			isa = PBXGroup;
+			children = (
+				6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */,
+				6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */,
+			);
+			name = XIB;
+			sourceTree = "<group>";
+		};
+		ED923340156185D100B0F505 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				ED923341156185FF00B0F505 /* Particle.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +324,7 @@
 				6691AA40150DCFBC00D4A47A /* InfoPlist.strings in Resources */,
 				6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */,
 				6691AA4F150DCFBD00D4A47A /* TCViewController_iPad.xib in Resources */,
+				ED923342156185FF00B0F505 /* Particle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6691AA61150DCFBD00D4A47A /* InfoPlist.strings in Resources */,
+				ED923343156185FF00B0F505 /* Particle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +366,9 @@
 				6691AA7E150DD02300D4A47A /* UITouchableView.m in Sources */,
 				6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */,
 				6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */,
+				ED9233391561778A00B0F505 /* SYFreePaintView.m in Sources */,
+				ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */,
+				ED92334A15619F0800B0F505 /* SYGeometricMathController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +377,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */,
+				ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */,
+				ED92334B15619F0800B0F505 /* SYGeometricMathController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +548,7 @@
 				6691AA69150DCFBD00D4A47A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchChartTests" */ = {
 			isa = XCConfigurationList;
@@ -488,6 +557,7 @@
 				6691AA6C150DCFBD00D4A47A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -7,6 +7,7 @@
 //
 
 #import "TCViewController.h"
+#import "SYFreePaintView.h"
 
 @interface TCViewController ()
 
@@ -14,25 +15,32 @@
 
 @implementation TCViewController
 
-- (void)viewDidLoad
+#pragma mark - Lifecycle Methods
+
+- (void) viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
+    
+    // Set initial the brush color
+	[(SYFreePaintView *)[[[self view]subviews]objectAtIndex:0] setBrushColorWithRed:.0 green:.0 blue:1.0];
 
-- (void)viewDidUnload
+}// viewDidLoad
+
+
+- (void) viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
+    
+}// viewDidUnload
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
+    else
         return YES;
-    }
-}
+
+}// shouldAutorotateToInterfaceOrientation:
 
 @end
