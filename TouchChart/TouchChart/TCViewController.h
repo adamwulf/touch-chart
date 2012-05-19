@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TCViewController : UIViewController
+@class SYFreePaintView;
+
+@interface TCViewController : UIViewController {
+    
+    IBOutlet SYFreePaintView *freePaint;
+    
+}
 
 @end

@@ -8,25 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SYGeometricMathController : NSObject
+@class SYGeometry;
+@class SYVectorView;
 
-// States
-@property (nonatomic, readwrite) BOOL isDeltaX;
-@property (nonatomic, readwrite) BOOL isDeltaY;
-
-// Cartesian values
-@property (nonatomic, readwrite) CGPoint maxX, maxY;
-@property (nonatomic, readwrite) CGPoint minX, minY;
-
-// Counters
-@property (nonatomic, readwrite) NSUInteger angleChangeCount;
-@property (nonatomic, readwrite) NSUInteger directionChangeCount;
-
-// Array Data
-@property(nonatomic, retain)    NSMutableArray *listPoints;
-@property(nonatomic, retain)    NSMutableArray *listAngles;
-@property(nonatomic, retain)    NSMutableArray *listVertex;
-
+@interface SYGeometricMathController : NSObject {
+    
+    IBOutlet SYVectorView *vectorView;
+    
+    @private
+    
+    // States
+    BOOL isDeltaX;
+    BOOL isDeltaY;
+    
+    // Cartesian values
+    CGPoint maxX, maxY;
+    CGPoint minX, minY;
+    
+    // Counters
+    NSUInteger angleChangeCount;
+    NSUInteger directionChangeCount;
+    
+    // Array Data
+    NSMutableArray *listPoints;
+    NSMutableArray *listAngles;
+    
+}
 
 // Management Data Operations
 - (void) cleanData;
@@ -38,6 +45,11 @@
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
 
 // Analyze and Recognizer Geometry Methods
-- (NSString *) getFigurePainted;
+- (void) getFigurePainted;
+
+// Geometric calculations
+- (void) createSquare;
+- (void) createDiamond;
+- (void) createCircle;
 
 @end

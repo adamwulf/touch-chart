@@ -10,6 +10,8 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#import <QuartzCore/QuartzCore.h>
+#import <OpenGLES/EAGLDrawable.h>
 
 // Constant
 #define kBrushOpacity		0.78
@@ -43,10 +45,7 @@
     
     // Calculation variables
     IBOutlet SYGeometricMathController *geometricMathController;
-    
-    // TEST
-    IBOutlet UILabel *consoleLineUp;
-    IBOutlet UILabel *consoleLineDown;
+
 }
 
 @property(nonatomic, readwrite) CGPoint location;

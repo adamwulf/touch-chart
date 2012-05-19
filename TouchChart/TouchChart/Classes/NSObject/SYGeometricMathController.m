@@ -7,27 +7,10 @@
 //
 
 #import "SYGeometricMathController.h"
+#import "SYGeometry.h"
+#import "SYVectorView.h"
 
 @implementation SYGeometricMathController
-
-// States
-@synthesize isDeltaX;
-@synthesize isDeltaY;
-
-// Cartesian values
-@synthesize maxX, maxY;
-@synthesize minX, minY;
-
-// Counters
-@synthesize angleChangeCount;
-@synthesize directionChangeCount;
-
-// Array Data
-@synthesize listPoints;
-@synthesize listAngles;
-@synthesize listVertex;
-
-
 
 #pragma mark - Management Operations
 
@@ -44,8 +27,10 @@
     minY = CGPointZero;
     
     // Create new point list
-    self.listPoints = [[NSMutableArray alloc]init];
-    self.listAngles = [[NSMutableArray alloc]init];
+    [listPoints release];
+    [listAngles release];
+    listPoints = [[NSMutableArray alloc]init];
+    listAngles = [[NSMutableArray alloc]init];
     
 }// cleanData
 
@@ -53,7 +38,7 @@
 - (void) addFirstPoint:(CGPoint) newPoint
 {
     NSValue *point = [NSValue valueWithCGPoint:newPoint];
-    [[self listPoints]addObject:point];
+    [listPoints addObject:point];
     
     maxX = newPoint;
     maxY = newPoint;
@@ -68,8 +53,8 @@
     // Add points
     NSValue *pointAValue = [NSValue valueWithCGPoint:pointA];
     NSValue *pointBValue = [NSValue valueWithCGPoint:pointB];
-    if (![[[self listPoints]lastObject]isEqualToValue:pointAValue]) {
-        [[self listPoints]addObject:pointAValue];
+    if (![[listPoints lastObject]isEqualToValue:pointAValue]) {
+        [listPoints addObject:pointAValue];
         
         // Get Max/Min
         if (pointA.x > maxX.x)
@@ -82,8 +67,8 @@
             minY = pointA;
         
     }
-    if (![[[self listPoints]lastObject]isEqualToValue:pointBValue]) {
-        [[self listPoints]addObject:pointBValue];
+    if (![[listPoints lastObject]isEqualToValue:pointBValue]) {
+        [listPoints addObject:pointBValue];
         
         // Get Max/Min
         if (pointB.x > maxX.x)
@@ -97,34 +82,30 @@
     }
     
     // Calculate angle
-    if ([[self listPoints]count] > 5) {
-        NSValue *vertexValue = [[self listPoints]objectAtIndex:[[self listPoints]count]-4];        
+    if ([listPoints count] > 5) {
+        NSValue *vertexValue = [listPoints objectAtIndex:[listPoints count]-4];        
         CGFloat angle = [self getAngleBetweenVertex:pointA
                                           andPointA:pointB
                                           andPointB:[vertexValue CGPointValue]];
         CGFloat deltaXF = fabs(pointB.x - [vertexValue CGPointValue].x);
         CGFloat deltaYF = fabs(pointB.y - [vertexValue CGPointValue].y);
-        
+                
         if (deltaXF > deltaYF) {
             if (!isDeltaX)
-                self.directionChangeCount++;
+                directionChangeCount++;
             isDeltaX = YES;
             isDeltaY = NO;
         }
         else {
             if (!isDeltaY)
-                self.directionChangeCount++;
+                directionChangeCount++;
             isDeltaY = YES;
             isDeltaX = NO;
         }
-        
-        CGFloat angleC = (angle/M_PI) * 180;
-        
-        if (angleC < 130) {
-            [self.listAngles addObject:[NSNumber numberWithFloat:angle]];
-            [self.listVertex addObject:vertexValue];
-            
-            self.angleChangeCount++;
+                        
+        if (angle < 2.44346) {
+            [listAngles addObject:[NSNumber numberWithFloat:angle]];            
+            angleChangeCount++;
         }
     }
     
@@ -165,7 +146,7 @@
 
 
 // Read lists and return the poligons best fit (or nil if the lists don't match)
-- (NSString *) getFigurePainted
+- (void) getFigurePainted
 {
     // Comprueba que el trazo es cerrado
     CGFloat maxDeltaX = maxX.x - minX.x;
@@ -177,50 +158,147 @@
     
     // Si es abierto, no hace nada
     if (fabs(ratioXClose) > 0.75 || fabs(ratioYClose) > 0.75)
-        return @"Open Line";
+        return;
 
     // Si es cerrado continua analizando el trazo
-    else {                
+    else {
         // Calcula el ratio total
         CGFloat ratioYmax = (maxY.x - minX.x) / (maxX.x - minX.x);
         CGFloat ratioYmin = (minY.x - minX.x) / (maxX.x - minX.x);
         
         CGFloat ratioXmax = (maxX.y - minY.y) / (maxY.y - minY.y);
         CGFloat ratioXmin = (minX.y - minY.y) / (maxY.y - minY.y);
-        
+                
         // Comprueba que se ha trazado bien
-        if ((maxX.x - minX.x) == 0 || (maxY.y - minY.y) == 0 || self.directionChangeCount < 2)
-            return @"Wrong figure";
+        if ((maxX.x - minX.x) == 0 || (maxY.y - minY.y) == 0 || directionChangeCount < 2)
+            return;
         else {
             if (ratioYmax < 0.1 || ratioYmin < 0.1 || ratioXmax < 0.1 || ratioXmin < 0.1) {
-                if (self.angleChangeCount > 7 || self.directionChangeCount > 5)
-                    return @"Wrong figure";
-                else
-                    return [NSString stringWithFormat:@"1. Square. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
+                if (angleChangeCount > 7 || directionChangeCount > 5)
+                    return;
+                else {
+                    [self createSquare];
+                    return;
+                }
             }
             else if (ratioYmax > 0.86 || ratioYmin > 0.86 || ratioXmax > 0.86 || ratioXmin > 0.86) {
-                if (self.angleChangeCount > 7 || self.directionChangeCount > 5)
-                    return @"Wrong figure";
-                else
-                    return [NSString stringWithFormat:@"2. Square. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
+                if (angleChangeCount > 7 || directionChangeCount > 5)
+                    return;
+                else {
+                    [self createSquare];
+                    return;
+                }
             }
-            else if (self.directionChangeCount > 8) {
-                if (self.angleChangeCount > 5 || self.directionChangeCount > 10)
-                    return @"Wrong figure";
-                else
-                    return [NSString stringWithFormat:@"1. Diamond. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
+            else if (directionChangeCount > 8) {
+                if (angleChangeCount > 5 || directionChangeCount > 10)
+                    return;
+                else {
+                    [self createDiamond];
+                    return;
+                }
             }
-            else if (self.angleChangeCount == 0)
-                return [NSString stringWithFormat:@"1. Circle. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
-            else if (self.directionChangeCount > 4)
-                return [NSString stringWithFormat:@"2. Diamond. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
-            else if (self.angleChangeCount < 3)
-                return [NSString stringWithFormat:@"3. Circle. A:%i - D:%i", self.angleChangeCount, self.directionChangeCount];
+            else if (angleChangeCount == 0) {
+                [self createCircle];
+                return;
+            }
+            else if (directionChangeCount > 4) {
+                [self createDiamond];
+                return;
+            }
+            else if (angleChangeCount < 3) {
+                [self createCircle];
+                return;
+            }
         }
     }
     
-    return @"Unknow figure";
+    return;
     
 }// getFigurePainted
+
+
+
+#pragma mark - Geometric calculations
+
+- (void) createSquare
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = SquareType;
+    geometry.rectGeometry = CGRectMake( minX.x, vectorView.bounds.size.height - maxY.y, (maxX.x - minX.x), (maxY.y - minY.y));
+    
+    // Draw properties
+    geometry.lineWidth = 2.0;
+    geometry.fillColor = [UIColor whiteColor];
+    geometry.strokeColor = [UIColor blackColor];
+    
+    vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
+//  [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+    return;
+    
+}// createSquare
+
+
+- (void) createDiamond
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = DiamondType;
+    geometry.rectGeometry = CGRectMake( minX.x, vectorView.bounds.size.height - maxY.y, (maxX.x - minX.x), (maxY.y - minY.y));
+    
+    // Draw properties
+    geometry.lineWidth = 2.0;
+    geometry.fillColor = [UIColor whiteColor];
+    geometry.strokeColor = [UIColor blackColor];
+    
+    vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
+//  [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+    return;
+    
+}// createDiamond
+
+
+- (void) createCircle
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = CircleType;
+    geometry.rectGeometry = CGRectMake( minX.x, vectorView.bounds.size.height - maxY.y, (maxX.x - minX.x), (maxY.y - minY.y));
+    
+    // Draw properties
+    geometry.lineWidth = 2.0;
+    geometry.fillColor = [UIColor whiteColor];
+    geometry.strokeColor = [UIColor blackColor];
+    
+    vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
+//  [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+    return;
+    
+}// createCircle
+
+
+-(void) dealloc
+{
+    [listPoints release];
+    [listAngles release];
+    
+    [super dealloc];
+    
+}// dealloc
 
 @end

@@ -10,5 +10,6 @@
 
 @interface SYVectorView : UIView
 
+@property (nonatomic, retain) NSMutableArray *shapeList;
 
 @end

@@ -24,6 +24,7 @@
 		6691AA7E150DD02300D4A47A /* UITouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA78150DD00900D4A47A /* UITouchableView.m */; };
 		6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA7A150DD00900D4A47A /* UITouchableWindow.m */; };
 		6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA83150DD1A400D4A47A /* TCChartView.m */; };
+		ED10586F15641F8500B10043 /* SYGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = ED10586E15641F8500B10043 /* SYGeometry.m */; };
 		ED9233391561778A00B0F505 /* SYFreePaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9233381561778A00B0F505 /* SYFreePaintView.m */; };
 		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
@@ -74,6 +75,8 @@
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		6691AA82150DD1A400D4A47A /* TCChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCChartView.h; sourceTree = "<group>"; };
 		6691AA83150DD1A400D4A47A /* TCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCChartView.m; sourceTree = "<group>"; };
+		ED10586D15641F8500B10043 /* SYGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometry.h; path = Classes/Models/SYGeometry.h; sourceTree = "<group>"; };
+		ED10586E15641F8500B10043 /* SYGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometry.m; path = Classes/Models/SYGeometry.m; sourceTree = "<group>"; };
 		ED9233371561778A00B0F505 /* SYFreePaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYFreePaintView.h; path = Classes/Views/SYFreePaintView.h; sourceTree = "<group>"; };
 		ED9233381561778A00B0F505 /* SYFreePaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYFreePaintView.m; path = Classes/Views/SYFreePaintView.m; sourceTree = "<group>"; };
 		ED92333A156177A600B0F505 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -114,7 +117,6 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
-				ED92333C156180F600B0F505 /* QuartzCore.framework */,
 				6691AA3B150DCFBC00D4A47A /* TouchChart */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -134,6 +136,7 @@
 		6691AA34150DCFBC00D4A47A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED92333C156180F600B0F505 /* QuartzCore.framework */,
 				ED92333A156177A600B0F505 /* OpenGLES.framework */,
 				6691AA35150DCFBC00D4A47A /* UIKit.framework */,
 				6691AA37150DCFBC00D4A47A /* Foundation.framework */,
@@ -146,6 +149,7 @@
 		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
 			isa = PBXGroup;
 			children = (
+				ED10585815640D9C00B10043 /* Model */,
 				ED9233351561774000B0F505 /* Views */,
 				ED92333E1561825D00B0F505 /* View Controllers */,
 				6691AA85150DD1AB00D4A47A /* AppDelegate */,
@@ -211,15 +215,24 @@
 			name = AppDelegate;
 			sourceTree = "<group>";
 		};
+		ED10585815640D9C00B10043 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ED10586D15641F8500B10043 /* SYGeometry.h */,
+				ED10586E15641F8500B10043 /* SYGeometry.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		ED9233351561774000B0F505 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				ED92334815619F0800B0F505 /* SYGeometricMathController.h */,
+				ED92334915619F0800B0F505 /* SYGeometricMathController.m */,
 				ED9233371561778A00B0F505 /* SYFreePaintView.h */,
 				ED9233381561778A00B0F505 /* SYFreePaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
-				ED92334815619F0800B0F505 /* SYGeometricMathController.h */,
-				ED92334915619F0800B0F505 /* SYGeometricMathController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -369,6 +382,7 @@
 				ED9233391561778A00B0F505 /* SYFreePaintView.m in Sources */,
 				ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */,
 				ED92334A15619F0800B0F505 /* SYGeometricMathController.m in Sources */,
+				ED10586F15641F8500B10043 /* SYGeometry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

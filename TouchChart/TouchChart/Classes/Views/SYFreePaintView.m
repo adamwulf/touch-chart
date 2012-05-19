@@ -9,10 +9,6 @@
 #import "SYFreePaintView.h"
 #import "SYGeometricMathController.h"
 
-#import <QuartzCore/QuartzCore.h>
-#import <OpenGLES/EAGLDrawable.h>
-
-
 // Category. Private Methods
 
 @interface SYFreePaintView (private)
@@ -131,11 +127,35 @@
 	if([EAGLContext currentContext] == context)
 		[EAGLContext setCurrentContext:nil];
 	
-    [geometricMathController release];
 	[context release];
 	[super dealloc];
     
 }// dealloc
+
+
+- (void) drawRect: (CGRect)rect
+{
+    // Drawing code
+    CGPoint origin = {21,21};
+    
+    CGRect rect2;
+    rect2.origin = origin;
+    rect2.size.width  = 128;
+    rect2.size.height = 128;
+	
+    UIBezierPath * path;
+    path = [UIBezierPath bezierPathWithRect:rect2];
+    
+    [path setLineWidth:4];
+    
+    [[UIColor whiteColor] set];
+    [path fill];
+    
+    [[UIColor grayColor] set]; 
+    [path stroke];
+    
+}// drawRect:
+
 
 
 #pragma mark - Basic OpenGL Methods
@@ -281,7 +301,7 @@
         
 		vertexCount += 1;
 	}
-	
+    
 	// Render the vertex array
 	glVertexPointer(2, GL_FLOAT, 0, vertexBuffer);
 	glDrawArrays(GL_POINTS, 0, vertexCount);
@@ -289,7 +309,7 @@
 	// Display the buffer
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
-    
+            
 }// renderLineFromPoint:
 
 
@@ -298,9 +318,6 @@
 // Handles the start of a touch
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    // Erase canvas
-    [self erase];
-
 	CGRect bounds = [self bounds];
     UITouch* touch = [[event touchesForView:self] anyObject];
 	firstTouch = YES;
@@ -312,10 +329,6 @@
     // CGPoint to NSValue and add it to list
     [geometricMathController cleanData];
     [geometricMathController addFirstPoint:location];
-    
-    // TEST
-    [consoleLineUp setText:@"Paiting"];
-    [consoleLineDown setText:@"Getting data..."];
         
 }// touchesBegan
 
@@ -362,11 +375,10 @@
 	}
     
     // Analyze a recognize the figure
-    NSString *result = [geometricMathController getFigurePainted];
+    [geometricMathController getFigurePainted];
     
-    // TEST
-    [consoleLineUp setText:@"Finished"];
-    [consoleLineDown setText:result];
+    // Erase canvas
+    [self erase];
     
 }// touchesEnded:
 
