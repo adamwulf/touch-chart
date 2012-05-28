@@ -37,11 +37,11 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="270951733">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">256</int>
+						<int key="NSvFlags">274</int>
 						<array class="NSMutableArray" key="NSSubviews">
 							<object class="IBUIView" id="208123881">
 								<reference key="NSNextResponder" ref="270951733"/>
-								<int key="NSvFlags">256</int>
+								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{768, 1004}</string>
 								<reference key="NSSuperview" ref="270951733"/>
 								<reference key="NSWindow"/>
@@ -50,7 +50,6 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MSAwAA</bytes>
 								</object>
-								<bool key="IBUIAutoresizesSubviews">NO</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
@@ -64,7 +63,6 @@
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MSAwAA</bytes>
 						</object>
-						<bool key="IBUIAutoresizesSubviews">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 				</array>
@@ -73,8 +71,8 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="270951733"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">1</int>
-					<bytes key="NSRGB">MC43NTYwOTI5MDYgMC4wMTg2MDk4NjY1IDAuMDI3NTIzNzM1NTQAA</bytes>
+					<int key="NSColorSpace">3</int>
+					<bytes key="NSWhite">MQA</bytes>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
@@ -102,6 +100,14 @@
 						<reference key="destination" ref="270951733"/>
 					</object>
 					<int key="connectionID">27</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">vectorView</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="208123881"/>
+					</object>
+					<int key="connectionID">28</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -172,7 +178,7 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="17.CustomClassName">SYFreePaintView</string>
+				<string key="17.CustomClassName">SYPaintView</string>
 				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="21.CustomClassName">SYGeometricMathController</string>
@@ -184,7 +190,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">27</int>
+			<int key="maxID">28</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -227,6 +233,25 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">SYPaintView</string>
+					<string key="superclassName">UIView</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">geometricMathController</string>
+						<string key="NS.object.0">SYGeometricMathController</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">geometricMathController</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">geometricMathController</string>
+							<string key="candidateClassName">SYGeometricMathController</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYPaintView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">SYVectorView</string>
 					<string key="superclassName">UIView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -237,17 +262,20 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">TCViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">freePaint</string>
-						<string key="NS.object.0">SYFreePaintView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">freePaint</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="freePaint">SYFreePaintView</string>
+						<string key="vectorView">SYVectorView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="freePaint">
 							<string key="name">freePaint</string>
 							<string key="candidateClassName">SYFreePaintView</string>
 						</object>
-					</object>
+						<object class="IBToOneOutletInfo" key="vectorView">
+							<string key="name">vectorView</string>
+							<string key="candidateClassName">SYVectorView</string>
+						</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/TCViewController.h</string>

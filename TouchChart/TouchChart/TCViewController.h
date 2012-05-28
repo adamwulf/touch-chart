@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @class SYFreePaintView;
+@class SYVectorView;
 
 @interface TCViewController : UIViewController {
     
     IBOutlet SYFreePaintView *freePaint;
+    IBOutlet SYVectorView *vectorView;
     
 }
 

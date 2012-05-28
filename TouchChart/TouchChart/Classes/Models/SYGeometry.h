@@ -11,7 +11,8 @@
 typedef enum {
 	SquareType,
 	CircleType,
-	DiamondType
+	DiamondType,
+    TriangleType
 } GeometryType;
 
 @interface SYGeometry : NSObject {
@@ -20,6 +21,7 @@ typedef enum {
     
     // Geometry parameters
     CGRect rectGeometry;
+    NSArray *pointArray;
     
     // Draw properties
     CGFloat lineWidth;
@@ -30,6 +32,7 @@ typedef enum {
 
 @property (nonatomic) GeometryType geometryType;
 @property (nonatomic) CGRect rectGeometry;
+@property (nonatomic, retain) NSArray *pointArray;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic, retain) UIColor *fillColor;
 @property (nonatomic, retain) UIColor *strokeColor;

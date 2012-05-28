@@ -12,6 +12,8 @@
 
 @implementation SYGeometricMathController
 
+#define limitTriangleDistace 5.0
+
 #pragma mark - Management Operations
 
 // Clean Data
@@ -120,7 +122,7 @@
     CGFloat dx = point2.x - point1.x;
     CGFloat dy = point2.y - point1.y;
     
-    return sqrt(dx*dx + dy*dy);
+    return sqrt(pow(dx,2) + pow(dy,2));
     
 }// distanceBetweenPoint:andPoint:
 
@@ -174,6 +176,7 @@
             return;
         else {
             if (ratioYmax < 0.1 || ratioYmin < 0.1 || ratioXmax < 0.1 || ratioXmin < 0.1) {
+                
                 if (angleChangeCount > 7 || directionChangeCount > 5)
                     return;
                 else {
@@ -290,6 +293,12 @@
     return;
     
 }// createCircle
+
+
+- (void) createTriangle
+{    
+    
+}// createTriangle
 
 
 -(void) dealloc

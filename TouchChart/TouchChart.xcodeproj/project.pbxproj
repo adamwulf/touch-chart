@@ -34,6 +34,7 @@
 		ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
 		ED92334A15619F0800B0F505 /* SYGeometricMathController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334915619F0800B0F505 /* SYGeometricMathController.m */; };
 		ED92334B15619F0800B0F505 /* SYGeometricMathController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334915619F0800B0F505 /* SYGeometricMathController.m */; };
+		EDE9DE1F1573EF5D009CC5EA /* SYPaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,8 @@
 		ED92334515618F9F00B0F505 /* SYVectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYVectorView.m; path = Classes/Views/SYVectorView.m; sourceTree = "<group>"; };
 		ED92334815619F0800B0F505 /* SYGeometricMathController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometricMathController.h; path = Classes/NSObject/SYGeometricMathController.h; sourceTree = "<group>"; };
 		ED92334915619F0800B0F505 /* SYGeometricMathController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometricMathController.m; path = Classes/NSObject/SYGeometricMathController.m; sourceTree = "<group>"; };
+		EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYPaintView.h; path = Classes/Views/SYPaintView.h; sourceTree = "<group>"; };
+		EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYPaintView.m; path = Classes/Views/SYPaintView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +234,8 @@
 				ED92334915619F0800B0F505 /* SYGeometricMathController.m */,
 				ED9233371561778A00B0F505 /* SYFreePaintView.h */,
 				ED9233381561778A00B0F505 /* SYFreePaintView.m */,
+				EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */,
+				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
 			);
@@ -383,6 +388,7 @@
 				ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */,
 				ED92334A15619F0800B0F505 /* SYGeometricMathController.m in Sources */,
 				ED10586F15641F8500B10043 /* SYGeometry.m in Sources */,
+				EDE9DE1F1573EF5D009CC5EA /* SYPaintView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,10 +507,12 @@
 		6691AA69150DCFBD00D4A47A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sylion Development SL";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
 				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3FF6B7B2-6993-4508-BD2B-5FD22F92279E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

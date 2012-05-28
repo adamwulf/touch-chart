@@ -41,7 +41,10 @@
 		eaglLayer.opaque = YES;
 		// In this application, we want to retain the EAGLDrawable contents after a call to presentRenderbuffer.
 		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-										[NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+										[NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil]; 
+        
+        // Apple iPad bug OpenGL ES: 
+        // http://stackoverflow.com/questions/9757052/problems-displaying-full-screen-caeagllayer-on-retina-ipad
 		
 		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 		

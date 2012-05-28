@@ -65,6 +65,25 @@
             [[geometry strokeColor] set]; 
             [path stroke];
         }
+        else if ([geometry geometryType] == TriangleType) {
+            
+            CGPoint pointA = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
+            CGPoint pointB = [[[geometry pointArray]objectAtIndex:1]CGPointValue];
+            CGPoint pointC = [[[geometry pointArray]objectAtIndex:2]CGPointValue];
+            
+            // Drawing code            
+            UIBezierPath * path = [UIBezierPath bezierPath];
+            [path moveToPoint:pointA];
+            [path addLineToPoint:pointB];
+            [path addLineToPoint:pointC];
+            [path setLineWidth:[geometry lineWidth]];
+            
+            [[geometry fillColor] set];
+            [path fill];
+            
+            [[geometry strokeColor] set]; 
+            [path stroke];
+        }
     }
 
 }// drawRect:

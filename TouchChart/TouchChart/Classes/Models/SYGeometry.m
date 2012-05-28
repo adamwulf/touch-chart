@@ -12,6 +12,7 @@
 
 @synthesize geometryType;
 @synthesize rectGeometry;
+@synthesize pointArray;
 
 @synthesize lineWidth;
 @synthesize fillColor;

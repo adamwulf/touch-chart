@@ -8,6 +8,7 @@
 
 #import "TCViewController.h"
 #import "SYFreePaintView.h"
+#import "SYVectorView.h"
 
 @interface TCViewController ()
 
@@ -31,16 +32,37 @@
 {
     [super viewDidUnload];
     
+    [freePaint release];
+    freePaint = nil;
+    
+    [vectorView release];
+    vectorView = nil;
+    
 }// viewDidUnload
 
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    else
-        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+    // Support all orientations
+    return YES;
 
 }// shouldAutorotateToInterfaceOrientation:
+
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [vectorView setNeedsDisplay];
+    
+}// willRotateToInterfaceOrientation:duration:
+
+
+- (void) dealloc
+{
+    [super dealloc];
+    
+    [freePaint release];
+    [vectorView release];
+    
+}// dealloc
 
 @end
