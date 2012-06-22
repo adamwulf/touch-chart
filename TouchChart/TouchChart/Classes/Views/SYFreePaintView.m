@@ -377,6 +377,9 @@
 		[self renderLineFromPoint:previousLocation toPoint:location];
 	}
     
+    // Add the last points
+    [geometricMathController addPoint:previousLocation andPoint:location];
+    
     // Analyze a recognize the figure
     [geometricMathController getFigurePainted];
     

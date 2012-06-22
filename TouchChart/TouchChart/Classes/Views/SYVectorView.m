@@ -11,6 +11,8 @@
 
 @implementation SYVectorView
 
+#define pointBlueSize 14.0
+
 @synthesize shapeList;
 
 - (void) awakeFromNib
@@ -83,6 +85,42 @@
             
             [[geometry strokeColor] set]; 
             [path stroke];
+        }
+        else if ([geometry geometryType] == LinesType) {
+                        
+            CGPoint pointA = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
+            
+            // Drawing code            
+            UIBezierPath * path = [UIBezierPath bezierPath];
+            [path moveToPoint:pointA];
+            
+            for (int i = 0; i< [[geometry pointArray]count] ; i++) {
+                CGPoint pointB = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
+                [path addLineToPoint:pointB];
+            }
+            [path addLineToPoint:pointA];
+            
+            [path setLineWidth:[geometry lineWidth]];
+            [[geometry fillColor] set];
+            [path fill];
+            
+            [[geometry strokeColor] set]; 
+            [path stroke];
+            
+            for (int i = 0; i< [[geometry pointArray]count] ; i++) {
+                CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
+                
+                // create a oval bezier path using the rect
+                UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointBlueSize * 0.5), point.y - (pointBlueSize * 0.5), pointBlueSize, pointBlueSize)];
+                [path setLineWidth:1.5];	
+                
+                // draw the path
+                [[UIColor colorWithRed:0.59 green:0.59 blue:0.59 alpha:1.0] set];
+                [path fill];
+                                
+                [[UIColor colorWithRed:0.47 green:0.47 blue:0.47 alpha:1.0] set]; 
+                [path stroke];
+            }
         }
     }
 

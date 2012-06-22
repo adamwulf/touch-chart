@@ -20,6 +20,14 @@
     // States
     BOOL isDeltaX;
     BOOL isDeltaY;
+    NSInteger isDeltaXPos;
+    NSInteger isDeltaYPos;
+    
+    CGFloat previousDeltaX;
+    CGFloat previousDeltaY;
+    
+    // Cartesian values
+    NSMutableArray *pointKeyArray;
     
     // Cartesian values
     CGPoint maxX, maxY;
@@ -35,14 +43,19 @@
     
 }
 
+@property (nonatomic, retain) NSMutableArray *pointKeyArray;
+
 // Management Data Operations
 - (void) cleanData;
 - (void) addFirstPoint:(CGPoint) newPoint;
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 
 // Basic Geometric calculations
+- (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2;
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
+- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC;
+- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointC isAlignedWithPoint:(CGPoint)pointB withDistance:(float) ratio;
 
 // Analyze and Recognizer Geometry Methods
 - (void) getFigurePainted;

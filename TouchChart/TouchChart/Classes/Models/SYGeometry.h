@@ -12,7 +12,8 @@ typedef enum {
 	SquareType,
 	CircleType,
 	DiamondType,
-    TriangleType
+    TriangleType,
+    LinesType
 } GeometryType;
 
 @interface SYGeometry : NSObject {
