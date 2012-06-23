@@ -498,8 +498,6 @@
     
     
     // Take the intersection between the segments (it will be key points)
-    NSMutableArray *pointKeyArrayTemp = [NSMutableArray array];
-    BOOL isSnap = YES;
     for (int i = 0 ; i < [segmentsArray count]; i++) {
         BOOL isBreak = NO;
         SYSegment *segmentA = [segmentsArray objectAtIndex:i];
@@ -519,32 +517,20 @@
         [segmentA setPointFn:intersectPoint];
         [segmentB setPointSt:intersectPoint];
 
-        // the intersection point is into screen size
-        if (fabs(intersectPoint.x) < 1024.0 && fabs(intersectPoint.y) < 745.0)
-            [pointKeyArrayTemp addObject:[NSValue valueWithCGPoint:intersectPoint]];
-        
-        // the intersection point would be far away and don't snap shape
-        else {
-            isSnap = NO;
-            break;
-        }
-        
         if (isBreak)
             break;        
     }
     
-    // If the shape was snapped
-    if (isSnap) {
-        self.pointKeyArray  = [[NSMutableArray alloc]init];
-        SYSegment *segment = [segmentsArray objectAtIndex:0];
-        [self.pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointSt]]];
-        
-        for (SYSegment *segment in segmentsArray) {
-            [self.pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointFn]]];
-            //NSLog(@"%f", [segment angleDeg]);
-        }
-        
+    // Get the final key points
+    self.pointKeyArray  = [[NSMutableArray alloc]init];
+    SYSegment *segment = [segmentsArray objectAtIndex:0];
+    [self.pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointSt]]];
+    
+    for (SYSegment *segment in segmentsArray) {
+        [self.pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointFn]]];
+        //NSLog(@"%f", [segment angleDeg]);
     }
+    
 
     // Draw the resulting shape
     for (id point in pointKeyArray) {

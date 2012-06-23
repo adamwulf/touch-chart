@@ -49,7 +49,6 @@
 
 #pragma mark - Geometric Methods
 
-// Cuadrado de la distancia
 - (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB
 {
     return (puntoB.x-puntoA.x)*(puntoB.x-puntoA.x) + (puntoB.y-puntoA.y)*(puntoB.y-puntoA.y);
@@ -57,7 +56,7 @@
 }// moduleTwo:and:
 
 
-// Distancia punto a punto en 2 dimensiones
+// Distance between two points (2D)
 - (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB
 {
     return sqrt([self moduleTwo:puntoA and:puntoB]);
@@ -65,7 +64,7 @@
 }// distance:and:
 
 
-// Longitud del vector
+// Vector longitude
 - (CGFloat) longitude
 {
     return sqrt([self moduleTwo:pointSt and:pointFn]);
@@ -73,51 +72,52 @@
 }// longitude
 
 
-// Distancia del segmento al punto C
+// Distance between point C to segment
 - (CGFloat) distanceToPoint:(CGPoint) C
 {
-    // Punto en el segmento al cual se calculará la distancia
+    // Punto en el segmento sobre el cual se calculará la distancia
     // iniciamos en uno de los extremos
-    CGPoint P = pointSt;
+    CGPoint P = CGPointZero;
     
-    // Para prevenir una división por cero se calcula primero el demoninador de
+    // Para prevenir una división por cero se calcula primero el denominador de
     // la división. (Se puede dar si A y B son el mismo punto).
-    // Podría substituirse por [self moduleTwo:A a:B]
-    CGFloat denominador = (pointFn.x-pointSt.x)*(pointFn.x-pointSt.x)+(pointFn.y-pointSt.y)*(pointFn.y-pointSt.y);
+    CGFloat denominator = [self moduleTwo:pointSt and:pointFn];
 
-    if(denominador !=0){
+    if(denominator !=0){
 
-        // Se calcula el parámetro, que indica la posición del punto P en la recta
-        // del segmento
-        CGFloat u = ((C.x - pointSt.x) * (pointFn.x - pointSt.x) + (C.y - pointSt.y) * (pointFn.y - pointSt.y))/denominador;
+        // The u parameter indicate the position the P point in the segment
+        CGFloat u = ((C.x - pointSt.x) * (pointFn.x - pointSt.x) + (C.y - pointSt.y) * (pointFn.y - pointSt.y))/denominator;
 
-        // Si u esta en el intervalo [0,1], el punto P pertenece al segmento
+        // If u is between interval [0,1], the point P is into the segment
         if(u > 0.0 && u < 1.0) {
             P.x = pointSt.x + u * (pointFn.x - pointSt.x);
             P.y = pointSt.y + u * (pointFn.y - pointSt.y);
         }
 
-        // Si P no pertenece al segmento se toma uno de los extremos para calcular
-        // la distancia. Si u < 0 el extremo es A. Si u >=1 el extremos es B.
-        else{
-            if( u>= 1.0)
-                P=pointFn;
+        // else we use the final point for calculate distance.
+        // If u < 0 we use start point, else if u >=1 we use final point
+        else {
+            if( u >= 1.0)
+                P = pointFn;
+            else
+                P = pointSt;
         }
     }
 
-    // Se devuelve la distancia entre el punto C y el punto P calculado.
+    // return the distance between point C and point P
     return [self distance:P and:C];
 
 }// distanceToPoint:
 
 
+// Intersect point between the current segment and other
 - (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment
 {
-    // Comprueba que tiene pendientes diferentes
+    // Check if they have equal slope
     float fS1ope1 = (equal(self.pointSt.x, self.pointFn.x)) ? (inf) : ((self.pointFn.y - self.pointSt.y)/(self.pointFn.x - self.pointSt.x));
     float fS1ope2 = (equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x)) ? (inf) : ((anotherSegment.pointFn.y - anotherSegment.pointSt.y)/(anotherSegment.pointFn.x - anotherSegment.pointSt.x));
     
-    // Si son iguales, ambas rectas son paralelas y no se cruzan
+    // If the both slope are equal, never intersect, they're parallels lines
     if (equal(fS1ope1, fS1ope2)) {
         if (equal(self.pointSt.y - fS1ope1 * self.pointSt.x,
                   anotherSegment.pointSt.y - fS1ope2 * anotherSegment.pointSt.x)) {
@@ -130,7 +130,7 @@
         return errorPoint;
     }
 
-    // Sino, se cruzarán en algun momento. Calcula ese punto
+    // else the lines intersect in a point, we calculate this point
     CGPoint ptIntersect = CGPointZero;
     ptIntersect.x = (fS1ope1 * self.pointSt.x - self.pointSt.y - fS1ope2 * anotherSegment.pointSt.x + anotherSegment.pointSt.y)/(fS1ope1 - fS1ope2);
     if (equal(self.pointSt.x, self.pointFn.x))
@@ -149,6 +149,7 @@
 
 #pragma mark - Angles Methods
 
+// Segment angle radian
 - (CGFloat) angleRad
 {
     CGFloat deltaX = pointFn.x - pointSt.x;
@@ -169,12 +170,12 @@
             return -M_PI;
     }
     
-    // Obtiene a través del arco tangente
     return atanf(deltaY/deltaX);
     
 }// angleRad
 
 
+// Segment angle degrees
 - (CGFloat) angleDeg
 {
     CGFloat angle = [self angleRad];
@@ -183,6 +184,7 @@
 }// angleDeg
 
 
+// Snap pivotal around the start point
 - (void) setStartPointToDegree:(CGFloat) angle
 {
     CGFloat angleRad = (angle/90.0) * M_PI_2;
@@ -201,6 +203,7 @@
 }// setStartPointToDegree:
 
 
+// Snap pivotal around the middle point
 - (void) setMiddlePointToDegree:(CGFloat) angle
 {
     CGFloat angleRad = (angle/90.0) * M_PI_2;
@@ -225,6 +228,7 @@
 }// setMiddlePointToDegree
 
 
+// Snap pivotal around the final point
 - (void) setFinalPointToDegree:(CGFloat) angle
 {
     CGFloat angleRad = (angle/90.0) * M_PI_2;
@@ -242,6 +246,7 @@
 }// setFinalPointToDegree:
 
 
+// Check angle to snap
 - (void) snapAngleChangingStartPoint
 {
     // Si es distinto de .0 o 90.0, y ajusta al punto B
@@ -292,9 +297,9 @@
 }// snapAngleChangingStartPoint
 
 
+// Check angle to snap
 - (void) snapAngleChangingFromMiddlePoint
 {
-    NSLog(@"Inicio: %f", [self angleDeg]);
     // Si es distinto de .0 o 90.0, y ajusta al punto B
     CGFloat angleDeg = [self angleDeg];
     if ([self isSnapAngle]) {
@@ -340,11 +345,10 @@
         }
     }
     
-    NSLog(@"Final: %f", [self angleDeg]);
-
 }// snapAngleChangingFromMiddlePoint
 
 
+// Check angle to snap
 - (void) snapAngleChangingFinalPoint
 {
     // Si es distinto de .0 o 90.0, y ajusta al punto B
@@ -395,53 +399,11 @@
 }// snapAngleChangingFinalPoint
 
 
+// do the segment need to snap?
 - (BOOL) isSnapAngle
 {
     CGFloat angleDeg = [self angleDeg];
-    
-    /*
-    // Si no esta ajustado responde que no
-    CGFloat resultAbs = fabsf(angleDeg);
-    
-    if (resultAbs < 5.0)
-        return YES;
 
-    CGFloat ratio = 30.0/resultAbs;     // de 25 a 35 grados
-    if (ratio > 0.85 && ratio < 1.2)
-        return YES;
-    
-    ratio = 45.0/resultAbs;             // de 40 a 50 grados
-    if (ratio < 1.125 && ratio > 0.9)
-        return YES;
-    
-    ratio = 60.0/resultAbs;             // de 55 a 65 grados
-    if (ratio < 1.091 && ratio > 0.923)
-        return YES;
-    
-    ratio = 90.0/resultAbs;             // de 85 a 95 grados
-    if (ratio < 1.0588 && ratio > 0.947)
-        return YES;
-    
-    ratio = 120.0/resultAbs;             // de 115 a 125 grados
-    if (ratio < 1.043 && ratio > 0.96)
-        return YES;
-    
-    ratio = 135.0/resultAbs;             // de 130 a 140 grados
-    if (ratio < 1.0384 && ratio > 0.9643)
-        return YES;
-    
-    ratio = 150.0/resultAbs;             // de 145 a 155 grados
-    if (ratio < 1.0345 && ratio > 0.9677)
-        return YES;
-    
-    ratio = 180.0/resultAbs;             // de 175 a 185 grados
-    if (ratio < 1.0286 && ratio > 0.973)
-        return YES;
-    
-    return NO;
-    */
-    
-    
     // Si no esta ajustado responde que no
     CGFloat resultAbs = fabsf(angleDeg);
 
