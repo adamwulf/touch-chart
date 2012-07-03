@@ -7,7 +7,6 @@
 //
 
 #import "TCViewController.h"
-#import "SYFreePaintView.h"
 #import "SYVectorView.h"
 
 @interface TCViewController ()
@@ -22,9 +21,6 @@
 {
     [super viewDidLoad];
     
-    // Set initial the brush color
-	[(SYFreePaintView *)[[[self view]subviews]objectAtIndex:0] setBrushColorWithRed:.0 green:.0 blue:1.0];
-
 }// viewDidLoad
 
 

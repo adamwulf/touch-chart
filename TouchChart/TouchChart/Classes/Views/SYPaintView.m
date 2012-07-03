@@ -129,6 +129,9 @@
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // TEMP
+    [self clearPaint];
+    
     // MathController send point
     CGRect bounds = [self bounds];
     UITouch* touch = [[event touchesForView:self] anyObject];
@@ -176,37 +179,32 @@
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    [self clearPaint];
+    //[self clearPaint];
     
     // Analyze a recognize the figure
-    CGRect bounds = [self bounds];
     UITouch *touch = [[event touchesForView:self] anyObject];
+    location = [touch locationInView:self];
     
-	if (firstTouch) {
-		firstTouch = NO;
-		previousLocation = [touch previousLocationInView:self];
-		previousLocation.y = bounds.size.height - previousLocation.y;
-	}
+    // Add the last point
+    [geometricMathController addLastPoint:previousLocation];
     
     // Analyze a recognize the figure
     [geometricMathController getFigurePainted];
     
 }// touchesEnded:withEvent:
 
+
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    [self clearPaint];
+    //[self clearPaint];
     
     // Analyze a recognize the figure
-    CGRect bounds = [self bounds];
     UITouch *touch = [[event touchesForView:self] anyObject];
+    location = [touch locationInView:self];
     
-	if (firstTouch) {
-		firstTouch = NO;
-		previousLocation = [touch previousLocationInView:self];
-		previousLocation.y = bounds.size.height - previousLocation.y;
-	}
+    // Add the last point
+    [geometricMathController addLastPoint:previousLocation];
     
     // Analyze a recognize the figure
     [geometricMathController getFigurePainted];

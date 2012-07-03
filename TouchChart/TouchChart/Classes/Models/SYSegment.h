@@ -17,12 +17,20 @@
 @property (nonatomic) CGPoint pointSt;
 @property (nonatomic) CGPoint pointFn;
 
+// Init
 - (id) initWithPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+
+// Get Special Points Methods
+- (CGPoint) startPoint;
+- (CGPoint) endPoint;
+- (CGPoint) midPoint;
+- (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment;
+
+// Distances
 - (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB;
 - (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB;
 - (CGFloat) longitude;
 - (CGFloat) distanceToPoint:(CGPoint) C;
-- (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment;
 
 // Angles Methods
 - (CGFloat) angleRad;

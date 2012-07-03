@@ -47,6 +47,34 @@
 }// dealloc
 
 
+#pragma mark - Get Special Points Methods
+
+- (CGPoint) startPoint
+{
+    return [self pointSt];
+    
+}// startPoint
+
+
+- (CGPoint) endPoint
+{
+    return [self pointFn];
+    
+}// startPoint
+
+
+- (CGPoint) midPoint
+{
+    CGFloat midX = (pointSt.x + pointFn.x) * 0.5;
+    CGFloat midY = (pointSt.y + pointFn.y) * 0.5;
+    
+    CGPoint midPoint = CGPointMake(midX, midY);
+    
+    return midPoint;
+    
+}// startPoint
+
+
 #pragma mark - Geometric Methods
 
 - (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB
@@ -207,17 +235,34 @@
 - (void) setMiddlePointToDegree:(CGFloat) angle
 {
     CGFloat angleRad = (angle/90.0) * M_PI_2;
+    CGFloat midLongitude = [self longitude] * 0.5;
     
     // sen/cos = tan ----> sen = tan * cos
     if (fabs(angle) == .0 || fabs(angle) == 180.0) {
         CGFloat midY = (pointFn.y + pointSt.y) * 0.5;
-        pointSt.y = midY;
-        pointFn.y = midY;
+        CGPoint midPoint = [self midPoint];
+        
+        if(pointSt.x > pointFn.x) {
+            pointSt = CGPointMake(midPoint.x + midLongitude, midY);
+            pointFn = CGPointMake(midPoint.x - midLongitude, midY);
+        }
+        else {
+            pointSt = CGPointMake(midPoint.x - midLongitude, midY);
+            pointFn = CGPointMake(midPoint.x + midLongitude, midY);
+        }
     }
     if (fabs(angle) == 90.0) {
         CGFloat midX = (pointFn.x + pointSt.x) * 0.5;
-        pointSt.x = midX;
-        pointFn.x = midX;
+        CGPoint midPoint = [self midPoint];
+        
+        if(pointSt.y > pointFn.y) {
+            pointSt = CGPointMake(midX, midPoint.y - midLongitude);
+            pointFn = CGPointMake(midX, midPoint.y + midLongitude);
+        }
+        else {
+            pointSt = CGPointMake(midX, midPoint.y - midLongitude);
+            pointFn = CGPointMake(midX, midPoint.y + midLongitude);
+        }
     }
     else {
         CGFloat deltaY = (pointFn.x - pointSt.x) * tanf(angleRad);

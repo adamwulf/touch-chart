@@ -49,6 +49,7 @@
 - (void) cleanData;
 - (void) addFirstPoint:(CGPoint) newPoint;
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+- (void) addLastPoint:(CGPoint) lastPoint;
 
 // Basic Geometric calculations
 - (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
@@ -61,8 +62,11 @@
 - (void) getFigurePainted;
 
 // Geometric calculations
+- (void) createPolygonal;
 - (void) createSquare;
 - (void) createDiamond;
 - (void) createCircle;
+- (void) createCircleWithTransform:(CGAffineTransform) transform;
+- (void) createArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
 
 @end
