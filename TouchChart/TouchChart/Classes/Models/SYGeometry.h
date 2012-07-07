@@ -46,7 +46,6 @@ typedef enum {
 @property (nonatomic) GeometryType geometryType;
 @property (nonatomic) CGRect rectGeometry;
 @property (nonatomic, retain) NSArray *pointArray;
-@property (nonatomic, retain) NSDictionary *controlPointDict;
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic, retain) UIColor *fillColor;
 @property (nonatomic, retain) UIColor *strokeColor;

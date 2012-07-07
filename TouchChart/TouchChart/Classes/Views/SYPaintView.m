@@ -41,7 +41,7 @@
     self = [super initWithFrame:frame];
 
     if (self) {
-		self.handwritingCoords = [[NSMutableArray alloc] init];
+		self.handwritingCoords = [NSMutableArray array];
 		self.lineWidth = 5.0f;
 		self.foreColor = [UIColor blackColor];
 		self.backgroundColor = [UIColor clearColor];
@@ -55,7 +55,7 @@
 
 - (void) awakeFromNib
 {
-    self.handwritingCoords = [[NSMutableArray alloc] init];
+    self.handwritingCoords = [NSMutableArray array];
     self.lineWidth = 5.0f;
     self.foreColor = [UIColor blackColor];
     self.backgroundColor = [UIColor clearColor];
@@ -130,7 +130,7 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // TEMP
-    [self clearPaint];
+    //[self clearPaint];
     
     // MathController send point
     CGRect bounds = [self bounds];
@@ -179,7 +179,7 @@
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [[event touchesForView:self] anyObject];
@@ -197,7 +197,7 @@
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [[event touchesForView:self] anyObject];

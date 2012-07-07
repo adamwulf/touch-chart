@@ -17,7 +17,7 @@
 
 - (void) awakeFromNib
 {
-    self.shapeList = [[NSMutableArray alloc]init];
+    self.shapeList = [NSMutableArray array];
     
 }// awakeFromNib
 
@@ -136,63 +136,27 @@
         }
         else if ([geometry geometryType] == BezierType) {
             
-            NSArray *controlFirstPoint = [[geometry controlPointDict]valueForKey:@"firstControl"];
-            NSArray *controlSecondPoint = [[geometry controlPointDict]valueForKey:@"secondControl"];
-            
-            for (int i = 0; i+1 < [[geometry pointArray]count]; i++) {
+            if([geometry.pointArray count] >= 4) {
                 
-                CGPoint startPoint = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
-                CGPoint endPoint = [[[geometry pointArray]objectAtIndex:i+1]CGPointValue];
+                CGPoint startPoint = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
+                CGPoint endPoint = [[[geometry pointArray]objectAtIndex:3]CGPointValue];
                 
-                CGPoint controlPointA = [[controlFirstPoint objectAtIndex:i]CGPointValue];
-                CGPoint controlPointB = [[controlSecondPoint objectAtIndex:i]CGPointValue];
+                CGPoint firstCP = [[[geometry pointArray]objectAtIndex:1]CGPointValue];
+                CGPoint secondCP = [[[geometry pointArray]objectAtIndex:2]CGPointValue];
                 
                 // Drawing code            
                 UIBezierPath * path = [UIBezierPath bezierPath];
-                [path moveToPoint:startPoint];
+                [path moveToPoint: startPoint];
                 
                 [path addCurveToPoint: endPoint
-                        controlPoint1: CGPointMake(controlPointA.x, controlPointA.y)
-                        controlPoint2: controlPointB];
+                        controlPoint1: firstCP
+                        controlPoint2: secondCP];
                 
                 [path setLineWidth:[geometry lineWidth]];
                 [[geometry fillColor] set];
                 [path fill];
                 
                 [[geometry strokeColor] set]; 
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            
-            for (int i = 0; i < [controlFirstPoint count] ; i++) {
-                CGPoint point = [[controlFirstPoint objectAtIndex:i]CGPointValue];
-                
-                // create a oval bezier path using the rect
-                UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointBlueSize * 0.25), point.y - (pointBlueSize * 0.25), pointBlueSize, pointBlueSize)];
-                [path setLineWidth:1.0];	
-                
-                // draw the path
-                [[UIColor redColor] set];
-                [path fill];
-                
-                [[UIColor orangeColor] set]; 
-                [path stroke];
-                
-            }
-            
-            for (int i = 0; i < [controlSecondPoint count] ; i++) {
-                CGPoint point = [[controlSecondPoint objectAtIndex:i]CGPointValue];
-                
-                // create a oval bezier path using the rect
-                UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointBlueSize * 0.25), point.y - (pointBlueSize * 0.25), pointBlueSize, pointBlueSize)];
-                [path setLineWidth:1.0];	
-                
-                // draw the path
-                [[UIColor cyanColor] set];
-                [path fill];
-                
-                [[UIColor blueColor] set]; 
                 [path stroke];
             }
         }

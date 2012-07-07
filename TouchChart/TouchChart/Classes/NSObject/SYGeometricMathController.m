@@ -224,6 +224,28 @@
 
 #pragma mark - Geometric calculations
 
+// Return shape/curve contour longitude (aprox)
+- (CGFloat) lengthFromPointList
+{
+    // If there isn't enough points, exit
+    if ([listPoints count] < 2)
+        return .0;
+    
+    CGFloat longitude = .0;
+    for (int i = 1 ; i < [listPoints count] ; i++) {
+        CGPoint startSegment = [[listPoints objectAtIndex:i-1]CGPointValue];
+        CGPoint endSegment = [[listPoints objectAtIndex:i]CGPointValue];
+        
+        SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
+        longitude += [segment longitude];
+        
+    }
+    
+    return longitude;
+    
+}// lengthFromPointList
+
+
 // Rewrite your TCChartView method ObjC native
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2
 {
@@ -398,14 +420,83 @@
     
     // Is the painted shape closed (almost closed)?
     // --------------------------------------------------------------------------
-    SYSegment *near = [[SYSegment alloc]initWithPoint:[[listPoints objectAtIndex:0]CGPointValue] andPoint:[[listPoints lastObject]CGPointValue]];
+    SYSegment *near = [[SYSegment alloc]initWithPoint:[[listPoints objectAtIndex:0]CGPointValue]
+                                             andPoint:[[listPoints lastObject]CGPointValue]];
     CGFloat ratioClose = [near longitude]/((maxDeltaX + maxDeltaY)*0.5);
     
     // It's open, do nothing, exit
     if (fabs(ratioClose) > 0.30) {
-        // The last point should be the last point touch with the finger
-        [finalArray addObject:[allPoint lastObject]];
-        [self createPolygonal];
+        
+        // Cubic bezier. We need two points and its 't' value
+        float lengthLine = [self lengthFromPointList];
+
+        NSMutableArray *pointsCurvesBezier = [NSMutableArray array];
+        for (NSValue *newPoint in finalArray) {
+            NSLog(@"newPoint");
+            CGFloat longitude = .0;
+            for (int i = 1 ; i < [listPoints count] ; i++) {
+                CGPoint startSegment = [[listPoints objectAtIndex:i-1]CGPointValue];
+                CGPoint endSegment = [[listPoints objectAtIndex:i]CGPointValue];
+                
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
+                longitude += [segment longitude];
+                
+                if ([[listPoints objectAtIndex:i] isEqual:newPoint]) {
+                    NSLog(@"(%f, %f) : %f", endSegment.x, endSegment.y, longitude/lengthLine);
+                    [pointsCurvesBezier addObject:[listPoints objectAtIndex:i]];
+                    [pointsCurvesBezier addObject:[NSNumber numberWithFloat:longitude/lengthLine]];
+                    break;
+                }
+            }
+        }
+        NSLog(@"end");
+        
+        // Get 2 points
+        CGPoint p0 = /*CGPointMake(25.0, 25.0);*/[[listPoints objectAtIndex:0]CGPointValue];
+        CGPoint p3 = /*CGPointMake(128.0, 128.0);*/[[listPoints lastObject]CGPointValue];
+        
+        CGPoint pt1_3 = /*CGPointMake(74.593, 51.704);*/[[pointsCurvesBezier objectAtIndex:0]CGPointValue];
+        float t1_3 = /*1.0/3.0;*/[[pointsCurvesBezier objectAtIndex:1]floatValue];
+        CGPoint pt2_3 = /*CGPointMake(78.407, 101.296);*/[[pointsCurvesBezier objectAtIndex:2]CGPointValue];
+        float t2_3 = /*2.0/3.0;*/[[pointsCurvesBezier objectAtIndex:3]floatValue];
+        
+        
+        // We use Cramer Rule
+        // ax + by = e
+        // cx + dy = f
+        
+        // First control Point
+        float e = pt1_3.x - (pow(1-t1_3, 3) * p0.x) - (pow(t1_3, 3) * p3.x);
+        float f = pt2_3.x - (pow(1-t2_3, 3) * p0.x) - (pow(t2_3, 3) * p3.x);
+        
+        float a = 3.0 * t1_3 * pow(1-t1_3, 2);
+        float b = 3.0 * pow(t1_3, 2) * (1-t1_3);
+        float c = 3 * t2_3 * pow(1-t2_3, 2);
+        float d = 3 * pow(t2_3, 2) * (1-t2_3);
+        
+        float cPointX = (e*d - b*f) / (a*d - b*c);
+        float cPointY = (a*f - e*c) / (a*d - b*c);
+        CGPoint cPointA = CGPointMake(cPointX, cPointY);
+        
+        // Second control Point
+        e = pt1_3.y - (pow(1-t1_3, 3) * p0.y) - (pow(t1_3, 3) * p3.y);
+        f = pt2_3.y - (pow(1-t2_3, 3) * p0.y) - (pow(t2_3, 3) * p3.y);
+        a = 3.0 * t1_3 * pow(1-t1_3, 2);
+        b = 3.0 * pow(t1_3, 2) * (1-t1_3);
+        c = 3 * t2_3 * pow(1-t2_3, 2);
+        d = 3 * pow(t2_3, 2) * (1-t2_3);
+        
+        cPointX = (e*d - b*f) / (a*d - b*c);
+        cPointY = (a*f - e*c) / (a*d - b*c);
+        CGPoint cPointB = CGPointMake(cPointX, cPointY);
+        
+        NSArray *bezierPointsArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:p0],
+                                     [NSValue valueWithCGPoint:cPointA],
+                                     [NSValue valueWithCGPoint:cPointB],
+                                     [NSValue valueWithCGPoint:p3], nil];
+        
+        [self createBezierCurveWithPoints:bezierPointsArray];
+        
         return;
     }
     else {
@@ -895,6 +986,36 @@
 }// getFigurePainted
 
 
+- (void) createBezierCurveWithPoints:(NSArray *) arrayData
+{
+    // Convert to real axis
+    NSMutableArray *pointArray = [NSMutableArray array];
+    for (NSValue *pointValue in arrayData) {
+        CGPoint pointCG = [pointValue CGPointValue];
+        pointCG = CGPointMake(pointCG.x, vectorView.bounds.size.height - pointCG.y);
+        [pointArray addObject:[NSValue valueWithCGPoint:pointCG]];
+    }
+    
+    // Draw the resulting shape
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = BezierType;
+    geometry.pointArray = [NSArray arrayWithArray:pointArray];
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor redColor];//[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+}// createBezierCurveWithPoints
+
+
 - (void) createPolygonal
 {
     // Draw the resulting shape
@@ -989,7 +1110,7 @@
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    geometry.strokeColor = [UIColor redColor];//[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     //vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
     [[vectorView shapeList]addObject:geometry];
@@ -1013,7 +1134,7 @@
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    geometry.strokeColor = [UIColor redColor];//[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     geometry.transform = transform;
     
@@ -1043,7 +1164,7 @@
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    geometry.strokeColor = [UIColor redColor];//[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     //vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
     [[vectorView shapeList]addObject:geometry];

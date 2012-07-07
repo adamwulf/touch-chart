@@ -62,6 +62,7 @@
 - (void) getFigurePainted;
 
 // Geometric calculations
+- (void) createBezierCurveWithPoints:(NSArray *) arrayData;
 - (void) createPolygonal;
 - (void) createSquare;
 - (void) createDiamond;
