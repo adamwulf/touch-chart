@@ -384,7 +384,7 @@
     
     
     // Remove points aligned (step A)
-    // --------------------------------------------------------------------------
+    // -------------------------------------------------
     NSMutableArray *edgePoints = [NSMutableArray array];
     if ([pointKeyArray count] > 0) {
         [edgePoints addObject:[pointKeyArray objectAtIndex:0]];
@@ -416,6 +416,7 @@
             [finalArray addObject:newPoint];
         }
     }
+    self.pointKeyArray = finalArray;
     
     
     // Is the painted shape closed (almost closed)?
@@ -427,6 +428,109 @@
     // It's open, do nothing, exit
     if (fabs(ratioClose) > 0.30) {
         
+        NSMutableArray *bezierPointsArray = [NSMutableArray array];
+        
+        // Get the real last point
+        [self.pointKeyArray removeLastObject];
+        [self.pointKeyArray addObject:[listPoints lastObject]];
+        
+        // The key point set the numbers of bezier curves
+        for (NSUInteger i = 1 ; i < [self.pointKeyArray count] ; i++) {
+            
+            // Get the start and end point
+            CGPoint t0Point = [[self.pointKeyArray objectAtIndex:i-1]CGPointValue];
+            CGPoint t3Point = [[self.pointKeyArray objectAtIndex:i]CGPointValue];
+                        
+            // Cubic bezier. We need two points and its 't' value
+            // --------------------------------------------------
+            // We analyze the list Points. What's the start and end point index into listPoint array?
+            NSUInteger index = 0; NSUInteger indexesStEnd[2] = {0,0};
+            for (NSValue *aPoint in listPoints) {
+                if ([aPoint isEqual:[self.pointKeyArray objectAtIndex:i-1]])
+                    indexesStEnd[0] = index;
+                if ([aPoint isEqual:[self.pointKeyArray objectAtIndex:i]])
+                    indexesStEnd[1] = index;
+
+                index++;
+            }
+                        
+            if (indexesStEnd[0] == indexesStEnd[1] || indexesStEnd[0] > indexesStEnd[1])
+                return;
+            
+            // We get iso-distributed points along bezier            
+            NSUInteger step = (indexesStEnd[1] - indexesStEnd[0]) / 3;
+            NSUInteger t1IndexPoint = indexesStEnd[0] + step;
+            NSUInteger t2IndexPoint = indexesStEnd[0] + (2 * step);
+                        
+            // We calculate longitude between init point and final point
+            CGFloat totalLongitude = .0; CGFloat t1Longitude = .0; CGFloat t2Longitude = .0;
+            for (int i = indexesStEnd[0]+1 ; i <= indexesStEnd[1] ; i++) {
+                CGPoint startSegment = [[listPoints objectAtIndex:i-1]CGPointValue];
+                CGPoint endSegment = [[listPoints objectAtIndex:i]CGPointValue];
+                
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
+                totalLongitude += [segment longitude];
+                
+                if (i == t1IndexPoint)
+                    t1Longitude = totalLongitude;
+                if (i == t2IndexPoint)
+                    t2Longitude = totalLongitude;
+            }
+            NSLog(@"totalLongitude: %f", totalLongitude);
+            CGPoint t1Point = [[listPoints objectAtIndex:t1IndexPoint]CGPointValue];
+            float t1 = t1Longitude / totalLongitude;
+            CGPoint t2Point = [[listPoints objectAtIndex:t2IndexPoint]CGPointValue];
+            float t2 = t2Longitude / totalLongitude;
+            
+            // We use Cramer Rule
+            // ax + by = e
+            // cx + dy = f
+            
+            // First control Point
+            float e = t1Point.x - (pow(1-t1, 3) * t0Point.x) - (pow(t1, 3) * t3Point.x);
+            float f = t2Point.x - (pow(1-t2, 3) * t0Point.x) - (pow(t2, 3) * t3Point.x);
+            
+            float a = 3.0 * t1 * pow(1-t1, 2);
+            float b = 3.0 * pow(t1, 2) * (1-t1);
+            float c = 3.0 * t2 * pow(1-t2, 2);
+            float d = 3.0 * pow(t2, 2) * (1-t2);
+            
+            float cPointX = (e*d - b*f) / (a*d - b*c);
+            float cPointY = (a*f - e*c) / (a*d - b*c);
+            CGPoint cPointA = CGPointMake(cPointX, cPointY);
+            
+            // Second control Point
+            e = t1Point.y - (pow(1-t1, 3) * t0Point.y) - (pow(t1, 3) * t3Point.y);
+            f = t2Point.y - (pow(1-t2, 3) * t0Point.y) - (pow(t2, 3) * t3Point.y);
+            a = 3.0 * t1 * pow(1-t1, 2);
+            b = 3.0 * pow(t1, 2) * (1-t1);
+            c = 3.0 * t2 * pow(1-t2, 2);
+            d = 3.0 * pow(t2, 2) * (1-t2);
+            
+            cPointX = (e*d - b*f) / (a*d - b*c);
+            cPointY = (a*f - e*c) / (a*d - b*c);
+            CGPoint cPointB = CGPointMake(cPointX, cPointY);
+            
+            // Convert points to draw axis
+            t0Point = CGPointMake(t0Point.x, vectorView.bounds.size.height - t0Point.y);
+            cPointA = CGPointMake(cPointA.x, vectorView.bounds.size.height - cPointA.y);
+            cPointB = CGPointMake(cPointB.x, vectorView.bounds.size.height - cPointB.y);
+            t3Point = CGPointMake(t3Point.x, vectorView.bounds.size.height - t3Point.y);
+            
+            t1Point = CGPointMake(t1Point.x, vectorView.bounds.size.height - t1Point.y);
+            t2Point = CGPointMake(t2Point.x, vectorView.bounds.size.height - t2Point.y);
+            
+            // Save the points to the array to paint
+            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSValue valueWithCGPoint:t0Point], @"t0Point",
+                                  [NSValue valueWithCGPoint:cPointA], @"cPointA",
+                                  [NSValue valueWithCGPoint:cPointB], @"cPointB",
+                                  [NSValue valueWithCGPoint:t3Point], @"t3Point",
+                                  [NSValue valueWithCGPoint:t1Point], @"t1Point",
+                                  [NSValue valueWithCGPoint:t2Point], @"t2Point", nil];
+            [bezierPointsArray addObject:dict];            
+        }
+        
+        /*
         // Cubic bezier. We need two points and its 't' value
         float lengthLine = [self lengthFromPointList];
 
@@ -452,13 +556,13 @@
         NSLog(@"end");
         
         // Get 2 points
-        CGPoint p0 = /*CGPointMake(25.0, 25.0);*/[[listPoints objectAtIndex:0]CGPointValue];
-        CGPoint p3 = /*CGPointMake(128.0, 128.0);*/[[listPoints lastObject]CGPointValue];
+        CGPoint p0 = [[listPoints objectAtIndex:0]CGPointValue];
+        CGPoint p3 = [[listPoints lastObject]CGPointValue];
         
-        CGPoint pt1_3 = /*CGPointMake(74.593, 51.704);*/[[pointsCurvesBezier objectAtIndex:0]CGPointValue];
-        float t1_3 = /*1.0/3.0;*/[[pointsCurvesBezier objectAtIndex:1]floatValue];
-        CGPoint pt2_3 = /*CGPointMake(78.407, 101.296);*/[[pointsCurvesBezier objectAtIndex:2]CGPointValue];
-        float t2_3 = /*2.0/3.0;*/[[pointsCurvesBezier objectAtIndex:3]floatValue];
+        CGPoint pt1_3 = [[pointsCurvesBezier objectAtIndex:0]CGPointValue];
+        float t1_3 = [[pointsCurvesBezier objectAtIndex:1]floatValue];
+        CGPoint pt2_3 = [[pointsCurvesBezier objectAtIndex:2]CGPointValue];
+        float t2_3 = [[pointsCurvesBezier objectAtIndex:3]floatValue];
         
         
         // We use Cramer Rule
@@ -494,7 +598,7 @@
                                      [NSValue valueWithCGPoint:cPointA],
                                      [NSValue valueWithCGPoint:cPointB],
                                      [NSValue valueWithCGPoint:p3], nil];
-        
+        */
         [self createBezierCurveWithPoints:bezierPointsArray];
         
         return;
@@ -521,12 +625,12 @@
         // Get oval axis
         CGFloat axisDistance = .0;
         SYSegment *bigAxisSegment = nil; 
-        for (NSValue *pointValue in allPoint) {
+        for (NSValue *pointValue in listPoints) {
             
             CGPoint pointA = [pointValue CGPointValue];
             
-            for (int i = 0 ; i < [allPoint count] ; i++) {
-                CGPoint pointB = [[allPoint objectAtIndex:i]CGPointValue];
+            for (int i = 0 ; i < [listPoints count] ; i++) {
+                CGPoint pointB = [[listPoints objectAtIndex:i]CGPointValue];
                 SYSegment *possibleAxis = [[SYSegment alloc]initWithPoint:pointA andPoint:pointB];
                 if (axisDistance < [possibleAxis longitude]) {
                     [bigAxisSegment release];
@@ -541,11 +645,11 @@
         float deltaAngle = fabs([bigAxisSegment angleDeg]) - 90.0;
         if (fabs([bigAxisSegment angleDeg]) < 10.0 || fabs(deltaAngle) < 10.0) {
             // Get the points Max, Min for create the CGRect
-            minX = [[allPoint objectAtIndex:0]CGPointValue];
-            maxX = [[allPoint objectAtIndex:0]CGPointValue];
-            minY = [[allPoint objectAtIndex:0]CGPointValue];
-            maxY = [[allPoint objectAtIndex:0]CGPointValue];
-            for (NSValue *pointValue in allPoint) {
+            minX = [[listPoints objectAtIndex:0]CGPointValue];
+            maxX = [[listPoints objectAtIndex:0]CGPointValue];
+            minY = [[listPoints objectAtIndex:0]CGPointValue];
+            maxY = [[listPoints objectAtIndex:0]CGPointValue];
+            for (NSValue *pointValue in listPoints) {
                 CGPoint point = [pointValue CGPointValue];
                 
                 if (point.x > maxX.x)
@@ -986,22 +1090,16 @@
 }// getFigurePainted
 
 
+#pragma mark - Create Geometric Methods
+
 - (void) createBezierCurveWithPoints:(NSArray *) arrayData
 {
-    // Convert to real axis
-    NSMutableArray *pointArray = [NSMutableArray array];
-    for (NSValue *pointValue in arrayData) {
-        CGPoint pointCG = [pointValue CGPointValue];
-        pointCG = CGPointMake(pointCG.x, vectorView.bounds.size.height - pointCG.y);
-        [pointArray addObject:[NSValue valueWithCGPoint:pointCG]];
-    }
-    
     // Draw the resulting shape
     SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = BezierType;
-    geometry.pointArray = [NSArray arrayWithArray:pointArray];
+    geometry.pointArray = [NSArray arrayWithArray:arrayData];
     
     // Draw properties
     geometry.lineWidth = 4.0;

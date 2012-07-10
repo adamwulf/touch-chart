@@ -135,16 +135,18 @@
             }
         }
         else if ([geometry geometryType] == BezierType) {
-            
-            if([geometry.pointArray count] >= 4) {
+
+            for (NSDictionary *dictPoints in geometry.pointArray) {
+                CGPoint startPoint = [[dictPoints valueForKey:@"t0Point"]CGPointValue];
+                CGPoint endPoint = [[dictPoints valueForKey:@"t3Point"]CGPointValue];
                 
-                CGPoint startPoint = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
-                CGPoint endPoint = [[[geometry pointArray]objectAtIndex:3]CGPointValue];
+                CGPoint firstCP = [[dictPoints valueForKey:@"cPointA"]CGPointValue];
+                CGPoint secondCP = [[dictPoints valueForKey:@"cPointB"]CGPointValue];
                 
-                CGPoint firstCP = [[[geometry pointArray]objectAtIndex:1]CGPointValue];
-                CGPoint secondCP = [[[geometry pointArray]objectAtIndex:2]CGPointValue];
+                CGPoint t1Point = [[dictPoints valueForKey:@"t1Point"]CGPointValue];
+                CGPoint t2Point = [[dictPoints valueForKey:@"t2Point"]CGPointValue];
                 
-                // Drawing code            
+                // Bezier lines           
                 UIBezierPath * path = [UIBezierPath bezierPath];
                 [path moveToPoint: startPoint];
                 
@@ -157,6 +159,100 @@
                 [path fill];
                 
                 [[geometry strokeColor] set]; 
+                [path stroke];
+                
+                
+                // Start points            
+                path = [UIBezierPath bezierPathWithRect:CGRectMake(startPoint.x - 5.0, startPoint.y - 5.0, 10.0, 10.0)];
+                [path setLineWidth:[geometry lineWidth]];
+                
+                [[geometry fillColor] set];
+                [path fill];
+                
+                [[geometry strokeColor] set]; 
+                [path stroke];
+                            
+                
+                // End points            
+                path = [UIBezierPath bezierPathWithRect:CGRectMake(endPoint.x - 5.0, endPoint.y - 5.0, 10.0, 10.0)];
+                [path setLineWidth:[geometry lineWidth]];
+                
+                [[geometry fillColor] set];
+                [path fill];
+                
+                [[geometry strokeColor] set]; 
+                [path stroke];
+
+                
+                // Control Point 1            
+                path = [UIBezierPath bezierPathWithRect:CGRectMake(firstCP.x - 2.5, firstCP.y - 2.5, 5.0, 5.0)];
+                [path setLineWidth:1.0];
+                
+                [[UIColor clearColor] set];
+                [path fill];
+                
+                [[UIColor grayColor] set]; 
+                [path stroke];
+                
+                
+                // Line P0 - C1            
+                path = [UIBezierPath bezierPath];
+                [path moveToPoint:startPoint];
+                [path addLineToPoint:firstCP];
+                
+                [path setLineWidth:1.0];
+                [[UIColor grayColor] set];
+                [path fill];
+                
+                [[UIColor grayColor] set]; 
+                [path stroke];
+
+                
+                // Control Point 2            
+                path = [UIBezierPath bezierPathWithRect:CGRectMake(secondCP.x - 2.5, secondCP.y - 2.5, 5.0, 5.0)];
+                [path setLineWidth:1.0];
+                
+                [[UIColor clearColor] set];
+                [path fill];
+                
+                [[UIColor grayColor] set]; 
+                [path stroke];
+
+                
+                // Line P3 - C2            
+                path = [UIBezierPath bezierPath];
+                [path moveToPoint:endPoint];
+                [path addLineToPoint:secondCP];
+                
+                [path setLineWidth:1.0];
+                [[UIColor grayColor] set];
+                [path fill];
+                
+                [[UIColor grayColor] set]; 
+                [path stroke];
+                
+                
+                // t1 point
+                path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(t1Point.x - 2.5, t1Point.y - 2.5, 5.0, 5.0)];
+                [path setLineWidth:1.0];	
+                                
+                // draw the path
+                [[UIColor orangeColor] set];
+                [path fill];
+                
+                [[UIColor orangeColor] set]; 
+                [path stroke];
+                
+                
+                // t2 point
+                path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(t2Point.x - 2.5, t2Point.y - 2.5, 5.0, 5.0)];
+                [path setLineWidth:1.0];	
+                
+                // draw the path
+                [[UIColor orangeColor] set];
+                [path fill];
+                
+                [[UIColor orangeColor] set]; 
                 [path stroke];
             }
         }

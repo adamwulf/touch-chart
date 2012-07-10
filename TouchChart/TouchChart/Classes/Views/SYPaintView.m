@@ -236,6 +236,6 @@
 	[self.handwritingCoords removeAllObjects];
 	[self setNeedsDisplay];
 	
-}// clearSignature
+}// clearPaint
 
 @end
