@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/Classes/NSObject/SYGeometricMathController.m"
-         timestampString = "363368291.160437"
+         timestampString = "363785670.508564"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "328"
-         endingLineNumber = "328"
+         startingLineNumber = "327"
+         endingLineNumber = "327"
          landmarkName = "-point:andPoint:isAlignedWithPoint:withDistance:"
          landmarkType = "5">
       </FileBreakpoint>

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Accelerate/Accelerate.h>
 
 @class SYGeometry;
 @class SYVectorView;
@@ -57,6 +58,9 @@
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
 - (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC;
 - (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointC isAlignedWithPoint:(CGPoint)pointB withDistance:(float) ratio;
+
+// Auxiliar calculations
+- (NSUInteger) getFactorial:(NSUInteger) intNumber;
 
 // Analyze and Recognizer Geometry Methods
 - (void) getFigurePainted;

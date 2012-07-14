@@ -149,7 +149,7 @@
                 // Bezier lines           
                 UIBezierPath * path = [UIBezierPath bezierPath];
                 [path moveToPoint: startPoint];
-                
+                 
                 [path addCurveToPoint: endPoint
                         controlPoint1: firstCP
                         controlPoint2: secondCP];

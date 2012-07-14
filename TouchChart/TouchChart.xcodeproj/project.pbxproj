@@ -25,6 +25,7 @@
 		6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA7A150DD00900D4A47A /* UITouchableWindow.m */; };
 		6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA83150DD1A400D4A47A /* TCChartView.m */; };
 		ED10586F15641F8500B10043 /* SYGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = ED10586E15641F8500B10043 /* SYGeometry.m */; };
+		ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED646F1B15AED566006434F8 /* Accelerate.framework */; };
 		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
 		ED923342156185FF00B0F505 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = ED923341156185FF00B0F505 /* Particle.png */; };
@@ -78,6 +79,7 @@
 		6691AA83150DD1A400D4A47A /* TCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCChartView.m; sourceTree = "<group>"; };
 		ED10586D15641F8500B10043 /* SYGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometry.h; path = Classes/Models/SYGeometry.h; sourceTree = "<group>"; };
 		ED10586E15641F8500B10043 /* SYGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometry.m; path = Classes/Models/SYGeometry.m; sourceTree = "<group>"; };
+		ED646F1B15AED566006434F8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		ED92333A156177A600B0F505 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		ED92333C156180F600B0F505 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ED923341156185FF00B0F505 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Particle.png; path = TouchChart/Images/Particle.png; sourceTree = SOURCE_ROOT; };
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */,
 				ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */,
 				ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */,
 				6691AA36150DCFBC00D4A47A /* UIKit.framework in Frameworks */,
@@ -139,6 +142,7 @@
 		6691AA34150DCFBC00D4A47A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED646F1B15AED566006434F8 /* Accelerate.framework */,
 				ED92333C156180F600B0F505 /* QuartzCore.framework */,
 				ED92333A156177A600B0F505 /* OpenGLES.framework */,
 				6691AA35150DCFBC00D4A47A /* UIKit.framework */,
@@ -467,6 +471,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -485,6 +490,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
@@ -499,7 +505,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Fernando Garcia Torcelly (M8HYXSG43T)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/TouchChart/External Libraries\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "EC50DEE7-8B81-4759-84C0-A908BC046316";
 				WRAPPER_EXTENSION = app;
@@ -512,7 +523,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sylion Development SL";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/TouchChart/External Libraries\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6B91E141-F7BF-4795-BCFA-F4EBD8A570CC";
 				WRAPPER_EXTENSION = app;

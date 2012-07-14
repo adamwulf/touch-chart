@@ -338,7 +338,21 @@
 
 
 
-#pragma mark - Geometric calculations
+#pragma mark - Auxiliar calculations
+
+- (NSUInteger) getFactorial:(NSUInteger) intNumber
+{
+    NSUInteger result = 1;
+    
+    for (NSUInteger i = 0; i < intNumber ; i++)
+        result = result * (intNumber-i);
+    
+    return result;
+    
+}// getFactorial:
+
+
+#pragma mark - Calculate Shapes
 
 - (void) getBezierPathPainted
 {
@@ -430,10 +444,224 @@
         
         NSMutableArray *bezierPointsArray = [NSMutableArray array];
         
-        // Get the real last point
-        [self.pointKeyArray removeLastObject];
-        [self.pointKeyArray addObject:[listPoints lastObject]];
+        // We get C(t)
+        CGFloat c[[listPoints count]];
+        CGFloat currentLongitude = .0;
         
+        for (NSUInteger i = 1 ; i < [listPoints count] ; i++) {
+            CGPoint previousPoint = [[listPoints objectAtIndex:i-1]CGPointValue];
+            CGPoint currentPoint = [[listPoints objectAtIndex:i]CGPointValue];
+            
+            SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
+            c[i-1] = currentLongitude;
+            currentLongitude += [segment longitude];
+            c[i] = currentLongitude;
+        }
+        
+        // Just divide c[n]/totalLongitude
+        CGFloat totalLongitude = currentLongitude;
+        for (NSUInteger i = 0 ; i < [listPoints count] ; i++)
+            c[i] = currentLongitude/totalLongitude;
+
+        
+        // Para degree 3
+        // ------------------------------
+        // We need 'degree-1' C(t) values
+        CGFloat cValue[4];
+        CGPoint cPoint[4];
+        CGFloat step = (float) [listPoints count] / 3;
+        
+        cValue[0] = 0.0;
+        cPoint[0] = [[listPoints objectAtIndex:0]CGPointValue];
+        cValue[3] = 1.0;
+        cPoint[3] = [[listPoints lastObject]CGPointValue];
+        
+        float numberPointsF = (float)[listPoints count];
+        for (NSUInteger j = 1; j < 3; j++) {
+            float indexF = (float) round(step * (j));
+            NSUInteger index = (NSUInteger) indexF;
+            cValue[j] = indexF/numberPointsF;
+            cPoint[j] = CGPointMake([[listPoints objectAtIndex:index]CGPointValue].x,
+                                    [[listPoints objectAtIndex:index]CGPointValue].y);
+        }            
+        
+
+        // We need create the matrix for solve the lineal equation
+        // -------------------------------------------------------
+        // Terminos a0, a1...
+        float a[4] = {1, 3, 3, 1};
+        
+        // Matrix B
+        double B[2];
+        for (NSUInteger j = 0; j < 2; j++)
+            B[j] = cPoint[j+1].x;
+        
+        B[0] = cPoint[1].x - (a[0] * pow(1 - cValue[1], 3) * cPoint[0].x) - (a[3] * pow(cValue[1], 3) * cPoint[3].x);
+        B[1] = cPoint[2].x - (a[0] * pow(1 - cValue[2], 3) * cPoint[0].x) - (a[3] * pow(cValue[2], 3) * cPoint[3].x);
+        
+        // Matrix A
+        double A[4];
+        A[0] = a[1] * cValue[1] * pow(1 - cValue[1], 2);
+        A[2] = a[2] * pow(cValue[1], 2) * (1 - cValue[1]);
+        A[1] = a[1] * cValue[2] * pow(1 - cValue[2], 2);
+        A[3] = a[2] * pow(cValue[2], 2) * (1 - cValue[2]);
+        
+        // Resolvemos la ecuacion
+        NSLog(@"Matriz B:\n%lf\n%lf", B[0], B[1]);
+        NSLog(@"Matriz A:\n%lf   %lf\n%f   %lf", A[0], A[1], A[2], A[3]);
+        int N = 2;
+        int nrhs = 1;
+        int lda = 2;
+        int ipiv[2];
+        int ldb = 2;
+        int info;
+        dgesv_(&N, &nrhs, A, &lda, &ipiv, B, &ldb, &info);
+        NSLog(@"Solucion: %lf %lf\n\n", B[0], B[1]);
+        
+        // Store solutions
+        CGPoint P1 = CGPointMake(B[0], .0);
+        CGPoint P2 = CGPointMake(B[1], .0);
+        
+        // Procedemos igual para coordenadas Y
+        // Matrix B
+        for (NSUInteger j = 0; j < 2; j++)
+            B[j] = cPoint[j+1].y;
+        
+        B[0] = cPoint[1].y - (a[0] * pow(1 - cValue[1], 3) * cPoint[0].y) - (a[3] * pow(cValue[1], 3) * cPoint[3].y);
+        B[1] = cPoint[2].y - (a[0] * pow(1 - cValue[2], 3) * cPoint[0].y) - (a[3] * pow(cValue[2], 3) * cPoint[3].y);
+        
+        // Matrix A
+        A[0] = a[1] * cValue[1] * pow(1 - cValue[1], 2);
+        A[2] = a[2] * pow(cValue[1], 2) * (1 - cValue[1]);
+        A[1] = a[1] * cValue[2] * pow(1 - cValue[2], 2);
+        A[3] = a[2] * pow(cValue[2], 2) * (1 - cValue[2]);
+
+        // Resolvemos la ecuacion
+        NSLog(@"Matriz B:\n%lf\n%lf", B[0], B[1]);
+        NSLog(@"Matriz A:\n%lf   %lf\n%lf   %lf", A[0], A[2], A[1], A[3]);
+        N = 2;
+        nrhs = 1;
+        lda = 2;
+        ldb = 2;
+        dgesv_(&N, &nrhs, A, &lda, &ipiv, B, &ldb, &info);
+        NSLog(@"Solucion: %lf %lf\n\n", B[0], B[1]);
+        
+        // Store solutions
+        P1 = CGPointMake(P1.x, B[0]);
+        P2 = CGPointMake(P2.x, B[1]);
+        
+        // Convert points to draw axis
+        cPoint[0] = CGPointMake(cPoint[0].x, vectorView.bounds.size.height - cPoint[0].y);
+        cPoint[1] = CGPointMake(cPoint[1].x, vectorView.bounds.size.height - cPoint[1].y);
+        cPoint[2] = CGPointMake(cPoint[2].x, vectorView.bounds.size.height - cPoint[2].y);
+        cPoint[3] = CGPointMake(cPoint[3].x, vectorView.bounds.size.height - cPoint[3].y);        
+        P1 = CGPointMake(P1.x, vectorView.bounds.size.height - P1.y);
+        P2 = CGPointMake(P2.x, vectorView.bounds.size.height - P2.y);
+        
+        // Save the points to the array to paint
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSValue valueWithCGPoint:cPoint[0]], @"t0Point",
+                              [NSValue valueWithCGPoint:P1], @"cPointA",
+                              [NSValue valueWithCGPoint:P2], @"cPointB",
+                              [NSValue valueWithCGPoint:cPoint[3]], @"t3Point",
+                              [NSValue valueWithCGPoint:cPoint[1]], @"t1Point",
+                              [NSValue valueWithCGPoint:cPoint[2]], @"t2Point", nil];
+        [bezierPointsArray addObject:dict]; 
+        
+        [self createBezierCurveWithPoints:bezierPointsArray];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /*
+        // We are going to test the best bezier curve. We start with cubic degree and then increase it
+        for (NSUInteger degree = 3; degree < 8; degree++) {
+
+            // We need 'degree-1' C(t) values
+            CGFloat cValue[degree-1];
+            CGPoint cPoint[degree-1];
+            CGFloat step = (float) [listPoints count] / degree;
+            
+            for (NSUInteger j = 0; j < degree-1; j++) {
+                NSUInteger index = (NSUInteger) round(step * (j+1));
+                cValue[j] = c[index];
+                cPoint[j] = CGPointMake(cPoint[index].x, cPoint[index].y);
+            }            
+            
+            // We need create the matrix for solve the lineal equation
+            // Matrix B
+            double b[degree-1];
+            for (NSUInteger j = 0; j < degree-1; j++)
+                b[j] = cPoint[j].x;
+            
+            // Matrix A
+            double A[degree+1];
+            for (NSUInteger j = 0; j < degree-1; j++) {
+                
+                double K[degree+1];
+                
+                for (NSUInteger k = 0; k <= degree; k++) {
+                    K[k] = 
+                }
+            }
+         */
+            
+
+            
+            //double b[degree] = {-3.0, 7.0, 3.3};
+            
+            
+            
+            // We need create the matrix for solve the lineal equation
+            /* 3x3 matrix A
+             * 76 25 11
+             * 27 89 51
+             * 18 60 32
+             */
+            /*double A[9] = {76, 27, 18, 25, 89, 60, 11, 51, 32};
+            double b[3] = {10, 7, 43};
+            int N = 3;
+            int nrhs = 1;
+            int lda = 3;
+            int ipiv[3];
+            int ldb = 3;
+            int info;
+             dgesv_(&N, &nrhs, A, &lda, &ipiv, b, &ldb, &info);
+             if(info == 0) // succeed
+            printf("The solution is %lf %lf %lf\n", b[0], b[1], b[2]);
+            else
+                fprintf(stderr, "dgesv_ fails %d\n", info);
+             */
+            
+            //double A[4] = {1.5, 2.3, 4.7, -5.0};
+            //double b[2] = {-3.0, 7.0};
+            /*
+            int N = 2;
+            int nrhs = 1;
+            int lda = 2;
+            int ipiv[2];
+            int ldb = 2;
+            int info;
+            dgesv_(&N, &nrhs, A, &lda, &ipiv, b, &ldb, &info);
+            if(info == 0) //* succeed
+                printf("The solution is %lf %lf\n", b[0], b[1]);
+            else
+                fprintf(stderr, "dgesv_ fails %d\n", info);
+            
+            NSLog(@"fin");*/
+        
+        
+        
+        
+        
+        /*
         // The key point set the numbers of bezier curves
         for (NSUInteger i = 1 ; i < [self.pointKeyArray count] ; i++) {
             
@@ -476,7 +704,7 @@
                 if (i == t2IndexPoint)
                     t2Longitude = totalLongitude;
             }
-            NSLog(@"totalLongitude: %f", totalLongitude);
+
             CGPoint t1Point = [[listPoints objectAtIndex:t1IndexPoint]CGPointValue];
             float t1 = t1Longitude / totalLongitude;
             CGPoint t2Point = [[listPoints objectAtIndex:t2IndexPoint]CGPointValue];
@@ -529,7 +757,7 @@
                                   [NSValue valueWithCGPoint:t2Point], @"t2Point", nil];
             [bezierPointsArray addObject:dict];            
         }
-        
+        */
         /*
         // Cubic bezier. We need two points and its 't' value
         float lengthLine = [self lengthFromPointList];
@@ -599,7 +827,7 @@
                                      [NSValue valueWithCGPoint:cPointB],
                                      [NSValue valueWithCGPoint:p3], nil];
         */
-        [self createBezierCurveWithPoints:bezierPointsArray];
+        //[self createBezierCurveWithPoints:bezierPointsArray];
         
         return;
     }
