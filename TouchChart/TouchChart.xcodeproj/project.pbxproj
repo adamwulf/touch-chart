@@ -25,6 +25,7 @@
 		6691AA7F150DD02300D4A47A /* UITouchableWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA7A150DD00900D4A47A /* UITouchableWindow.m */; };
 		6691AA84150DD1A400D4A47A /* TCChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA83150DD1A400D4A47A /* TCChartView.m */; };
 		ED10586F15641F8500B10043 /* SYGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = ED10586E15641F8500B10043 /* SYGeometry.m */; };
+		ED2592E815BECB4000DC1DF0 /* SYBezierController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED2592E715BECB4000DC1DF0 /* SYBezierController.m */; };
 		ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED646F1B15AED566006434F8 /* Accelerate.framework */; };
 		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
@@ -79,6 +80,8 @@
 		6691AA83150DD1A400D4A47A /* TCChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCChartView.m; sourceTree = "<group>"; };
 		ED10586D15641F8500B10043 /* SYGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometry.h; path = Classes/Models/SYGeometry.h; sourceTree = "<group>"; };
 		ED10586E15641F8500B10043 /* SYGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometry.m; path = Classes/Models/SYGeometry.m; sourceTree = "<group>"; };
+		ED2592E615BECB4000DC1DF0 /* SYBezierController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYBezierController.h; path = Classes/NSObject/SYBezierController.h; sourceTree = "<group>"; };
+		ED2592E715BECB4000DC1DF0 /* SYBezierController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYBezierController.m; path = Classes/NSObject/SYBezierController.m; sourceTree = "<group>"; };
 		ED646F1B15AED566006434F8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		ED92333A156177A600B0F505 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		ED92333C156180F600B0F505 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -242,6 +245,8 @@
 				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
+				ED2592E615BECB4000DC1DF0 /* SYBezierController.h */,
+				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -393,6 +398,7 @@
 				ED10586F15641F8500B10043 /* SYGeometry.m in Sources */,
 				EDE9DE1F1573EF5D009CC5EA /* SYPaintView.m in Sources */,
 				EDF3BD3115796AC70026B9C2 /* SYSegment.m in Sources */,
+				ED2592E815BECB4000DC1DF0 /* SYBezierController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

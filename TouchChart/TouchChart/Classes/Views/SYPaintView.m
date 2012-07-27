@@ -130,7 +130,7 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // TEMP
-    [self clearPaint];
+    //[self clearPaint];
     
     // MathController send point
     CGRect bounds = [self bounds];
@@ -179,7 +179,7 @@
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [[event touchesForView:self] anyObject];
@@ -197,7 +197,7 @@
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	[self.handwritingCoords addObject:[NSValue valueWithCGPoint:CGPointZero]];
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [[event touchesForView:self] anyObject];

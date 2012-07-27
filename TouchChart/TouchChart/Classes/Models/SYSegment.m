@@ -189,7 +189,6 @@
         else if (deltaY < .0)
             return -M_PI_2;
     }
-
     
     if (deltaY == .0) {
         if (deltaX > .0)
@@ -197,7 +196,7 @@
         else if (deltaX < .0)
             return -M_PI;
     }
-    
+    // +/-
     return atanf(deltaY/deltaX);
     
 }// angleRad
