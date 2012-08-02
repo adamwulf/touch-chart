@@ -11,6 +11,7 @@
 
 @class SYGeometry;
 @class SYVectorView;
+@class SYSegment;
 
 @interface SYGeometricMathController : NSObject {
     
@@ -68,6 +69,7 @@
 // Geometric calculations
 - (void) createBezierCurveWithPoints:(NSArray *) arrayData;
 - (void) createPolygonal;
+- (void) createPolygonalFromSegment:(SYSegment *) segment;
 - (void) createSquare;
 - (void) createDiamond;
 - (void) createCircle;

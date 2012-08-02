@@ -359,11 +359,10 @@
 {
     //TEMPORAL
     vectorView.shapeList = [[NSMutableArray alloc]init];
-    NSArray *allPoint = [NSArray arrayWithArray:self.pointKeyArray];
     
     // Get radius to reduce point cloud
     CGFloat maxDeltaX = maxX.x - minX.x;
-    CGFloat maxDeltaY = maxY.y - minY.y;
+    CGFloat maxDeltaY = maxY.y - minY.y;/*
     CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.10;
     
     // Point cloud simplification algorithm (using radiusCloud)
@@ -432,16 +431,16 @@
         }
     }
     self.pointKeyArray = finalArray;
-    
+    */
     
     // Is the painted shape closed (almost closed)?
     // --------------------------------------------------------------------------
     SYSegment *near = [[SYSegment alloc]initWithPoint:[[listPoints objectAtIndex:0]CGPointValue]
                                              andPoint:[[listPoints lastObject]CGPointValue]];
     CGFloat ratioClose = [near longitude]/((maxDeltaX + maxDeltaY)*0.5);
-    
+    NSLog(@"%f", ratioClose);
     // It's open, do nothing, exit
-    if (fabs(ratioClose) > 0.30) {
+    if (fabs(ratioClose) > 0.40) {
         
         SYBezierController *bezierController = [[SYBezierController alloc]init];
         //NSArray *curves = [bezierController getCubicBezierPointsForListPoint:listPoints splitIn:8 andConvertFromView:vectorView];
@@ -453,24 +452,6 @@
         return;
     }
     else {
-        // It's closed (almost closed), do closed perfectly
-        CGPoint firstPoint = [[finalArray objectAtIndex:0]CGPointValue];
-        CGPoint lastPoint = [[finalArray lastObject]CGPointValue];
-        CGPoint midPoint = [self midPointBetweenPoint:firstPoint andPoint:lastPoint];
-        [finalArray replaceObjectAtIndex:0 withObject:[NSValue valueWithCGPoint:midPoint]];
-        [finalArray removeLastObject];
-        
-        // Clean all NSNull
-        finalArray = [NSMutableArray array];
-        for (id keyPoint in pointKeyArray) {
-            if ((NSNull *) keyPoint != [NSNull null]) {
-                CGPoint newCGPoint = [keyPoint CGPointValue];
-                NSValue *newPoint = [NSValue valueWithCGPoint:CGPointMake(newCGPoint.x, newCGPoint.y)];
-                [finalArray addObject:newPoint];
-            }
-        }
-        self.pointKeyArray = [[NSMutableArray alloc]initWithArray:finalArray];
-        
         // Get oval axis
         CGFloat axisDistance = .0;
         SYSegment *bigAxisSegment = nil; 
@@ -513,34 +494,40 @@
             [self createCircle];
             return;
         }
-        
+                
         // Looking for the small axis
         CGPoint center = [bigAxisSegment midPoint];
-        SYSegment *smallAxisSegment = nil; CGFloat angleMax = .0;
-        for (NSValue *pointValue in allPoint) {
+        SYSegment *smallAxisSegment = nil; CGFloat angleMax = 10000.0;
+        
+        for (NSValue *pointValue in listPoints) {
             CGPoint pointB = [pointValue CGPointValue];
             SYSegment *possibleAxis = [[SYSegment alloc]initWithPoint:center andPoint:pointB];
             
-            float angle = fabs([bigAxisSegment angleDeg] - [possibleAxis angleDeg]);            
-            
-            if (angle > angleMax) {
+            // Busca aquel segmento que más se acerque a 90º
+            // con respecto al eje mayor.            
+            float deltaAngle = fabs([bigAxisSegment angleDeg] - [possibleAxis angleDeg]);
+            float angle = fabs(deltaAngle - 90.0);
+
+            if (angle < angleMax) {
                 [smallAxisSegment release];
                 smallAxisSegment = [possibleAxis retain];
                 angleMax = angle;
             }
             [possibleAxis release];
         }
+        
 
         // Maybe it's almost a circle
         float bigAxisLongitude = [bigAxisSegment longitude];
-        float smallAxisLongitude = sin((angleMax/180) * M_PI) * [smallAxisSegment longitude] * 2.0;
-        if (smallAxisLongitude/bigAxisLongitude > 0.70) {
+        float smallAxisLongitude = [smallAxisSegment longitude] * 2.0;
+                
+        if (smallAxisLongitude/bigAxisLongitude > 0.80) {
             
             // Get the points Max, Min for create the CGRect
             minX = [bigAxisSegment pointSt];
             maxX = [bigAxisSegment pointFn];
-            minY = [[allPoint objectAtIndex:0]CGPointValue];
-            maxY = [[allPoint objectAtIndex:0]CGPointValue];
+            minY = [[listPoints objectAtIndex:0]CGPointValue];
+            maxY = [[listPoints objectAtIndex:0]CGPointValue];
             
             // Create arc 
             [self createArc:CGPointMake(center.x, vectorView.bounds.size.height - center.y)
@@ -574,143 +561,6 @@
     
 }// getBezierPathPainted
 
-/*
-- (NSDictionary *) getCurveControlPointsFromKnots:(NSArray *) knots
-{
-    if (!knots) {
-        NSLog(@"Error: We need knots points");
-        return nil;
-    }
-    
-    int n = [knots count] - 1;    
-    if (n < 1)
-        NSLog(@"Error: At least two knot points required");
-
-    if (n == 1) {
-        // Special case: Bezier curve should be a straight line.
-        CGPoint firstControlPoints = CGPointZero;
-        
-        // 3P1 = 2P0 + P3
-        firstControlPoints.x = (2 * [[knots objectAtIndex:0]CGPointValue].x + [[knots objectAtIndex:1]CGPointValue].x) / 3;
-        firstControlPoints.y = (2 * [[knots objectAtIndex:0]CGPointValue].y + [[knots objectAtIndex:1]CGPointValue].y) / 3;
-        
-        CGPoint secondControlPoints = CGPointZero;
-        
-        // P2 = 2P1 – P0
-        secondControlPoints.x = 2 * firstControlPoints.x - [[knots objectAtIndex:0]CGPointValue].x;
-        secondControlPoints.y = 2 * firstControlPoints.y - [[knots objectAtIndex:0]CGPointValue].y;
-        
-        NSArray *firstControlPointsArray = [NSArray arrayWithObject:[NSValue valueWithCGPoint:firstControlPoints]];
-        NSArray *secondControlPointsArray = [NSArray arrayWithObject:[NSValue valueWithCGPoint:secondControlPoints]];
-        
-        return [NSDictionary dictionaryWithObjectsAndKeys: firstControlPointsArray, @"firstControl", secondControlPointsArray, @"secondControl", nil];
-    }
-    
-    // Calculate first Bezier control points
-    // Right hand side vector
-    double rhs[n];
-    
-    // Set right hand side X values
-    NSMutableArray *rhsArray = [NSMutableArray array];
-    rhs[0] = [[knots objectAtIndex:0]CGPointValue].x + 2 * [[knots objectAtIndex:1]CGPointValue].x;
-    [rhsArray addObject:[NSNumber numberWithDouble:rhs[0]]];
-    
-    for (int i = 1; i < n - 1; ++i) {
-        rhs[i] = 4 * [[knots objectAtIndex:i]CGPointValue].x + 2 * [[knots objectAtIndex:i+1]CGPointValue].x;
-        [rhsArray addObject:[NSNumber numberWithDouble:rhs[i]]];
-    }
-    
-    rhs[n - 1] = (8 * [[knots objectAtIndex:n-1]CGPointValue].x + [[knots objectAtIndex:n]CGPointValue].x) / 2.0;
-    [rhsArray addObject:[NSNumber numberWithDouble:rhs[n - 1]]];
-    
-    
-    
-    // Get first control points X-values
-    NSArray *xValues = [self getFirstControlPoints:rhsArray];
-    
-    // Set right hand side Y values
-    rhsArray = [NSMutableArray array];
-    rhs[0] = [[knots objectAtIndex:0]CGPointValue].y + 2 * [[knots objectAtIndex:1]CGPointValue].y;
-    [rhsArray addObject:[NSNumber numberWithDouble:rhs[0]]];
-    
-    for (int i = 1; i < n - 1; ++i) {
-        rhs[i] = 4 * [[knots objectAtIndex:i]CGPointValue].y + 2 * [[knots objectAtIndex:i+1]CGPointValue].y;
-        [rhsArray addObject:[NSNumber numberWithDouble:rhs[i]]];
-    }
-    
-    rhs[n - 1] = (8 * [[knots objectAtIndex:n-1]CGPointValue].y + [[knots objectAtIndex:n]CGPointValue].y) / 2.0;
-    [rhsArray addObject:[NSNumber numberWithDouble:rhs[n - 1]]];
-    
-    
-    
-    // Get first control points Y-values
-    NSArray *yValues = [self getFirstControlPoints:rhsArray];
-    
-    // Fill output arrays.
-    CGPoint firstControlPoints[n];
-    CGPoint secondControlPoints[n];
-    
-    NSMutableArray *firstControlPointsArray = [NSMutableArray array];
-    NSMutableArray *secondControlPointsArray = [NSMutableArray array];
-    
-    for (int i = 0; i < n; ++i) {
-        
-        // First control point
-        firstControlPoints[i] = CGPointMake([[xValues objectAtIndex:i]doubleValue], [[yValues objectAtIndex:i]doubleValue]);
-        [firstControlPointsArray addObject:[NSValue valueWithCGPoint:firstControlPoints[i]]];
-        
-        // Second control point
-        if (i < n - 1) {
-            secondControlPoints[i] = CGPointMake(2 * [[knots objectAtIndex:i+1]CGPointValue].x - [[xValues objectAtIndex:i+1]doubleValue],
-                                                 2 * [[knots objectAtIndex:i+1]CGPointValue].y - [[yValues objectAtIndex:i+1]doubleValue]);
-            [secondControlPointsArray addObject:[NSValue valueWithCGPoint:secondControlPoints[i]]];
-        }
-        else {
-            secondControlPoints[i] = CGPointMake(([[knots objectAtIndex:n]CGPointValue].x + [[xValues objectAtIndex:n-1]doubleValue]) / 2,
-                                                 ([[knots objectAtIndex:n]CGPointValue].y + [[yValues objectAtIndex:n-1]doubleValue]) / 2);
-            [secondControlPointsArray addObject:[NSValue valueWithCGPoint:secondControlPoints[i]]];
-        }
-    }
-    
-    return [NSDictionary dictionaryWithObjectsAndKeys: firstControlPointsArray, @"firstControl", secondControlPointsArray, @"secondControl", nil];
-    
-}// getCurveControlPointsFromKnots:
-
-
-- (NSArray *) getFirstControlPoints:(NSArray *) rhs
-{
-    int n = [rhs count];
-    double x[n];    // Solution vector.
-    double tmp[n];  // Temp workspace.
-    
-    NSMutableArray *result = [NSMutableArray array];
-    
-    double b = 2.0;
-    x[0] = [[rhs objectAtIndex:0]doubleValue] / b;
-    [result addObject:[NSNumber numberWithDouble:x[0]]];
-
-    // Decomposition and forward substitution.
-    for (int i = 1; i < n; i++) {
-        tmp[i] = 1 / b;
-        b = (i < n - 1 ? 4.0 : 3.5) - tmp[i];
-        x[i] = ([[rhs objectAtIndex:i]doubleValue] - x[i - 1]) / b;
-        [result addObject:[NSNumber numberWithDouble:x[i]]];
-    }
-    
-    // Backsubstitution
-    for (int i = 1; i < n; i++) {
-        x[n - i - 1] -= tmp[n - i] * x[n - i];
-
-        if (i==1)
-            [result addObject:[NSNumber numberWithDouble:x[n - i - 1]]];
-        else
-            [result replaceObjectAtIndex:n-i-1 withObject:[NSNumber numberWithDouble:x[n - i - 1]]];
-    }
-    
-    return [NSArray arrayWithArray:result];
-    
-}// getFirstControlPoints:
-*/
 
 // Read lists and return the poligons best fit (or nil if the lists don't match)
 - (void) getFigurePainted
@@ -748,7 +598,6 @@
             }
         }
     }
-    
     
     // Clean all NSNull
     self.pointKeyArray = [[NSMutableArray alloc]init];
@@ -995,7 +844,31 @@
     
     return;
     
-}// getFigurePainted
+}// createPolygonal
+
+
+- (void) createPolygonalFromSegment:(SYSegment *) segment
+{
+    // Draw the resulting shape
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = LinesType;
+    geometry.pointArray = [[NSArray alloc]initWithObjects:[NSValue valueWithCGPoint:CGPointMake([segment pointSt].x, vectorView.bounds.size.height - [segment pointSt].y)],
+                                                          [NSValue valueWithCGPoint:CGPointMake([segment pointFn].x, vectorView.bounds.size.height - [segment pointFn].y)], nil];
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+    return;
+    
+}// createPolygonalFromSegment
 
 
 - (void) createSquare
@@ -1068,6 +941,30 @@
     return;
     
 }// createCircle
+
+
+- (void) createPoint:(CGPoint) point
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = CircleType;
+    geometry.rectGeometry = CGRectMake( point.x - 2.5, vectorView.bounds.size.height - point.y - 2.5, 5.0, 5.0);
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor redColor];//[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    //vectorView.shapeList = [[NSMutableArray alloc]initWithObjects:geometry, nil];
+    [[vectorView shapeList]addObject:geometry];
+    [vectorView setNeedsDisplay];
+    
+    [geometry release];
+    
+    return;
+    
+}// createPoint:
 
 
 - (void) createCircleWithTransform:(CGAffineTransform) transform
