@@ -97,27 +97,6 @@
     //UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
     
     [selectCaseNameView setAlpha:.0];
-    /*
-    // The table is on screen
-    if ([tableBase frame].origin.x == 1024.0 || [tableBase frame].origin.x == 768.0) {
-        [UIView animateWithDuration:0.4 animations:^{
-            if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-                [tableBase setFrame:CGRectMake(768.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-            else
-                [tableBase setFrame:CGRectMake(1024.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-             
-        }];
-    }
-    // The table is out screen
-    else {
-        [UIView animateWithDuration:0.4 animations:^{
-            if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-                [tableBase setFrame:CGRectMake(368.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-            else
-                [tableBase setFrame:CGRectMake(624.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-        }];
-    }
-    */
     [vectorView setNeedsDisplay];
     
 }// willRotateToInterfaceOrientation:duration:
@@ -132,7 +111,7 @@
         [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, 287.0, 179.0)];
     else
         [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, 287.0, 179.0)];
-      
+    
     [selectCaseNameView setNeedsDisplay];
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -166,7 +145,7 @@
         [tableBase setHidden:NO];
         [UIView animateWithDuration:0.2 animations:^{
             [tableBase setAlpha:1.0];
-        }];        
+        }];
     }
     else {
         [UIView animateWithDuration:0.2 animations:^{
@@ -176,26 +155,6 @@
         }];
     }
     
-    /*
-    // The table is on screen
-    if ([tableBase frame].origin.x == 624.0 || [tableBase frame].origin.x == 368.0) {
-        [UIView animateWithDuration:0.4 animations:^{
-            if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-                [tableBase setFrame:CGRectMake(768.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-            else
-                [tableBase setFrame:CGRectMake(1024.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-        }];
-    }
-    // The table is out screen
-    else {
-        [UIView animateWithDuration:0.4 animations:^{
-            if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-                [tableBase setFrame:CGRectMake(368.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-            else
-                [tableBase setFrame:CGRectMake(624.0, tableBase.frame.origin.y, tableBase.frame.size.width, tableBase.frame.size.height)];
-        }];
-    }
-    */
 }// switchShowTable
 
 
@@ -218,7 +177,7 @@
         [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, 287.0, 179.0)];
     else
         [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, 287.0, 179.0)];
-        
+    
     
     [nameTextField becomeFirstResponder];
     [selectCaseNameView setAlpha:.0];
@@ -343,7 +302,7 @@
         return;
     
     if ([openCurveButton isSelected])
-        [self drawBezierPathPainted];
+        [self drawOpenShape];
     else if ([ovalCircleButton isSelected])
         [self drawOvalCirclePainted];
     else
@@ -354,27 +313,246 @@
 }// getFigurePainted
 
 
-- (void) drawBezierPathPainted
+- (void) drawOpenShape
 {
-    for (NSValue *pointValue in [self reducePointsKey])
+    for (NSValue *pointValue in pointKeyArray)
         [self drawPoint:[pointValue CGPointValue]];
     
-    NSLog(@"Número de puntos: %u", [listPoints count]);
-    /*
-    // Create bezier curve
-    SYBezierController *bezierController = [[SYBezierController alloc]init];
-    NSArray *curves = [bezierController getBestCurveForListPoint:listPoints tolerance:0.01];
-    [bezierController release];    
-    if (!curves)
-        return;
+    NSMutableArray *pointsToFit = [NSMutableArray arrayWithArray:listPoints];       // Points to follow replacing keypoints for the final key points
+    NSMutableArray *indexKeyPoints = [NSMutableArray array];                        // Index for all key points
+    
+    // --------------------------------------------------------------------------
+    // Reduce Points
+    // --------------------------------------------------------------------------
+    
+    // Get radius to reduce point cloud
+    CGFloat maxDeltaX = maxX.x - minX.x;
+    CGFloat maxDeltaY = maxY.y - minY.y;
+    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.05;
+    
+    // Point cloud simplification algorithm (using radiusCloud)
+    NSMutableArray *reducePointKeyArray = [NSMutableArray arrayWithArray:pointKeyArray];
+    
+    for (int i = 0 ; i < [reducePointKeyArray count] ; i++) {
+        id pointID = [reducePointKeyArray objectAtIndex:i];
+        
+        if ((NSNull *) pointID != [NSNull null]) {
+            CGPoint point = [pointID CGPointValue];
+            
+            // Take the neighbors points for which compose the cloud points
+            NSMutableArray *localCloudPoint = [NSMutableArray array];
+            [localCloudPoint addObject:pointID];
+            
+            NSInteger firstIndex = -1;
+            
+            for (int j = i+1 ; j < [pointKeyArray count] ; j++) {
+                
+                CGPoint nextPoint = [[pointKeyArray objectAtIndex:j]CGPointValue];
+                CGFloat distance = [self distanceBetweenPoint:point andPoint:nextPoint];
+                
+                if (distance < radiusCloud) {
+                    [localCloudPoint addObject:[pointKeyArray objectAtIndex:j]];
+                    [reducePointKeyArray replaceObjectAtIndex:j withObject:[NSNull null]];
+                    
+                    // Take the first index for the cloud points
+                    NSUInteger indexToRemove = [pointsToFit indexOfObject:[pointKeyArray objectAtIndex:j]];
+                    if (indexToRemove == NSNotFound)
+                        NSLog(@"error");
+                    else {
+                        [pointsToFit replaceObjectAtIndex:indexToRemove withObject:[NSNull null]];
+                        if (firstIndex == -1)
+                            firstIndex = indexToRemove;
+                    }
+                }
+                else
+                    break;
+            }
+            
+            if ([localCloudPoint count] > 1) {
+                
+                NSUInteger indexMidPoint = (NSUInteger)[localCloudPoint count] * 0.5;
+                
+                // If the point is the first o last point, it will be the point key
+                if ([[localCloudPoint objectAtIndex:0]isEqual:[pointsToFit objectAtIndex:0]])
+                    indexMidPoint = 0;
+                else if ([[localCloudPoint lastObject]isEqual:[pointsToFit lastObject]])
+                    indexMidPoint = [localCloudPoint count]-1;
+                // else will be the index in the middle
+                
+                // Replace all the point from the cloud for the mid point
+                NSValue *midPoint = [localCloudPoint objectAtIndex:indexMidPoint];
+                [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
+                
+                // Replace the new point into pointsToFit
+                if (firstIndex != -1)
+                    [pointsToFit replaceObjectAtIndex:firstIndex withObject:midPoint];
+                
+                /*
+                // Get the key point for this local cloud point
+                CGFloat xMid = .0; CGFloat yMid = .0; CGFloat countF = (CGFloat) [localCloudPoint count];
+                for (NSValue *pointCloudValue in localCloudPoint) {
+                    CGPoint pointCloud = [pointCloudValue CGPointValue];
+                    xMid += pointCloud.x;
+                    yMid += pointCloud.y;
+                }
+                
+                // Replace all the point from the cloud for the mid point
+                NSValue *midPoint = [NSValue valueWithCGPoint:CGPointMake(xMid/countF, yMid/countF)];
+                [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
+                
+                // Replace the new point into pointsToFit
+                if (firstIndex != -1)
+                    [pointsToFit replaceObjectAtIndex:firstIndex withObject:midPoint];
+                 */
+            }                
+        }
+    }
+    
+    // Clean all NSNull
+    NSMutableArray *cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
+    reducePointKeyArray = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [reducePointKeyArray addObject:keyPoint];
+    }
+    
+    // Remove points aligned (step A)
+    // --------------------------------------------------------------------------
+    NSMutableArray *edgePoints = [NSMutableArray array];
+    if ([reducePointKeyArray count] > 0) {
+        [edgePoints addObject:[reducePointKeyArray objectAtIndex:0]];
+        
+        for (int i = 0 ; i+2 < [reducePointKeyArray count] ; i++) {
+            
+            CGPoint pointKeyA = [[reducePointKeyArray objectAtIndex:i]CGPointValue];
+            CGPoint pointKeyB = [[reducePointKeyArray objectAtIndex:i+1]CGPointValue];
+            CGPoint pointKeyC = [[reducePointKeyArray objectAtIndex:i+2]CGPointValue];
+            
+            SYSegment *segment = [[SYSegment alloc]initWithPoint:pointKeyA andPoint:pointKeyC];
+            CGFloat longitude = [segment longitude];
+            
+            if ([segment distanceToPoint:pointKeyB] < longitude * 0.12) {
+                [reducePointKeyArray replaceObjectAtIndex:i+1 withObject:[NSNull null]];
+                i = i+1;
+            }
+            
+            [segment release];
+        }
+    }
+    
+    // Clean all NSNull
+    cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
+    reducePointKeyArray = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [reducePointKeyArray addObject:keyPoint];
+    }
+    
+    // Identify the keypoints indexes
+    cleanerArray  = [NSMutableArray arrayWithArray:pointsToFit];
+    pointsToFit = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [pointsToFit addObject:keyPoint];
+    }
+    for (NSValue *keyPoint in reducePointKeyArray) {
+        NSUInteger index = [pointsToFit indexOfObject:keyPoint];
+        [indexKeyPoints addObject:[NSNumber numberWithInteger:index]];
+    }
+    
+    // --------------------------------------------------------------------------
 
-    [self drawBezierCurveWithPoints:curves];
-    */
+    for (NSValue *pointValue in reducePointKeyArray)
+        [self drawKeyPoint:[pointValue CGPointValue]];
+    
+    // We have the correct keypoints now and its index into a points list.
+    // We can start to study the stretch between key points (line or curve)
+    for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
+        
+        // Build stretch
+        NSUInteger fromIndex = [[indexKeyPoints objectAtIndex:i-1]integerValue];
+        NSUInteger toIndex = [[indexKeyPoints objectAtIndex:i]integerValue];
+        
+        CGPoint firstPoint = [[pointsToFit objectAtIndex:fromIndex]CGPointValue];
+        CGPoint lastPoint = [[pointsToFit objectAtIndex:toIndex]CGPointValue];
+        SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
+        
+        CGFloat sumDistance = .0;
+        for (NSUInteger j = fromIndex; j < toIndex; j++) {
+            CGPoint firstPoint = [[pointsToFit objectAtIndex:j]CGPointValue];
+            sumDistance += [segment distanceToPoint:firstPoint];
+        }
+        CGFloat errorRatio = sumDistance / (toIndex-fromIndex);
+        
+        
+        // Bezier Methods
+        // Get the bezier for that stretch
+        NSRange theRange = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
+        NSArray *stretch = [pointsToFit subarrayWithRange:theRange];
+        
+        SYBezierController *bezierController = [[SYBezierController alloc]init];
+        NSDictionary *result = [bezierController getCubicBezierPointsForListPoint:stretch];
+        [bezierController release];
+        [self drawBezierCurveWithPoints:result];
+        
+        // Is line or curve? (Are aligned the control points?)
+        CGPoint controlPoint1 = [[result valueForKey:@"cPointA"]CGPointValue];
+        CGPoint controlPoint2 = [[result valueForKey:@"cPointB"]CGPointValue];
+        CGFloat bezierRatioError = [[result valueForKey:@"errorRatio"]floatValue];
+        CGFloat bezierRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
+        [segment release];
+        NSLog(@"%u - %u   :   ratioSumError: %f -  RatioBezier: %f con error de %f", fromIndex, toIndex, errorRatio, bezierRatio, bezierRatioError);
+        
+        
+        // Estimate curve or line reading the parameters calculated
+        // If the bezier is fit to the shape well...
+        if (bezierRatioError < 0.23) {
+            
+            if (bezierRatio < 0.033)
+                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+            else if (bezierRatio > 0.06)
+                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+            else if (errorRatio < 2.1)
+                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+            else
+                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+            
+        }
+        else if (errorRatio < 2.1)
+            NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+        else
+            NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+         
+    }
+    
+}// drawOpenCurve
+
+
+
+
+- (void) drawBezierPathPainted
+{
+    for (NSValue *pointValue in pointKeyArray)
+        [self drawPoint:[pointValue CGPointValue]];
+    
+    for (NSValue *pointValue in [self reducePointsKey])
+        [self drawKeyPoint:[pointValue CGPointValue]];
     
     /*
-    for (NSUInteger i = 0 ; i < [listPoints count] ; i++)
-        [self drawPoint:[[listPoints objectAtIndex:i]CGPointValue]];
-    */
+     // Create bezier curve
+     SYBezierController *bezierController = [[SYBezierController alloc]init];
+     NSArray *curves = [bezierController getBestCurveForListPoint:listPoints tolerance:0.01];
+     [bezierController release];
+     if (!curves)
+     return;
+     
+     [self drawBezierCurveWithPoints:curves];
+     */
+    
+    /*
+     for (NSUInteger i = 0 ; i < [listPoints count] ; i++)
+     [self drawPoint:[[listPoints objectAtIndex:i]CGPointValue]];
+     */
 }// getBezierPathPainted
 
 
@@ -500,147 +678,147 @@
     
     
     /*
-    // Is the painted shape closed (almost closed)?
-    // --------------------------------------------------------------------------
-    CGFloat deltaX = [[listPoints objectAtIndex:0]CGPointValue].x - [[listPoints lastObject]CGPointValue].x;
-    CGFloat deltaY = [[listPoints objectAtIndex:0]CGPointValue].y - [[listPoints lastObject]CGPointValue].y;
-    CGFloat ratioXClose = deltaX / maxDeltaX;
-    CGFloat ratioYClose = deltaY / maxDeltaY;
-    
-    // It's open, do nothing, exit
-    if (fabs(ratioXClose) > 0.25 || fabs(ratioYClose) > 0.25)
-        return;
-    
-    // It's closed (almost closed), do closed perfectly
-    CGPoint firstPoint = [[finalArray objectAtIndex:0]CGPointValue];
-    CGPoint lastPoint = [[finalArray lastObject]CGPointValue];
-    CGPoint midPoint = [self midPointBetweenPoint:firstPoint andPoint:lastPoint];
-    [finalArray replaceObjectAtIndex:0 withObject:[NSValue valueWithCGPoint:midPoint]];
-    [finalArray removeLastObject];
-    
-    // Clean all NSNull
-    finalArray = [NSMutableArray array];
-    for (id keyPoint in pointKeyArray) {
-        if ((NSNull *) keyPoint != [NSNull null]) {
-            CGPoint newCGPoint = [keyPoint CGPointValue];
-            NSValue *newPoint = [NSValue valueWithCGPoint:CGPointMake(newCGPoint.x, newCGPoint.y)];
-            [finalArray addObject:newPoint];
-        }
-    }
-    
-    // If the resulting points number is insufficient, exit
-    pointKeyArray  = [[NSMutableArray alloc]initWithArray:finalArray];
-    if ([pointKeyArray count] < 2)
-        return;
-    
-    
-    // Remove points aligned (step B)
-    // -----------------------------------------------------------------------
-    NSMutableArray *pointAlign = [NSMutableArray arrayWithArray:pointKeyArray];
-    for (int i = 0 ; i < [pointKeyArray count]; i++) {
-        
-        BOOL isBreak = NO;
-        CGPoint pointA = [[pointAlign objectAtIndex:i]CGPointValue];
-        CGPoint pointB = [[pointAlign objectAtIndex:i+1]CGPointValue];
-        CGPoint pointC = CGPointZero;
-        
-        // Is it the last point?... take the first
-        if (i+2 == [pointAlign count]) {
-            pointC = [[pointAlign objectAtIndex:0]CGPointValue];
-            isBreak = YES;
-        }
-        else
-            pointC = [[pointAlign objectAtIndex:i+2]CGPointValue];
-        
-        CGFloat angleRad = fabsf([self getAngleBetweenVertex:pointB andPointA:pointA andPointB:pointC]);
-        
-        // Is it aligned
-        if (angleRad > 2.4) { // casi 180º grados
-            [pointAlign removeObjectAtIndex:i+1];
-            i--;
-            
-            // If the resulting points number is insufficient, exit
-            if ([pointAlign count] < 3)
-                return;
-        }
-        
-        if (isBreak)
-            break;
-    }
-    
-    // Clean all NSNull
-    pointKeyArray  = [[NSMutableArray alloc]init];
-    for (id point in pointAlign) {
-        if ((NSNull *) point != [NSNull null])
-            [pointKeyArray addObject:point];
-    }
-    
-    
-    // Snap Angles
-    // ----------------------------------------------------------------
-    // Build segment array
-    NSMutableArray *segmentsArray  = [NSMutableArray array];
-    for (int i = 0 ; i < [pointKeyArray count]; i++) {
-        BOOL isBreak = NO;
-        CGPoint pointA = [[pointKeyArray objectAtIndex:i]CGPointValue];
-        CGPoint pointB = CGPointZero;
-        
-        // Is it the last point?... take the first
-        if (i+1 == [pointKeyArray count]) {
-            pointB = [[pointKeyArray objectAtIndex:0]CGPointValue];
-            isBreak = YES;
-        }
-        else
-            pointB = [[pointKeyArray objectAtIndex:i+1]CGPointValue];
-        
-        SYSegment *segment = [[SYSegment alloc]initWithPoint:pointA andPoint:pointB];
-        [segmentsArray addObject:segment];
-        
-        if (isBreak)
-            break;
-    }
-    
-    // Snap all the segments
-    for (SYSegment *segment in segmentsArray) {
-        if ([segment isSnapAngle])
-            [segment snapAngleChangingFinalPoint];
-    }
-    
-    
-    // Take the intersection between the segments (it will be key points)
-    for (int i = 0 ; i < [segmentsArray count]; i++) {
-        BOOL isBreak = NO;
-        SYSegment *segmentA = [segmentsArray objectAtIndex:i];
-        SYSegment *segmentB = nil;
-        
-        // Is it the last point?... take the first
-        if (i+1 == [segmentsArray count]) {
-            segmentB = [segmentsArray objectAtIndex:0];
-            isBreak = YES;
-        }
-        else
-            segmentB = [segmentsArray objectAtIndex:i+1];
-        
-        // Get the intersection point
-        CGPoint intersectPoint = [segmentA pointIntersectWithSegment:segmentB];
-        
-        [segmentA setPointFn:intersectPoint];
-        [segmentB setPointSt:intersectPoint];
-        
-        if (isBreak)
-            break;
-    }
-    
-    // Get the final key points
-    pointKeyArray = [[NSMutableArray alloc]init];
-    SYSegment *segment = [segmentsArray objectAtIndex:0];
-    [pointKeyArray  addObject:[NSValue valueWithCGPoint:[segment pointSt]]];
-    
-    for (SYSegment *segment in segmentsArray)
-        [pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointFn]]];
-    
-    [self drawPolygonal:pointKeyArray];
-    */
+     // Is the painted shape closed (almost closed)?
+     // --------------------------------------------------------------------------
+     CGFloat deltaX = [[listPoints objectAtIndex:0]CGPointValue].x - [[listPoints lastObject]CGPointValue].x;
+     CGFloat deltaY = [[listPoints objectAtIndex:0]CGPointValue].y - [[listPoints lastObject]CGPointValue].y;
+     CGFloat ratioXClose = deltaX / maxDeltaX;
+     CGFloat ratioYClose = deltaY / maxDeltaY;
+     
+     // It's open, do nothing, exit
+     if (fabs(ratioXClose) > 0.25 || fabs(ratioYClose) > 0.25)
+     return;
+     
+     // It's closed (almost closed), do closed perfectly
+     CGPoint firstPoint = [[finalArray objectAtIndex:0]CGPointValue];
+     CGPoint lastPoint = [[finalArray lastObject]CGPointValue];
+     CGPoint midPoint = [self midPointBetweenPoint:firstPoint andPoint:lastPoint];
+     [finalArray replaceObjectAtIndex:0 withObject:[NSValue valueWithCGPoint:midPoint]];
+     [finalArray removeLastObject];
+     
+     // Clean all NSNull
+     finalArray = [NSMutableArray array];
+     for (id keyPoint in pointKeyArray) {
+     if ((NSNull *) keyPoint != [NSNull null]) {
+     CGPoint newCGPoint = [keyPoint CGPointValue];
+     NSValue *newPoint = [NSValue valueWithCGPoint:CGPointMake(newCGPoint.x, newCGPoint.y)];
+     [finalArray addObject:newPoint];
+     }
+     }
+     
+     // If the resulting points number is insufficient, exit
+     pointKeyArray  = [[NSMutableArray alloc]initWithArray:finalArray];
+     if ([pointKeyArray count] < 2)
+     return;
+     
+     
+     // Remove points aligned (step B)
+     // -----------------------------------------------------------------------
+     NSMutableArray *pointAlign = [NSMutableArray arrayWithArray:pointKeyArray];
+     for (int i = 0 ; i < [pointKeyArray count]; i++) {
+     
+     BOOL isBreak = NO;
+     CGPoint pointA = [[pointAlign objectAtIndex:i]CGPointValue];
+     CGPoint pointB = [[pointAlign objectAtIndex:i+1]CGPointValue];
+     CGPoint pointC = CGPointZero;
+     
+     // Is it the last point?... take the first
+     if (i+2 == [pointAlign count]) {
+     pointC = [[pointAlign objectAtIndex:0]CGPointValue];
+     isBreak = YES;
+     }
+     else
+     pointC = [[pointAlign objectAtIndex:i+2]CGPointValue];
+     
+     CGFloat angleRad = fabsf([self getAngleBetweenVertex:pointB andPointA:pointA andPointB:pointC]);
+     
+     // Is it aligned
+     if (angleRad > 2.4) { // casi 180º grados
+     [pointAlign removeObjectAtIndex:i+1];
+     i--;
+     
+     // If the resulting points number is insufficient, exit
+     if ([pointAlign count] < 3)
+     return;
+     }
+     
+     if (isBreak)
+     break;
+     }
+     
+     // Clean all NSNull
+     pointKeyArray  = [[NSMutableArray alloc]init];
+     for (id point in pointAlign) {
+     if ((NSNull *) point != [NSNull null])
+     [pointKeyArray addObject:point];
+     }
+     
+     
+     // Snap Angles
+     // ----------------------------------------------------------------
+     // Build segment array
+     NSMutableArray *segmentsArray  = [NSMutableArray array];
+     for (int i = 0 ; i < [pointKeyArray count]; i++) {
+     BOOL isBreak = NO;
+     CGPoint pointA = [[pointKeyArray objectAtIndex:i]CGPointValue];
+     CGPoint pointB = CGPointZero;
+     
+     // Is it the last point?... take the first
+     if (i+1 == [pointKeyArray count]) {
+     pointB = [[pointKeyArray objectAtIndex:0]CGPointValue];
+     isBreak = YES;
+     }
+     else
+     pointB = [[pointKeyArray objectAtIndex:i+1]CGPointValue];
+     
+     SYSegment *segment = [[SYSegment alloc]initWithPoint:pointA andPoint:pointB];
+     [segmentsArray addObject:segment];
+     
+     if (isBreak)
+     break;
+     }
+     
+     // Snap all the segments
+     for (SYSegment *segment in segmentsArray) {
+     if ([segment isSnapAngle])
+     [segment snapAngleChangingFinalPoint];
+     }
+     
+     
+     // Take the intersection between the segments (it will be key points)
+     for (int i = 0 ; i < [segmentsArray count]; i++) {
+     BOOL isBreak = NO;
+     SYSegment *segmentA = [segmentsArray objectAtIndex:i];
+     SYSegment *segmentB = nil;
+     
+     // Is it the last point?... take the first
+     if (i+1 == [segmentsArray count]) {
+     segmentB = [segmentsArray objectAtIndex:0];
+     isBreak = YES;
+     }
+     else
+     segmentB = [segmentsArray objectAtIndex:i+1];
+     
+     // Get the intersection point
+     CGPoint intersectPoint = [segmentA pointIntersectWithSegment:segmentB];
+     
+     [segmentA setPointFn:intersectPoint];
+     [segmentB setPointSt:intersectPoint];
+     
+     if (isBreak)
+     break;
+     }
+     
+     // Get the final key points
+     pointKeyArray = [[NSMutableArray alloc]init];
+     SYSegment *segment = [segmentsArray objectAtIndex:0];
+     [pointKeyArray  addObject:[NSValue valueWithCGPoint:[segment pointSt]]];
+     
+     for (SYSegment *segment in segmentsArray)
+     [pointKeyArray addObject:[NSValue valueWithCGPoint:[segment pointFn]]];
+     
+     [self drawPolygonal:pointKeyArray];
+     */
 }// drawLineCurvesMixedPainted
 
 
@@ -706,23 +884,27 @@
         }
         else {
             if (deltaXF > limitDistace && isDeltaXPos == -1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaXPos = 1;
                 return;
             }
             else if (deltaXF < -limitDistace && isDeltaXPos == 1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaXPos = -1;
                 return;
             }
             
             if (deltaXF > limitDistace && isDeltaXPos == -1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaXPos = 1;
                 return;
             }
             else if (deltaXF < -limitDistace && isDeltaXPos == 1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaXPos = -1;
                 return;
             }
@@ -750,37 +932,49 @@
         }
         else {
             if (deltaYF > limitDistace && isDeltaYPos == -1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaYPos = 1;
                 return;
             }
             else if (deltaYF < -limitDistace && isDeltaYPos == 1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaYPos = -1;
                 return;
             }
             
             if (deltaYF > limitDistace && isDeltaYPos == -1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaYPos = 1;
                 return;
             }
             else if (deltaYF < -limitDistace && isDeltaYPos == 1) {
-                [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
+                if (![[pointKeyArray lastObject]isEqual:[NSValue valueWithCGPoint:pointA]])
+                    [pointKeyArray addObject:[NSValue valueWithCGPoint:pointA]];
                 isDeltaYPos = -1;
                 return;
             }
         }
         
         // ANGLES
-        NSValue *vertexValue = [listPoints objectAtIndex:[listPoints count]-4];
+        NSValue *vertexValue = [listPoints objectAtIndex:[listPoints count]-3];
         CGFloat angle = [self getAngleBetweenVertex:pointA
                                           andPointA:pointB
                                           andPointB:[vertexValue CGPointValue]];
         
         CGFloat angleDeg = (angle / M_PI_2) * 90.0;
-        if (angleDeg < 170.0)
-            [pointKeyArray addObject:[NSValue valueWithCGPoint:[vertexValue CGPointValue]]];
+        if (angleDeg < 170.0) {
+            // A or B was adding to the pointKeyPoint...
+            if ([[pointKeyArray lastObject]isEqual:pointAValue] || [[pointKeyArray lastObject]isEqual:pointBValue]) {
+                // we don't need add vertex
+            }
+            else {
+                if (![[pointKeyArray lastObject]isEqual:vertexValue])
+                    [pointKeyArray addObject:vertexValue];
+            }
+        }
     }
     
 }// addPoint:andPoint:
@@ -788,7 +982,10 @@
 
 - (void) addLastPoint:(CGPoint) lastPoint
 {
+    // Add the first and the last point to key points
+    [listPoints addObject:[NSValue valueWithCGPoint:lastPoint]];
     [pointKeyArray addObject:[NSValue valueWithCGPoint:lastPoint]];
+    [pointKeyArray insertObject:[listPoints objectAtIndex:0] atIndex:0];
     
 }// addLastPoint:
 
@@ -816,28 +1013,47 @@
     // Get radius to reduce point cloud
     CGFloat maxDeltaX = maxX.x - minX.x;
     CGFloat maxDeltaY = maxY.y - minY.y;
-    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.10;
+    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.05;
     
     // Point cloud simplification algorithm (using radiusCloud)
     // --------------------------------------------------------------------------
     NSMutableArray *reducePointKeyArray = [NSMutableArray arrayWithArray:pointKeyArray];
+    NSMutableArray *indexKeyPoints = [NSMutableArray array];
+    
     for (int i = 0 ; i < [reducePointKeyArray count] ; i++) {
-        // Pilla el primer punto
         id pointID = [reducePointKeyArray objectAtIndex:i];
         
         if ((NSNull *) pointID != [NSNull null]) {
-            CGPoint point = [[reducePointKeyArray objectAtIndex:i]CGPointValue];
+            CGPoint point = [pointID CGPointValue];
+            [indexKeyPoints addObject:[NSNumber numberWithInt:i]];
             
-            // Compara con los siguientes hasta que no haya proximidad
+            // Take the neighbors points for which compose the cloud points
+            NSMutableArray *localCloudPoint = [NSMutableArray array];
+            [localCloudPoint addObject:pointID];
+            
             for (int j = i+1 ; j < [pointKeyArray count] ; j++) {
                 CGPoint nextPoint = [[pointKeyArray objectAtIndex:j]CGPointValue];
-                
                 CGFloat distance = [self distanceBetweenPoint:point andPoint:nextPoint];
+                
                 if (distance < radiusCloud) {
-                    [reducePointKeyArray replaceObjectAtIndex:i withObject:[NSValue valueWithCGPoint:point]];
+                    [localCloudPoint addObject:[pointKeyArray objectAtIndex:j]];
                     [reducePointKeyArray replaceObjectAtIndex:j withObject:[NSNull null]];
                 }
+                else
+                    break;
             }
+            
+            // Get the key point for this local cloud point
+            CGFloat xMid = .0; CGFloat yMid = .0; CGFloat countF = (CGFloat) [localCloudPoint count];
+            for (NSValue *pointCloudValue in localCloudPoint) {
+                CGPoint pointCloud = [pointCloudValue CGPointValue];
+                xMid += pointCloud.x;
+                yMid += pointCloud.y;
+            }
+            
+            // Replace all the point from the cloud for the mid point
+            NSValue *midPoint = [NSValue valueWithCGPoint:CGPointMake(xMid/countF, yMid/countF)];
+            [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
         }
     }
     
@@ -848,7 +1064,6 @@
         if ((NSNull *) keyPoint != [NSNull null])
             [reducePointKeyArray addObject:keyPoint];
     }
-    
     
     // Remove points aligned (step A)
     // --------------------------------------------------------------------------
@@ -867,6 +1082,7 @@
             
             if ([segment distanceToPoint:pointKeyB] < longitude * 0.12) {
                 [reducePointKeyArray replaceObjectAtIndex:i+1 withObject:[NSNull null]];
+                [indexKeyPoints replaceObjectAtIndex:i+1 withObject:[NSNull null]];
                 i = i+1;
             }
             
@@ -882,8 +1098,16 @@
             [reducePointKeyArray addObject:keyPoint];
     }
     
+    // Clean all NSNull
+    cleanerArray  = [NSMutableArray arrayWithArray:indexKeyPoints];
+    indexKeyPoints = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [indexKeyPoints addObject:keyPoint];
+    }
+    
     return [NSArray arrayWithArray:reducePointKeyArray];
-
+    
 }// reducePointsKey
 
 
@@ -1019,16 +1243,25 @@
 
 #pragma mark - Draw Geometric Methods
 
-- (void) drawBezierCurveWithPoints:(NSArray *) arrayData
+- (void) drawBezierCurveWithPoints:(NSDictionary *) data
 {
-    //TEMPORAL
-    vectorView.shapeList = [[NSMutableArray alloc]init];
-    
-    SYGeometry *shapeToAdd = [self createBezierCurveWithPoints:arrayData];
+    SYGeometry *shapeToAdd = [self createBezierCurveWithPoints:data];
     if (shapeToAdd)
         [vectorView.shapeList addObject:shapeToAdd];
     
 }// drawBezierCurveWithPoints:
+
+
+- (void) drawBezierCurvesWithPoints:(NSArray *) arrayData
+{
+    //TEMPORAL
+    vectorView.shapeList = [[NSMutableArray alloc]init];
+    
+    SYGeometry *shapeToAdd = [self createBezierCurvesWithPoints:arrayData];
+    if (shapeToAdd)
+        [vectorView.shapeList addObject:shapeToAdd];
+    
+}// drawBezierCurvesWithPoints:
 
 
 - (void) drawPolygonal:(NSArray *) pointKeyList
@@ -1040,7 +1273,7 @@
     if (shapeToAdd)
         [vectorView.shapeList addObject:shapeToAdd];
     
-}// drawBezierCurveWithPoints:
+}// drawPolygonal:
 
 
 - (void) drawPolygonalFromSegment:(SYSegment *) segment
@@ -1100,6 +1333,25 @@
 }// drawPoint:
 
 
+- (void) drawKeyPoint:(CGPoint) point
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = CircleType;
+    geometry.rectGeometry = CGRectMake(point.x - 4.0, point.y - 4.0, 8.0, 8.0);
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor redColor];
+    geometry.strokeColor = [UIColor redColor];
+    
+    if (geometry)
+        [vectorView.shapeList addObject:geometry];
+    
+}// drawKeyPoint:
+
+
 - (void) drawCircleWithTransform:(CGAffineTransform) transform
 {
     //TEMPORAL
@@ -1127,7 +1379,26 @@
 
 #pragma mark - Create Geometric Methods
 
-- (SYGeometry *) createBezierCurveWithPoints:(NSArray *) arrayData
+- (SYGeometry *) createBezierCurveWithPoints:(NSDictionary *) data
+{
+    // Draw the resulting shape
+    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    
+    // Geometry parameters
+    geometry.geometryType = BezierType;
+    geometry.pointArray = [NSArray arrayWithObject:data];
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    return geometry;
+    
+}// createBezierCurveWithPoints
+
+
+- (SYGeometry *) createBezierCurvesWithPoints:(NSArray *) arrayData
 {
     // Draw the resulting shape
     SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
@@ -1143,7 +1414,7 @@
     
     return geometry;
     
-}// createBezierCurveWithPoints
+}// createBezierCurvesWithPoints
 
 
 - (SYGeometry *) createPolygonal:(NSArray *) pointKeyList

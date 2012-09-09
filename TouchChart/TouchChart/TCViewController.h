@@ -39,6 +39,7 @@
 
 // Unit Test Methods
 - (IBAction) switchShowTable:(id)sender;
+- (void) drawOpenShape;
 - (IBAction) selectName:(id)sender;
 - (IBAction) saveCase:(id)sender;
 - (IBAction) cancelCase:(id)sender;
@@ -69,18 +70,21 @@
 - (void) drawLineCurvesMixedPainted;
 
 // Draw Geometric Methods
-- (void) drawBezierCurveWithPoints:(NSArray *) arrayData;
+- (void) drawBezierCurveWithPoints:(NSDictionary *) data;
+- (void) drawBezierCurvesWithPoints:(NSArray *) arrayData;
 - (void) drawPolygonal:(NSArray *) pointKeyList;
 - (void) drawPolygonalFromSegment:(SYSegment *) segment;
 - (void) drawSquare:(CGRect) squareRect;
 - (void) drawDiamond:(CGRect) diamondRect;
 - (void) drawCircle:(CGRect) circleRect;
 - (void) drawPoint:(CGPoint) point;
+- (void) drawKeyPoint:(CGPoint) point;
 - (void) drawCircleWithTransform:(CGAffineTransform) transform;
 - (void) drawArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
 
 // Create Geometric Methods
-- (SYGeometry *) createBezierCurveWithPoints:(NSArray *) arrayData;
+- (SYGeometry *) createBezierCurveWithPoints:(NSDictionary *) data;
+- (SYGeometry *) createBezierCurvesWithPoints:(NSArray *) arrayData;
 - (SYGeometry *) createPolygonal:(NSArray *) pointKeyList;
 - (SYGeometry *) createPolygonalFromSegment:(SYSegment *) segment;
 - (SYGeometry *) createSquare:(CGRect) squareRect;

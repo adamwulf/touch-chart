@@ -50,10 +50,13 @@
     //float numberPointsF = (float)[listPoints count];
     for (NSUInteger j = 1; j < 3; j++) {
         float indexF = (float) round(step * (j));
+        NSLog(@"indexF %f", indexF);
         NSUInteger index = (NSUInteger) indexF;
+        NSLog(@"%u", index);
         cValue[j] = c[index];
         cPoint[j] = CGPointMake([[listPoints objectAtIndex:index]CGPointValue].x,
                                 [[listPoints objectAtIndex:index]CGPointValue].y);
+        NSLog(@"cPoint[%u] (%f, %f)", j, cPoint[j].x, cPoint[j].y);
     }            
     
     
@@ -114,6 +117,10 @@
     // Store solutions
     P1 = CGPointMake(P1.x, B[0]);
     P2 = CGPointMake(P2.x, B[1]);
+    NSLog(@"P1(%f, %f)  P2(%f, %f)", P1.x, P1.y, P2.x, P2.y);
+    if (P1.x==0 || P1.y==0 || P2.x==0 || P2.y==0) {
+        NSLog(@"hola");
+    }
     
     // Statistics Curve Fit
     CGFloat ratio = .0;

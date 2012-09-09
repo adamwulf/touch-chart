@@ -144,7 +144,7 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // TEMP
-    //[self clearPaint];
+    [self clearPaint];
     
     // CGPoint to NSValue and add it to list
     [viewController resetData];
@@ -169,7 +169,7 @@
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self clearPaint];
+    //[self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [touches anyObject];
@@ -186,7 +186,7 @@
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self clearPaint];
+    //[self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [touches anyObject];

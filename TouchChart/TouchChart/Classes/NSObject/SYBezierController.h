@@ -12,7 +12,6 @@
 
 // Getter Curves
 - (NSDictionary *) getCubicBezierPointsForListPoint:(NSArray *) listPoints;
-- (NSDictionary *) getCubicBezierPointsForListPoint:(NSArray *) listPoints;
 - (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints splitIn:(NSUInteger) ntimes;
 - (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints splitIn:(NSUInteger) ntimes;
 - (NSArray *) getBestCurveForListPoint:(NSArray *) listPoints tolerance:(CGFloat) ratioError;
