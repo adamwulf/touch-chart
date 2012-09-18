@@ -14,6 +14,8 @@
 #import "SYBezierController.h"
 #import "SYPaintView.h"
 
+#import "SYShape.h"
+
 #import "SYUnitTestController.h"
 
 
@@ -51,7 +53,7 @@
     // Alert name cases, set round corner
     [[selectCaseNameView layer] setMasksToBounds:YES];
     [[selectCaseNameView layer]setCornerRadius:4.0];
-    [unitController updateListPointStored];
+//    [unitController updateListPointStored];
     
     // Hide table
     [tableBase setAlpha:.0];
@@ -69,10 +71,7 @@
     
     [vectorView release];
     vectorView = nil;
-    
-    [unitController release];
-    unitController = nil;
-    
+        
     [openCurveButton release];
     openCurveButton = nil;
     
@@ -127,7 +126,6 @@
     
     [paintView release];
     [vectorView release];
-    [unitController release];
     
     [openCurveButton release];
     [ovalCircleButton release];
@@ -186,7 +184,7 @@
         [selectCaseNameView setAlpha:1.0];
     }];
     
-}// saveCase:
+}// selectName:
 
 
 - (IBAction) saveCase:(id)sender
@@ -204,10 +202,8 @@
         nameTextField.text = @"";
     }];
     
-    // Create dictionary with all data about the last drawing
-    NSDictionary *dataDictionary = [NSDictionary dictionaryWithObjectsAndKeys:listPoints, @"listPoints", pointKeyArray, @"pointKeyArray", [NSValue valueWithCGPoint:maxX], @"maxX", [NSValue valueWithCGPoint:maxY], @"maxY", [NSValue valueWithCGPoint:minX], @"minX", [NSValue valueWithCGPoint:minY], @"minY", nil];
-    [unitController saveListPoints:dataDictionary forKey:[nameTextField text]];
-    
+    [paintView saveCase:nameTextField.text];
+
 }// save
 
 
@@ -250,30 +246,34 @@
     
 }// switchDrawModes
 
-#pragma mark - Management Operations
 
-- (void) importCase:(NSDictionary *) dict
+#pragma mark - Unit Test Operations
+
+- (void) importCase:(NSArray *) allPoints
 {
     // Clear Paint
     [paintView clearPaint];
     
-    // Init all the data and set ready them
-    maxX = [[dict valueForKey:@"maxX"]CGPointValue];
-    maxY = [[dict valueForKey:@"maxY"]CGPointValue];
-    minX = [[dict valueForKey:@"minX"]CGPointValue];
-    minY = [[dict valueForKey:@"minY"]CGPointValue];
+    // Init Data
+    [self resetData];
     
-    // Create new point list
-    [listPoints release];
-    [pointKeyArray release];
-    listPoints = [[NSMutableArray alloc]initWithArray:[dict valueForKey:@"listPoints"]];
-    pointKeyArray = [[NSMutableArray alloc]initWithArray:[dict valueForKey:@"pointKeyArray"]];
+    for (NSUInteger i = 1 ; i < [allPoints count]-1 ; i++) {
+        // Add these new points
+        CGPoint touchPreviousLocation = [[allPoints objectAtIndex:i-1]CGPointValue];
+        CGPoint touchLocation = [[allPoints objectAtIndex:i]CGPointValue];
+        [self addPoint:touchPreviousLocation andPoint:touchLocation];
+    }
+    
+    CGPoint touchLocation = [[allPoints lastObject]CGPointValue];
+    [self addLastPoint:touchLocation];
     
     // Analyze a recognize the figure
     [self getFigurePainted];
     
 }// importCase
 
+
+#pragma mark - Management Operations
 
 // Clean Data
 - (void) resetData
@@ -315,9 +315,10 @@
 
 - (void) drawOpenShape
 {
+    /*
     for (NSValue *pointValue in pointKeyArray)
         [self drawPoint:[pointValue CGPointValue]];
-    
+    */
     NSMutableArray *pointsToFit = [NSMutableArray arrayWithArray:listPoints];       // Points to follow replacing keypoints for the final key points
     NSMutableArray *indexKeyPoints = [NSMutableArray array];                        // Index for all key points
     
@@ -386,24 +387,6 @@
                 // Replace the new point into pointsToFit
                 if (firstIndex != -1)
                     [pointsToFit replaceObjectAtIndex:firstIndex withObject:midPoint];
-                
-                /*
-                // Get the key point for this local cloud point
-                CGFloat xMid = .0; CGFloat yMid = .0; CGFloat countF = (CGFloat) [localCloudPoint count];
-                for (NSValue *pointCloudValue in localCloudPoint) {
-                    CGPoint pointCloud = [pointCloudValue CGPointValue];
-                    xMid += pointCloud.x;
-                    yMid += pointCloud.y;
-                }
-                
-                // Replace all the point from the cloud for the mid point
-                NSValue *midPoint = [NSValue valueWithCGPoint:CGPointMake(xMid/countF, yMid/countF)];
-                [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
-                
-                // Replace the new point into pointsToFit
-                if (firstIndex != -1)
-                    [pointsToFit replaceObjectAtIndex:firstIndex withObject:midPoint];
-                 */
             }                
         }
     }
@@ -462,11 +445,16 @@
     
     // --------------------------------------------------------------------------
 
+    /*
     for (NSValue *pointValue in reducePointKeyArray)
         [self drawKeyPoint:[pointValue CGPointValue]];
-    
+    */
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
+    
+    SYShape *shape = [[SYShape alloc]init];
+    NSMutableArray *previousCurves = [NSMutableArray array];
+    
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
         
         // Build stretch
@@ -482,7 +470,7 @@
             CGPoint firstPoint = [[pointsToFit objectAtIndex:j]CGPointValue];
             sumDistance += [segment distanceToPoint:firstPoint];
         }
-        CGFloat errorRatio = sumDistance / (toIndex-fromIndex);
+        CGFloat errorRatio = sumDistance / [segment longitude];
         
         
         // Bezier Methods
@@ -490,40 +478,90 @@
         NSRange theRange = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
         NSArray *stretch = [pointsToFit subarrayWithRange:theRange];
         
-        SYBezierController *bezierController = [[SYBezierController alloc]init];
-        NSDictionary *result = [bezierController getCubicBezierPointsForListPoint:stretch];
-        [bezierController release];
-        [self drawBezierCurveWithPoints:result];
-        
-        // Is line or curve? (Are aligned the control points?)
-        CGPoint controlPoint1 = [[result valueForKey:@"cPointA"]CGPointValue];
-        CGPoint controlPoint2 = [[result valueForKey:@"cPointB"]CGPointValue];
-        CGFloat bezierRatioError = [[result valueForKey:@"errorRatio"]floatValue];
-        CGFloat bezierRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
-        [segment release];
-        NSLog(@"%u - %u   :   ratioSumError: %f -  RatioBezier: %f con error de %f", fromIndex, toIndex, errorRatio, bezierRatio, bezierRatioError);
-        
-        
-        // Estimate curve or line reading the parameters calculated
-        // If the bezier is fit to the shape well...
-        if (bezierRatioError < 0.23) {
-            
-            if (bezierRatio < 0.033)
-                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
-            else if (bezierRatio > 0.06)
-                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
-            else if (errorRatio < 2.1)
-                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
-            else
-                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
-            
+        // If there are only 4 points,
+        // it's possible that the estimation won't be right
+        if ([stretch count] < 5) {
+            //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+            if ([previousCurves count] != 0) {
+                [shape addCurve:previousCurves];
+                previousCurves = [NSMutableArray array];
+            }
+            [shape addPolygonalFromSegment:segment];
         }
-        else if (errorRatio < 2.1)
-            NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
-        else
-            NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
-         
+        else {
+            SYBezierController *bezierController = [[SYBezierController alloc]init];
+            NSDictionary *result = [bezierController getCubicBezierPointsForListPoint:stretch];
+            [bezierController release];
+            //[self drawBezierCurveWithPoints:result];
+            
+            // Is line or curve? (Are aligned the control points?)
+            CGPoint controlPoint1 = [[result valueForKey:@"cPointA"]CGPointValue];
+            CGPoint controlPoint2 = [[result valueForKey:@"cPointB"]CGPointValue];
+            CGFloat bezierRatioError = [[result valueForKey:@"errorRatio"]floatValue];
+            CGFloat bezierRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
+            //NSLog(@"%u - %u   :   ratioSumError: %f -  RatioBezier: %f con error de %f", fromIndex, toIndex, errorRatio, bezierRatio, bezierRatioError);
+            
+            
+            // Estimate curve or line reading the parameters calculated
+            // If the bezier is fit to the shape well...
+            if (bezierRatioError < 0.24) {
+                
+                if (bezierRatio < 0.037) {
+                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+                    if ([previousCurves count] != 0) {
+                        [shape addCurve:previousCurves];
+                        previousCurves = [NSMutableArray array];
+                    }
+                    [shape addPolygonalFromSegment:segment];
+                }
+                else if (bezierRatio > 0.06) {
+                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                    if ([previousCurves count] != 0)
+                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousCurves addObjectsFromArray:stretch];
+                }
+                else if (errorRatio < 2.1) {
+                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+                    if ([previousCurves count] != 0) {
+                        [shape addCurve:previousCurves];
+                        previousCurves = [NSMutableArray array];
+                    }
+                    [shape addPolygonalFromSegment:segment];
+                }
+                else {
+                    // NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                    if ([previousCurves count] != 0)
+                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousCurves addObjectsFromArray:stretch];
+                }
+                
+            }
+            else if (errorRatio < 2.1) {
+                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+                if ([previousCurves count] != 0) {
+                    [shape addCurve:previousCurves];
+                    previousCurves = [NSMutableArray array];
+                }
+                [shape addPolygonalFromSegment:segment];
+            }
+            else {
+                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                if ([previousCurves count] != 0)
+                    [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                [previousCurves addObjectsFromArray:stretch];
+            }
+            
+            [segment release];
+        }
     }
+    
+    // If finish with curve, it should add this last stretch
+    if ([previousCurves count] != 0) {
+        [shape addCurve:previousCurves];
+        previousCurves = [NSMutableArray array];
+    }
+    
+    [vectorView addShape:shape];
     
 }// drawOpenCurve
 

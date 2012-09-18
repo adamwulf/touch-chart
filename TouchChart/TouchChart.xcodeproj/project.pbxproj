@@ -32,6 +32,7 @@
 		ED0BE5D115F0C81800EBE866 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5D015F0C81800EBE866 /* SystemConfiguration.framework */; };
 		ED0BE5D415F0C8F700EBE866 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5D315F0C8F700EBE866 /* Parse.framework */; };
 		ED10586F15641F8500B10043 /* SYGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = ED10586E15641F8500B10043 /* SYGeometry.m */; };
+		ED10653C15FF5E71005C233F /* SYShape.m in Sources */ = {isa = PBXBuildFile; fileRef = ED10653B15FF5E71005C233F /* SYShape.m */; };
 		ED12DD2715F4C0B400FBDF00 /* UnitTestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */; };
 		ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */; };
 		ED12DD3515F5295200FBDF00 /* LoginPopupBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */; };
@@ -94,6 +95,8 @@
 		ED0BE5D315F0C8F700EBE866 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		ED10586D15641F8500B10043 /* SYGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYGeometry.h; path = Classes/Models/SYGeometry.h; sourceTree = "<group>"; };
 		ED10586E15641F8500B10043 /* SYGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYGeometry.m; path = Classes/Models/SYGeometry.m; sourceTree = "<group>"; };
+		ED10653A15FF5E71005C233F /* SYShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYShape.h; path = Classes/Models/SYShape.h; sourceTree = "<group>"; };
+		ED10653B15FF5E71005C233F /* SYShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYShape.m; path = Classes/Models/SYShape.m; sourceTree = "<group>"; };
 		ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UnitTestCell.xib; path = XIB/UnitTestCell.xib; sourceTree = "<group>"; };
 		ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitPreview.h; path = Classes/Views/SYUnitPreview.h; sourceTree = "<group>"; };
 		ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitPreview.m; path = Classes/Views/SYUnitPreview.m; sourceTree = "<group>"; };
@@ -259,6 +262,8 @@
 		ED10585815640D9C00B10043 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				ED10653A15FF5E71005C233F /* SYShape.h */,
+				ED10653B15FF5E71005C233F /* SYShape.m */,
 				ED10586D15641F8500B10043 /* SYGeometry.h */,
 				ED10586E15641F8500B10043 /* SYGeometry.m */,
 				EDF3BD2F15796AC70026B9C2 /* SYSegment.h */,
@@ -448,6 +453,7 @@
 				ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */,
 				ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */,
 				ED12DD3B15F537E400FBDF00 /* SYListButton.m in Sources */,
+				ED10653C15FF5E71005C233F /* SYShape.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

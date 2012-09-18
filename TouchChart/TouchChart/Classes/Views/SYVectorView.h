@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class SYShape;
+
 @interface SYVectorView : UIView
 
 @property (nonatomic, retain) NSMutableArray *shapeList;
+
+- (void) addShape:(SYShape *)shape;
 
 @end

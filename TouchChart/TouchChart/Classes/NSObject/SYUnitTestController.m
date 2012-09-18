@@ -46,80 +46,35 @@
 {    
     // List point convert
     NSMutableArray *listPoints = [NSMutableArray array];
-    NSMutableArray *listPointStored = [pfObject objectForKey:@"listPoints"];
+    NSMutableArray *listPointStored = [pfObject objectForKey:@"allPoints"];
     for (NSDictionary *dictPoint in listPointStored) {
         CGPoint point = CGPointMake([[dictPoint valueForKey:@"x"]floatValue], [[dictPoint valueForKey:@"y"]floatValue]);
         [listPoints addObject:[NSValue valueWithCGPoint:point]];
     }
     
-    
-    // Point Key convert
-    NSMutableArray *pointKeyArray = [NSMutableArray array];
-    NSMutableArray *pointKeyArrayStored = [pfObject objectForKey:@"pointKeyArray"];
-    for (NSDictionary *dictPoint in pointKeyArrayStored) {
-        CGPoint point = CGPointMake([[dictPoint valueForKey:@"x"]floatValue], [[dictPoint valueForKey:@"y"]floatValue]);
-        [pointKeyArray addObject:[NSValue valueWithCGPoint:point]];
-    }
-    
-    
-    // Max and Min
-    NSDictionary *maxXDict = [pfObject objectForKey:@"maxX"];
-    NSDictionary *maxYDict = [pfObject objectForKey:@"maxY"];
-    NSDictionary *minXDict = [pfObject objectForKey:@"minX"];
-    NSDictionary *minYDict = [pfObject objectForKey:@"minY"];
-    
-    CGPoint maxX = CGPointMake([[maxXDict valueForKey:@"x"]floatValue], [[maxXDict valueForKey:@"y"]floatValue]);
-    CGPoint maxY = CGPointMake([[maxYDict valueForKey:@"x"]floatValue], [[maxYDict valueForKey:@"y"]floatValue]);
-    CGPoint minX = CGPointMake([[minXDict valueForKey:@"x"]floatValue], [[minXDict valueForKey:@"y"]floatValue]);
-    CGPoint minY = CGPointMake([[minYDict valueForKey:@"x"]floatValue], [[minYDict valueForKey:@"y"]floatValue]);
-    
-    NSDictionary *dataDictionary = [NSDictionary dictionaryWithObjectsAndKeys:listPoints, @"listPoints", pointKeyArray, @"pointKeyArray", [NSValue valueWithCGPoint:maxX], @"maxX", [NSValue valueWithCGPoint:maxY], @"maxY", [NSValue valueWithCGPoint:minX], @"minX", [NSValue valueWithCGPoint:minY], @"minY", nil];
-    
-    [viewController importCase:dataDictionary];    
+    [viewController importCase:listPoints];    
 
 }// importPointsStored
 
 
-- (void) saveListPoints:(NSDictionary *) dataDictionary forKey:(NSString *) key
+- (void) saveListPoints:(NSArray *) allPoints withName:(NSString *) name
 {
-    NSArray *listPoints = [dataDictionary valueForKey:@"listPoints"];
-    NSArray *pointKeyArray = [dataDictionary valueForKey:@"pointKeyArray"];
-    NSValue *maxXValue = [dataDictionary valueForKey:@"maxX"];
-    NSValue *maxYValue = [dataDictionary valueForKey:@"maxY"];
-    NSValue *minXValue = [dataDictionary valueForKey:@"minX"];
-    NSValue *minYValue = [dataDictionary valueForKey:@"minY"];
-    
     // Convert NSValue Array in NSDictionary Array
     // because PFObject doesn't work with NSValue
     NSMutableArray *listPointToStore = [NSMutableArray array];
-    for (NSValue *pointValue in listPoints) {
-        NSDictionary *dictPoint = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[pointValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[pointValue CGPointValue].y], @"y", nil];
+    for (NSValue *pointValue in allPoints) {
+        NSDictionary *dictPoint = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[pointValue CGPointValue].x], @"x",
+                                                                             [NSNumber numberWithFloat:[pointValue CGPointValue].y], @"y", nil];
         [listPointToStore addObject:dictPoint];
     }
-    
-    NSMutableArray *pointKeyArrayToStore = [NSMutableArray array];
-    for (NSValue *pointValue in pointKeyArray) {
-        NSDictionary *dictPoint = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[pointValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[pointValue CGPointValue].y], @"y", nil];
-        [pointKeyArrayToStore addObject:dictPoint];
-    }
-    
-    NSDictionary *maxX = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[maxXValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[maxXValue CGPointValue].y], @"y", nil];
-    NSDictionary *maxY = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[maxYValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[maxYValue CGPointValue].y], @"y", nil];
-    NSDictionary *minX = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[minXValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[minXValue CGPointValue].y], @"y", nil];
-    NSDictionary *minY = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[minYValue CGPointValue].x], @"x", [NSNumber numberWithFloat:[minYValue CGPointValue].y], @"y", nil];
-    
+        
     PFObject *testObject = [PFObject objectWithClassName:@"ListPoints"];
-    [testObject setObject:listPointToStore forKey:@"listPoints"];
-    [testObject setObject:pointKeyArrayToStore forKey:@"pointKeyArray"];
-    [testObject setObject:maxX forKey:@"maxX"];
-    [testObject setObject:maxY forKey:@"maxY"];
-    [testObject setObject:minX forKey:@"minX"];
-    [testObject setObject:minY forKey:@"minY"];    
-    [testObject setObject:key forKey:@"name"];
+    [testObject setObject:name forKey:@"name"];
+    [testObject setObject:listPointToStore forKey:@"allPoints"];
     [testObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
+        if (!error)
             [self updateListPointStored];
-        } else {
+        else {
             // Avisa del error obtenido
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[[error domain] capitalizedString]
                                                             message:[error localizedDescription]
@@ -136,6 +91,7 @@
 - (void) updateListPointStored
 {
     PFQuery *query = [PFQuery queryWithClassName:@"ListPoints"];
+    [query orderByAscending:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
@@ -263,7 +219,7 @@
     
     // Data
     PFObject *pfObject = [pfObjects objectAtIndex:indexPath.row];
-    NSArray *list = [pfObject objectForKey:@"listPoints"];
+    NSArray *list = [pfObject objectForKey:@"allPoints"];
 
     // Day
     UILabel *day = (UILabel *)[cell viewWithTag:1];
@@ -282,7 +238,6 @@
     [preview setPoints:list];
     [preview setAlpha:1.0];
     [preview setNeedsDisplay];
-    //[preview setNeedsLayout];
 
     // Name
     UILabel *name = (UILabel *)[cell viewWithTag:4];

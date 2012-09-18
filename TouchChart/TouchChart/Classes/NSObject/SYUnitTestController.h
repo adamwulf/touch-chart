@@ -23,7 +23,7 @@
 
 // Save/Load Operations
 - (void) importPointsStored:(PFObject *) listPointStored;
-- (void) saveListPoints:(NSDictionary *) dataDictionary forKey:(NSString *) key;
+- (void) saveListPoints:(NSArray *) allPoints withName:(NSString *) name;
 - (void) updateListPointStored;
 
 @end

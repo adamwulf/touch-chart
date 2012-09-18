@@ -29,9 +29,6 @@
     IBOutlet UITextField *nameTextField;
     IBOutlet UIView *tableBase;
 
-    // Controller
-    IBOutlet SYUnitTestController *unitController;
-    
 }
 
 // Button Draw Modes
@@ -46,7 +43,7 @@
 
 
 // Management Data Operations
-- (void) importCase:(NSDictionary *) dict;
+- (void) importCase:(NSArray *) allPoints;
 - (void) resetData;
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 - (void) addLastPoint:(CGPoint) lastPoint;

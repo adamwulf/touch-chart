@@ -13,8 +13,92 @@
 
 #pragma mark - Getter Curves
 
+- (NSArray *) addPointBasedQuadraticBezier:(NSArray *) listPoints
+{
+    // If the list has more than 3 elements, it doesn't need more points
+    if ([listPoints count] != 3)
+        return nil;
+    
+    // We get C(t)
+    CGFloat c[3];
+    CGFloat currentLongitude = .0;
+    c[0] = .0; 
+    
+    for (NSUInteger i = 1 ; i < 3 ; i++) {
+        CGPoint previousPoint = [[listPoints objectAtIndex:i-1]CGPointValue];
+        CGPoint currentPoint = [[listPoints objectAtIndex:i]CGPointValue];
+        
+        SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
+        currentLongitude += [segment longitude];
+        c[i] = currentLongitude;
+    }
+    
+    // Just divide c[n]/totalLongitude
+    CGFloat totalLongitude = currentLongitude;
+    for (NSUInteger i = 0 ; i < 3 ; i++)
+        c[i] = c[i]/totalLongitude;
+    
+    // Para degree 2
+    // ------------------------------
+    CGFloat ctX = [[listPoints objectAtIndex:1]CGPointValue].x;
+    CGFloat ctY = [[listPoints objectAtIndex:1]CGPointValue].y;
+    
+    CGFloat t = c[1];
+    
+    CGFloat p0X = [[listPoints objectAtIndex:0]CGPointValue].x;
+    CGFloat p0Y = [[listPoints objectAtIndex:0]CGPointValue].y;
+
+    CGFloat p3X = [[listPoints objectAtIndex:2]CGPointValue].x;
+    CGFloat p3Y = [[listPoints objectAtIndex:2]CGPointValue].y;
+
+    // Calculate control point for the quadratic bezier
+    CGFloat mt = 1-t;
+    CGFloat p1X = (ctX - (pow(mt, 2) * p0X) - (pow(t, 2) * p3X)) / (2*t*mt);
+    CGFloat p1Y = (ctY - (pow(mt, 2) * p0Y) - (pow(t, 2) * p3Y)) / (2*t*mt);
+
+    // We get other point from the quadratic bezier
+    t = c[1] + ((1-c[1]) * 0.5); mt = 1-t;
+    CGFloat ctX2 = (pow(mt, 2) * p0X) + (2*t*mt*p1X) + (pow(t, 2)*p3X);
+    CGFloat ctY2 = (pow(mt, 2) * p0Y) + (2*t*mt*p1Y) + (pow(t, 2)*p3Y);
+    CGPoint ctPoint = CGPointMake(ctX2, ctY2);
+    
+    NSMutableArray *newListPoint = [NSMutableArray arrayWithArray:listPoints];
+    [newListPoint insertObject:[NSValue valueWithCGPoint:ctPoint] atIndex:2];
+    
+    return newListPoint;
+    
+}// addPointBasedQuadraticBezier:
+
+
 - (NSDictionary *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
 {
+    // If the list points has 1 point, return nil
+    if ([listPoints count] == 1)
+        return nil;
+    
+    // If the list points has 2 point, return line
+    else if ([listPoints count] == 2) {
+        
+        NSValue *pointA = [listPoints objectAtIndex:0];
+        NSValue *pointB = [listPoints objectAtIndex:1];
+        
+        // Save the points to the array to paint
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                              pointA, @"t0Point",
+                              pointA, @"cPointA",
+                              pointB, @"cPointB",
+                              pointB, @"t3Point",
+                              pointA, @"t1Point",
+                              pointB, @"t2Point",
+                              [NSNumber numberWithFloat:.0], @"errorRatio", nil];
+        
+        return dict;
+    }
+    // If the list points has 3 point, return quadratic bezier
+    else if ([listPoints count] == 3)
+        listPoints = [self addPointBasedQuadraticBezier:listPoints];
+    
+    
     // We get C(t)
     CGFloat c[[listPoints count]];
     CGFloat currentLongitude = .0;
@@ -47,18 +131,28 @@
     cValue[3] = 1.0;
     cPoint[3] = [[listPoints lastObject]CGPointValue];
     
-    //float numberPointsF = (float)[listPoints count];
-    for (NSUInteger j = 1; j < 3; j++) {
-        float indexF = (float) round(step * (j));
-        NSLog(@"indexF %f", indexF);
-        NSUInteger index = (NSUInteger) indexF;
-        NSLog(@"%u", index);
-        cValue[j] = c[index];
-        cPoint[j] = CGPointMake([[listPoints objectAtIndex:index]CGPointValue].x,
-                                [[listPoints objectAtIndex:index]CGPointValue].y);
-        NSLog(@"cPoint[%u] (%f, %f)", j, cPoint[j].x, cPoint[j].y);
-    }            
     
+    // If the list points has 4 point, return quadratic bezier
+    if ([listPoints count] == 4) {
+        cValue[1] = c[1];
+        cPoint[1] = CGPointMake([[listPoints objectAtIndex:1]CGPointValue].x,
+                                [[listPoints objectAtIndex:1]CGPointValue].y);
+        cValue[2] = c[2];
+        cPoint[2] = CGPointMake([[listPoints objectAtIndex:2]CGPointValue].x,
+                                [[listPoints objectAtIndex:2]CGPointValue].y);
+    }
+    else {
+        //float numberPointsF = (float)[listPoints count];
+        for (NSUInteger j = 1; j < 3; j++) {
+            float indexF = (float) round(step * (j));
+            NSUInteger index = (NSUInteger) indexF;
+
+            cValue[j] = c[index];
+            cPoint[j] = CGPointMake([[listPoints objectAtIndex:index]CGPointValue].x,
+                                    [[listPoints objectAtIndex:index]CGPointValue].y);
+        }
+    }
+
     
     // We need create the matrix for solve the lineal equation
     // -------------------------------------------------------
@@ -117,7 +211,7 @@
     // Store solutions
     P1 = CGPointMake(P1.x, B[0]);
     P2 = CGPointMake(P2.x, B[1]);
-    NSLog(@"P1(%f, %f)  P2(%f, %f)", P1.x, P1.y, P2.x, P2.y);
+    //NSLog(@"P1(%f, %f)  P2(%f, %f)", P1.x, P1.y, P2.x, P2.y);
     if (P1.x==0 || P1.y==0 || P2.x==0 || P2.y==0) {
         NSLog(@"hola");
     }
@@ -152,40 +246,6 @@
     
 }// getCubicBezierPointsForListPoint:
 
-/*
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
-                                       splitIn:(NSUInteger) ntimes
-{
-    if (ntimes == 0)
-        return nil;
-    
-    NSMutableArray *curves = [NSMutableArray array];
-    NSUInteger splitParts = [listPoints count] * 1/ntimes;
-        
-    for (NSUInteger i = 0; i < ntimes; i++) {
-        
-        NSMutableArray *splitList = [NSMutableArray array];
-        
-        if (i == 0) {
-            for (NSUInteger j = i * splitParts; j < ((i+1) * splitParts); j++)
-                [splitList addObject:[listPoints objectAtIndex:j]];
-        }
-        else if (i == ntimes - 1) {
-            for (NSUInteger j = (i * splitParts) - 1; j < [listPoints count]; j++)
-                [splitList addObject:[listPoints objectAtIndex:j]];
-        }
-        else {
-            for (NSUInteger j = (i * splitParts) - 1; j < ((i+1) * splitParts); j++)
-                [splitList addObject:[listPoints objectAtIndex:j]];
-        }
-        
-        [curves addObject:[self getCubicBezierPointsForListPoint:splitList]];
-    }
-    
-    return curves;
-    
-}// getCubicBezierPointsForListPoint:splitIn:
-*/
 
 - (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
                                        splitIn:(NSUInteger) ntimes
@@ -199,7 +259,6 @@
     for (NSUInteger i = 0; i < ntimes; i++) {
         
         NSMutableArray *splitList = [NSMutableArray array];
-        
         if (i == 0) {
             for (NSUInteger j = i * splitParts; j < ((i+1) * splitParts); j++)
                 [splitList addObject:[listPoints objectAtIndex:j]];
@@ -228,7 +287,7 @@
         CGPoint P2 = [[dict valueForKey:@"cPointB"]CGPointValue];
         
         // Continuity
-        if (i != 0 && i != ntimes-1) {
+        if (i != 0/* && i != ntimes-1*/) {
             
             // Compare with the previous curve
             NSMutableDictionary *curve = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:i-1]];
@@ -285,7 +344,7 @@
             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
             
         }
-        
+
         // Save the points to the array to paint
         NSDictionary *convertPoint = [NSDictionary dictionaryWithObjectsAndKeys:
                                       [NSValue valueWithCGPoint:cPoint[0]], @"t0Point",
@@ -304,9 +363,14 @@
 }// getCubicBezierPointsForListPoint:splitIn:
 
 
-- (NSArray *) getBestCurveForListPoint:(NSArray *) listPoints
+- (NSArray *) getBestCurveForListPoint:(NSArray *)listPoints
                              tolerance:(CGFloat) ratioError
 {
+    // If there isn't enough number of points
+    // we just split one time
+    if ([listPoints count] < 7)
+        return [self getCubicBezierPointsForListPoint:listPoints splitIn:1];
+
     // We get all info about the listPoints
     // We get C(t)
     CGFloat c[[listPoints count]];
@@ -334,11 +398,13 @@
     //NSLog(@"Todo %u", limit);
     
     // LOG
+    /*
     for (NSUInteger i = 2; i <= limit; i++) {
         // Calculate error ratio
         CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
         NSLog(@"Para %u hay un %f", i, errorRatio);        
     }
+     */
     
     // We start loop looking for the minimize curves number
     NSUInteger splitParts = 4;
@@ -349,13 +415,13 @@
 
         if (errorRatio < 0.25) {
             splitParts = i;
-            NSLog(@"Elegido -> %u - error %f", i, errorRatio);
+            //NSLog(@"Elegido -> %u - error %f", i, errorRatio);
             break;
         }
         
         if (errorRatio > previousErrorRatio && errorRatio > 1.0) {
             splitParts = i-1;
-            NSLog(@"Elegido -> %u", i-1);
+            //NSLog(@"Elegido -> %u", i-1);
             break;
         }
         

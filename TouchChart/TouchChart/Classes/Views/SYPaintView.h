@@ -9,22 +9,25 @@
 #import <UIKit/UIKit.h>
 
 @class TCViewController;
+@class SYUnitTestController;
 
 @interface SYPaintView : UIView {
     
     // Controller
     __weak IBOutlet TCViewController *viewController;
+    __weak IBOutlet SYUnitTestController *unitTestController;
     
 }
 
-@property(nonatomic) float lineWidth;               // Sets the stroke width
-@property(nonatomic,strong) UIColor *foreColor;     // The stroke color
+@property(nonatomic, strong) NSMutableArray *allPoints; // Unit test data
 
 // Clears the finger drawing from the screen
 - (void) clearPaint;
 
 // Setter Parameters Drawing
-- (void) setBrushColorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
 - (void) setLineWidth:(float)lineWidth;
+
+// Unit Test Methods
+- (void) saveCase:(NSString *) caseName;
 
 @end

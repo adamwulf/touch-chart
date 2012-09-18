@@ -8,6 +8,7 @@
 
 #import "SYPaintView.h"
 #import "TCViewController.h"
+#import "SYUnitTestController.h"
 
 #pragma mark - Private Interface
 
@@ -35,8 +36,7 @@
 @implementation SYPaintView
 
 @synthesize handwritingCoords = handwritingCoords_;
-@synthesize lineWidth = lineWidth_;
-@synthesize foreColor = foreColor_;
+@synthesize allPoints;
 
 #pragma mark - Initializers
 
@@ -47,9 +47,11 @@
     if (self) {
 		self.handwritingCoords = [NSMutableArray array];
 		self.lineWidth = 5.0f;
-		self.foreColor = [UIColor blackColor];
-		self.backgroundColor = [UIColor clearColor];
+		foreColor_ = [UIColor blackColor];
 		lastTapPoint_ = CGPointZero;
+        
+        // Import cases from the cloud
+        [unitTestController updateListPointStored];
     }
     
     return self;
@@ -61,12 +63,22 @@
 {
     self.handwritingCoords = [NSMutableArray array];
     self.lineWidth = 5.0f;
-    self.foreColor = [UIColor blackColor];
-    self.backgroundColor = [UIColor clearColor];
+    foreColor_ = [UIColor blackColor];
     lastTapPoint_ = CGPointZero;
+    
+    // Import cases from the cloud
+    [unitTestController updateListPointStored];
     
 }// awakeFromNib
 
+
+#pragma mark - Setter Parameters Drawing
+
+- (void) setLineWidth:(float) lineWidth
+{
+    lineWidth_ = lineWidth;
+    
+}// setLineWidth
 
 
 #pragma mark - Drawing
@@ -76,8 +88,8 @@
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	
 	// Set drawing params
-	CGContextSetLineWidth(context, self.lineWidth);
-	CGContextSetStrokeColorWithColor(context, [self.foreColor CGColor]);
+	CGContextSetLineWidth(context, lineWidth_);
+	CGContextSetStrokeColorWithColor(context, [foreColor_ CGColor]);
 	CGContextSetLineCap(context, kCGLineCapButt);
 	CGContextSetLineJoin(context, kCGLineJoinRound);
 	CGContextBeginPath(context);
@@ -129,25 +141,23 @@
 }// clearPaint
 
 
-#pragma mark - Setter Parameters Drawing
-
-- (void) setBrushColorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue
-{
-	// Set the brush color using premultiplied alpha values
-	self.foreColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
-    
-}// setBrushColorWithRed:
-
-
 #pragma mark - Touch Handling
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // TEMP
-    [self clearPaint];
+    //[self clearPaint];
     
     // CGPoint to NSValue and add it to list
     [viewController resetData];
+    
+    // Init list points
+    self.allPoints = [[NSMutableArray alloc]init];
+    
+    // Unit Test: Add point
+    UITouch *touch = [touches anyObject];
+	CGPoint touchLocation = [touch locationInView:self];
+    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
         
 }// touchesBegan:withEvent:
 
@@ -163,42 +173,60 @@
     
     // Pre-process point to draw in screen
     [self processPoint:touchLocation];
+    
+    // Unit Test: Add point
+    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     	
 }// touchesMoved:withEvent:
 
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInView:self];
+    CGPoint touchLocation = [touch locationInView:self];
     
     // Add the last point
-    [viewController addLastPoint:location];
+    [viewController addLastPoint:touchLocation];
     
     // Analyze a recognize the figure
     [viewController getFigurePainted];
+    
+    // Unit Test: Add point
+    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesEnded:withEvent:
 
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //[self clearPaint];
+    [self clearPaint];
     
     // Analyze a recognize the figure
     UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInView:self];
+    CGPoint touchLocation = [touch locationInView:self];
     
     // Add the last point
-    [viewController addLastPoint:location];
+    [viewController addLastPoint:touchLocation];
     
     // Analyze a recognize the figure
     [viewController getFigurePainted];
     
+    // Unit Test: Add point
+    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    
 }// touchesCancelled:withEvent:
+
+
+#pragma mark - Unit Test Methods
+
+- (void) saveCase:(NSString *) caseName
+{
+    [unitTestController saveListPoints:allPoints withName:caseName];
+    
+}// saveCase:
 
 
 #pragma mark - Private Methods

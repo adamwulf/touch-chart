@@ -24,12 +24,15 @@
     [path setLineWidth:2.0];
     
     NSDictionary *firstPointDict = [points objectAtIndex:0];
-    CGPoint firstPoint = CGPointMake([[firstPointDict valueForKey:@"x"]floatValue] * 0.1, [[firstPointDict valueForKey:@"y"]floatValue] * 0.1);
-    [path  moveToPoint:firstPoint];
+    CGPoint previousPoint = CGPointMake([[firstPointDict valueForKey:@"x"]floatValue] * 0.1, [[firstPointDict valueForKey:@"y"]floatValue] * 0.1);
+    [path  moveToPoint:previousPoint];
     
     for (NSDictionary *pointDict in points) {
         CGPoint point = CGPointMake([[pointDict valueForKey:@"x"]floatValue] * 0.1, [[pointDict valueForKey:@"y"]floatValue] * 0.1);
-        [path addLineToPoint:point];
+        if (previousPoint.x != point.x || previousPoint.y != point.y) {
+            [path addLineToPoint:point];
+            previousPoint = point;
+        }
     }
     
     [[UIColor clearColor] set];
