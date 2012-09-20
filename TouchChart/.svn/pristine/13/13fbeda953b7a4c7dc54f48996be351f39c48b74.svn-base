@@ -13,7 +13,6 @@
 @interface SYShape : NSObject
 
 // Adding Elements
-- (void) addPoint:(CGPoint) keyPoint;
 - (void) addKeyPoint:(CGPoint) keyPoint;
 - (void) addPolygonalFromSegment:(SYSegment *) segment;
 - (void) addCurve:(NSArray *) curvePoints;

@@ -8,13 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class SYSaveMessageView;
 @class SYUnitTestController;
 @class SYPaintView;
 @class SYVectorView;
 @class SYSegment;
 @class SYGeometry;
-@class SYTableBase;
 
 @interface TCViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
     
@@ -27,9 +25,9 @@
     IBOutlet UIButton *ovalCircleButton;
     IBOutlet UIButton *polygonsButton;
     
-    IBOutlet SYSaveMessageView *selectCaseNameView;
+    IBOutlet UIView *selectCaseNameView;
     IBOutlet UITextField *nameTextField;
-    IBOutlet SYTableBase *tableBase;
+    IBOutlet UIView *tableBase;
 
 }
 

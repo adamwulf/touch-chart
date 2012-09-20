@@ -13,7 +13,6 @@
 #import "SYSegment.h"
 #import "SYBezierController.h"
 #import "SYPaintView.h"
-#import "SYSaveMessageView.h"
 
 #import "SYShape.h"
 
@@ -50,6 +49,11 @@
 - (void) viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Alert name cases, set round corner
+    [[selectCaseNameView layer] setMasksToBounds:YES];
+    [[selectCaseNameView layer]setCornerRadius:4.0];
+    //    [unitController updateListPointStored];
     
     // Hide table
     [tableBase setAlpha:.0];
@@ -103,9 +107,9 @@
     
     // Set message view position
     if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
+        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, 287.0, 179.0)];
     else
-        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
+        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, 287.0, 179.0)];
     
     [selectCaseNameView setNeedsDisplay];
     
@@ -168,9 +172,9 @@
     // Set message view position
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
     if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
+        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, 287.0, 179.0)];
     else
-        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
+        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, 287.0, 179.0)];
     
     
     [nameTextField becomeFirstResponder];
@@ -321,7 +325,7 @@
     // Get radius to reduce point cloud
     CGFloat maxDeltaX = maxX.x - minX.x;
     CGFloat maxDeltaY = maxY.y - minY.y;
-    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.038;
+    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.05;
     
     // Point cloud simplification algorithm (using radiusCloud)
     NSMutableArray *reducePointKeyArray = [NSMutableArray arrayWithArray:pointKeyArray];
@@ -436,22 +440,13 @@
     }
     
     // --------------------------------------------------------------------------
-    /*
+    
     // DEBUG DRAW
     SYShape *keyPointShape = [[SYShape alloc]init];
     for (NSValue *pointValue in listPoints)
-        [keyPointShape addPoint:[pointValue CGPointValue]];
+        [keyPointShape addKeyPoint:[pointValue CGPointValue]];
     [vectorView addShape:keyPointShape];
     [keyPointShape release];
-    
-    // DEBUG DRAW
-    SYShape *reducePointKeyArrayShape = [[SYShape alloc]init];
-    for (NSValue *pointValue in reducePointKeyArray)
-        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
-    [vectorView addShape:reducePointKeyArrayShape];
-    [reducePointKeyArrayShape release];
-    */
-    
     
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
@@ -484,70 +479,39 @@
         }
         else {
             
-            // Line. Errors if we use a line to fit
+            // Line
             // ---------------------------------------------------------
             // Line between the first and the last point in that stretch
             SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
             
-            // Deviation ratio and Max curvature
-            CGFloat sumDistance = .0; CGFloat maxCurvature = .0; CGFloat longitude = .0;
-            for (NSUInteger j = fromIndex+1; j < toIndex; j++) {
-                CGPoint aPoint = [[pointsToFit objectAtIndex:j]CGPointValue];
-                sumDistance += [segment distanceToPoint:aPoint];
-                
-                // Study curvature
-                SYSegment *fromStartToStudyPoint = [[SYSegment alloc]initWithPoint:firstPoint andPoint:aPoint];
-                SYSegment *fromStudyPointToEnd = [[SYSegment alloc]initWithPoint:aPoint andPoint:lastPoint];
-                
-                CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
-                CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
-                CGFloat minumumLongitude = [segment longitude] * 0.25;
-                if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
-                    maxCurvature = [segment distanceToPoint:aPoint];
-                
-                CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
-                SYSegment *segmentCalculateLongitude = [[SYSegment alloc]initWithPoint:previousPoint andPoint:aPoint];
-                longitude += [segmentCalculateLongitude longitude];
-                [segmentCalculateLongitude release];
+            // Error if we use a line to fit
+            CGFloat sumDistance = .0;
+            for (NSUInteger j = fromIndex; j < toIndex; j++) {
+                CGPoint firstPoint = [[pointsToFit objectAtIndex:j]CGPointValue];
+                sumDistance += [segment distanceToPoint:firstPoint];
             }
-            
-            CGFloat ratioSumDistance = sumDistance / longitude;
-            
+            CGFloat lineErrorRatio = sumDistance / [segment longitude];
             
             // Bezier
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *result = [bezierController getBestCurveForListPoint:stretch tolerance:0.01];
+            NSDictionary *result = [bezierController getCubicBezierPointsForListPoint:stretch];
             [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
-            CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
-            CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
-            CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
+            CGPoint controlPoint1 = [[result valueForKey:@"cPointA"]CGPointValue];
+            CGPoint controlPoint2 = [[result valueForKey:@"cPointB"]CGPointValue];
+            CGFloat bezierRatioError = [[result valueForKey:@"errorRatio"]floatValue];
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
-            //NSLog(@"%u - %u : longitude: %f  |  maxCurvature: %f  |  ratioSumDistance: %f  |  alignedCPRatio: %f  |  bezierRatioError: %f", fromIndex, toIndex, longitude, maxCurvature, ratioSumDistance, alignedCPRatio, bezierRatioError);
+            NSLog(@"%u - %u   :   Si es recta, ratio: %f -  Cubic bezier aligned: %f con error de %f", fromIndex, toIndex, lineErrorRatio, alignedCPRatio, bezierRatioError);
+            
             
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
-            if (longitude > 65.0) {
-                if (maxCurvature < 6.3) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
-                    }
-                    [shape addPolygonalFromSegment:segment];
-                }
-                else {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
-                }
-            }
-            else if (bezierRatioError < 0.29) {
+            if (bezierRatioError < 0.29) {
+                
                 if (alignedCPRatio < 0.037) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+                    NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -555,13 +519,13 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18) {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                    NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
-                else if (ratioSumDistance < 1.0) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+                else if (lineErrorRatio < 1.2) {
+                    NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -569,15 +533,15 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                     //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                     NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
                 
             }
-            else if (ratioSumDistance < 2.1) {
-                //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+            else if (lineErrorRatio < 2.1) {
+                NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                 if ([previousCurves count] != 0) {
                     [shape addCurve:previousCurves];
                     previousCurves = [NSMutableArray array];
@@ -585,7 +549,7 @@
                 [shape addPolygonalFromSegment:segment];
             }
             else {
-                //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
+                NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                 if ([previousCurves count] != 0)
                     [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                 [previousCurves addObjectsFromArray:stretch];
@@ -1066,29 +1030,6 @@
     [pointKeyArray addObject:[NSValue valueWithCGPoint:lastPoint]];
     [pointKeyArray insertObject:[listPoints objectAtIndex:0] atIndex:0];
     
-    /*
-    for (int i = 1; i < [listPoints count]; i++) {
-     
-    }
-    
-    // ANGLES
-    NSValue *vertexValue = [listPoints objectAtIndex:[listPoints count]-3];
-    CGFloat angle = [self getAngleBetweenVertex:pointA
-                                      andPointA:pointB
-                                      andPointB:[vertexValue CGPointValue]];
-    
-    CGFloat angleDeg = (angle / M_PI_2) * 90.0;
-    if (angleDeg < 170.0) {
-        // A or B was adding to the pointKeyPoint...
-        if ([[pointKeyArray lastObject]isEqual:pointAValue] || [[pointKeyArray lastObject]isEqual:pointBValue]) {
-            // we don't need add vertex
-        }
-        else {
-            if (![[pointKeyArray lastObject]isEqual:vertexValue])
-                [pointKeyArray addObject:vertexValue];
-        }
-    }
-    */
 }// addLastPoint:
 
 

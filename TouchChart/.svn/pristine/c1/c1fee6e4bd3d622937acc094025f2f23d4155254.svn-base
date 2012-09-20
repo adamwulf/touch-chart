@@ -70,7 +70,7 @@
 }// addPointBasedQuadraticBezier:
 
 
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
+- (NSDictionary *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
 {
     // If the list points has 1 point, return nil
     if ([listPoints count] == 1)
@@ -92,7 +92,7 @@
                               pointB, @"t2Point",
                               [NSNumber numberWithFloat:.0], @"errorRatio", nil];
         
-        return [NSArray arrayWithObject:dict];
+        return dict;
     }
     // If the list points has 3 point, return quadratic bezier
     else if ([listPoints count] == 3)
@@ -243,7 +243,7 @@
                           [NSValue valueWithCGPoint:cPoint[2]], @"t2Point",
                           [NSNumber numberWithFloat:ratio], @"errorRatio", nil];
     
-    return [NSArray arrayWithObject:dict];
+    return dict;
     
 }// getCubicBezierPointsForListPoint:
 
@@ -252,7 +252,7 @@
                                        splitIn:(NSUInteger) ntimes
 {    
     if (ntimes == 0)
-        return [self getCubicBezierPointsForListPoint:listPoints];
+        return nil;
     
     NSMutableArray *curves = [NSMutableArray array];
     NSUInteger splitParts = [listPoints count] * 1/ntimes;
@@ -279,47 +279,18 @@
         else if ([splitList count] < 4)
             NSLog(@"Error");
 
-        NSArray *array = [self getCubicBezierPointsForListPoint:splitList];
+        NSDictionary *dict = [self getCubicBezierPointsForListPoint:splitList];
         
         // Store solutions
-        CGPoint cPoint[4] = {[[[array objectAtIndex:0] valueForKey:@"t0Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t1Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t2Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t3Point"]CGPointValue]};
-        CGPoint P1 = [[[array objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
-        CGPoint P2 = [[[array objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
+        CGPoint cPoint[4] = {[[dict valueForKey:@"t0Point"]CGPointValue],
+            [[dict valueForKey:@"t1Point"]CGPointValue],
+            [[dict valueForKey:@"t2Point"]CGPointValue],
+            [[dict valueForKey:@"t3Point"]CGPointValue]};
+        CGPoint P1 = [[dict valueForKey:@"cPointA"]CGPointValue];
+        CGPoint P2 = [[dict valueForKey:@"cPointB"]CGPointValue];
         
         // Continuity
 //      if (i != 0/* && i != ntimes-1*/) {
-        /*
-        if (i != 0) {
-            // Compare with the previous curve
-            NSMutableDictionary *curve = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:i-1]];
-            
-            // Get the last control point in the last curve stored.
-            // I have to do the inverse conversion
-            CGPoint controlPointEndPrevious = CGPointMake([[curve valueForKey:@"cPointB"]CGPointValue].x,
-                                                          [[curve valueForKey:@"cPointB"]CGPointValue].y);
-            
-            // Get pivotal (the last point in this
-            CGPoint controlPointStartCurrent = P1;
-            CGPoint pivotalPoint = [[splitList objectAtIndex:0]CGPointValue];
-            
-            // Slope for the first CP
-            CGFloat deltaX1 = controlPointEndPrevious.x - pivotalPoint.x;
-            CGFloat deltaY1 = controlPointEndPrevious.y - pivotalPoint.y;
-            CGFloat m1 = deltaY1/deltaX1;
-            
-            // Slope for the second CP
-            CGFloat deltaX2 = controlPointStartCurrent.x - pivotalPoint.x;
-            CGFloat deltaY2 = controlPointStartCurrent.y - pivotalPoint.y;
-            CGFloat m2 = deltaY2/deltaX2;
-            
-            // Get the average value
-            CGFloat mMid = (fabsf(m1) + fabsf(m2)) * 0.5;
-        }
-        */
-        
         if (i != 0) {
             
             // Compare with the previous curve
@@ -375,7 +346,7 @@
             
             // Store normally
             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
-         
+            
         }
 
         // Save the points to the array to paint
@@ -386,7 +357,7 @@
                                       [NSValue valueWithCGPoint:cPoint[3]], @"t3Point",
                                       [NSValue valueWithCGPoint:cPoint[1]], @"t1Point",
                                       [NSValue valueWithCGPoint:cPoint[2]], @"t2Point",
-                                      [NSNumber numberWithFloat:[[[array objectAtIndex:0] valueForKey:@"errorRatio"]floatValue]], @"errorRatio", nil];
+                                      [NSNumber numberWithFloat:[[dict valueForKey:@"errorRatio"]floatValue]], @"errorRatio", nil];
         
         [curves addObject:convertPoint];
     }
@@ -426,39 +397,41 @@
         c[i] = currentLongitude/totalLongitude;
     
     // Limit
-    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);    
+    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);
+    //NSLog(@"Todo %u", [listPoints count]);
+    //NSLog(@"Todo %u", limit);
+    
+    // LOG
+    /*
+    for (NSUInteger i = 2; i <= limit; i++) {
+        // Calculate error ratio
+        CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
+        NSLog(@"Para %u hay un %f", i, errorRatio);        
+    }
+     */
     
     // We start loop looking for the minimize curves number
-    NSUInteger splitParts = 1;
+    NSUInteger splitParts = 4;
     CGFloat previousErrorRatio = 1000.0;
-    for (NSUInteger i = 0; i <= limit; i++) {
+    for (NSUInteger i = 2; i <= limit; i++) {
         // Calculate error ratio
         CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
 
-        if (errorRatio < 0.025) {
+        if (errorRatio < 0.25) {
             splitParts = i;
+            NSLog(@"Elegido -> %u - error %f", i, errorRatio);
             break;
-        }
-        else if (errorRatio < previousErrorRatio) {
-            splitParts = i;
-            previousErrorRatio = errorRatio;
         }
         
         if (errorRatio > previousErrorRatio && errorRatio > 1.0) {
             splitParts = i-1;
+            NSLog(@"Elegido -> %u", i-1);
             break;
         }
+        
+        previousErrorRatio = errorRatio;
     }
     
-    // LOG
-    /*
-     for (NSUInteger i = 0; i <= limit; i++) {
-     // Calculate error ratio
-     CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
-     NSLog(@"Para %u hay un %f", i, errorRatio);
-     }
-     */
-    //NSLog(@"Elegido -> %u", splitParts);
     return [self getCubicBezierPointsForListPoint:listPoints splitIn:splitParts];
     
 }// getBestCurveForListPoint:tolerance:

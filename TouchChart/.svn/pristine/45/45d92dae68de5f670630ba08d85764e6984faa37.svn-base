@@ -40,10 +40,8 @@
 		ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */; };
 		ED12DD3B15F537E400FBDF00 /* SYListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ED12DD3A15F537E400FBDF00 /* SYListButton.m */; };
 		ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */; };
-		ED256D26160B44980009C871 /* SYTableBase.m in Sources */ = {isa = PBXBuildFile; fileRef = ED256D25160B44980009C871 /* SYTableBase.m */; };
 		ED2592E815BECB4000DC1DF0 /* SYBezierController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED2592E715BECB4000DC1DF0 /* SYBezierController.m */; };
 		ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED646F1B15AED566006434F8 /* Accelerate.framework */; };
-		ED669884160A30B900115E68 /* SYSaveMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED669883160A30B900115E68 /* SYSaveMessageView.m */; };
 		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
 		ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
@@ -108,13 +106,9 @@
 		ED12DD3915F537E400FBDF00 /* SYListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYListButton.h; path = Classes/Views/Buttons/SYListButton.h; sourceTree = "<group>"; };
 		ED12DD3A15F537E400FBDF00 /* SYListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYListButton.m; path = Classes/Views/Buttons/SYListButton.m; sourceTree = "<group>"; };
 		ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ListGlyphs.png; path = TouchChart/Images/ListGlyphs.png; sourceTree = SOURCE_ROOT; };
-		ED256D24160B44980009C871 /* SYTableBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYTableBase.h; path = Classes/Views/Buttons/SYTableBase.h; sourceTree = "<group>"; };
-		ED256D25160B44980009C871 /* SYTableBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYTableBase.m; path = Classes/Views/Buttons/SYTableBase.m; sourceTree = "<group>"; };
 		ED2592E615BECB4000DC1DF0 /* SYBezierController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYBezierController.h; path = Classes/NSObject/SYBezierController.h; sourceTree = "<group>"; };
 		ED2592E715BECB4000DC1DF0 /* SYBezierController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYBezierController.m; path = Classes/NSObject/SYBezierController.m; sourceTree = "<group>"; };
 		ED646F1B15AED566006434F8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		ED669882160A30B900115E68 /* SYSaveMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYSaveMessageView.h; path = Classes/Views/Buttons/SYSaveMessageView.h; sourceTree = "<group>"; };
-		ED669883160A30B900115E68 /* SYSaveMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYSaveMessageView.m; path = Classes/Views/Buttons/SYSaveMessageView.m; sourceTree = "<group>"; };
 		ED92333A156177A600B0F505 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		ED92333C156180F600B0F505 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ED92334415618F9E00B0F505 /* SYVectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYVectorView.h; path = Classes/Views/SYVectorView.h; sourceTree = "<group>"; };
@@ -278,23 +272,19 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		ED12DD3815F537BA00FBDF00 /* Paint Code */ = {
+		ED12DD3815F537BA00FBDF00 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
 				ED12DD3915F537E400FBDF00 /* SYListButton.h */,
 				ED12DD3A15F537E400FBDF00 /* SYListButton.m */,
-				ED669882160A30B900115E68 /* SYSaveMessageView.h */,
-				ED669883160A30B900115E68 /* SYSaveMessageView.m */,
-				ED256D24160B44980009C871 /* SYTableBase.h */,
-				ED256D25160B44980009C871 /* SYTableBase.m */,
 			);
-			name = "Paint Code";
+			name = Buttons;
 			sourceTree = "<group>";
 		};
 		ED9233351561774000B0F505 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				ED12DD3815F537BA00FBDF00 /* Paint Code */,
+				ED12DD3815F537BA00FBDF00 /* Buttons */,
 				EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */,
 				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
@@ -464,8 +454,6 @@
 				ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */,
 				ED12DD3B15F537E400FBDF00 /* SYListButton.m in Sources */,
 				ED10653C15FF5E71005C233F /* SYShape.m in Sources */,
-				ED669884160A30B900115E68 /* SYSaveMessageView.m in Sources */,
-				ED256D26160B44980009C871 /* SYTableBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
