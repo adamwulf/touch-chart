@@ -7,38 +7,12 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "TouchChart/Classes/Views/JBSignatureView.m"
-         timestampString = "359920657.126862"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "97"
-         endingLineNumber = "97"
-         landmarkName = "-drawRect:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369843805.540451"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "353"
-         endingLineNumber = "353"
-         landmarkName = "-drawOpenShape"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1351"
-         endingLineNumber = "1351"
+         startingLineNumber = "1540"
+         endingLineNumber = "1540"
          landmarkName = "-drawBezierCurveWithPoints:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1360"
-         endingLineNumber = "1360"
+         startingLineNumber = "1549"
+         endingLineNumber = "1549"
          landmarkName = "-drawBezierCurvesWithPoints:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1372"
-         endingLineNumber = "1372"
+         startingLineNumber = "1561"
+         endingLineNumber = "1561"
          landmarkName = "-drawPolygonal:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -73,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1384"
-         endingLineNumber = "1384"
+         startingLineNumber = "1573"
+         endingLineNumber = "1573"
          landmarkName = "-drawPolygonalFromSegment:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1396"
-         endingLineNumber = "1396"
+         startingLineNumber = "1585"
+         endingLineNumber = "1585"
          landmarkName = "-drawSquare:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1408"
-         endingLineNumber = "1408"
+         startingLineNumber = "1597"
+         endingLineNumber = "1597"
          landmarkName = "-drawDiamond:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1420"
-         endingLineNumber = "1420"
+         startingLineNumber = "1609"
+         endingLineNumber = "1609"
          landmarkName = "-drawCircle:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -125,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1431"
-         endingLineNumber = "1431"
+         startingLineNumber = "1620"
+         endingLineNumber = "1620"
          landmarkName = "-drawPoint:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -138,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1441"
-         endingLineNumber = "1441"
+         startingLineNumber = "1630"
+         endingLineNumber = "1630"
          landmarkName = "-drawCircleWithTransform:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -151,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "TouchChart/TCViewController.m"
-         timestampString = "369849243.255153"
+         timestampString = "371066559.217543"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1453"
-         endingLineNumber = "1453"
+         startingLineNumber = "1642"
+         endingLineNumber = "1642"
          landmarkName = "-drawArc:radius:startAngle:endAngle:clockwise:"
          landmarkType = "5">
       </FileBreakpoint>

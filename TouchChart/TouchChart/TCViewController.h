@@ -15,6 +15,7 @@
 @class SYSegment;
 @class SYGeometry;
 @class SYTableBase;
+@class SYShape;
 
 @interface TCViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
     
@@ -50,7 +51,8 @@
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 - (void) addLastPoint:(CGPoint) lastPoint;
 
-- (NSArray *) reducePointsKey;
+- (NSDictionary *) reducePointsKey;
+- (void) snapLinesAnglesForShape:(SYShape *)shape;
 
 // Basic Geometric calculations
 - (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
@@ -64,7 +66,6 @@
 
 // Analyze and Recognizer Geometry Methods
 - (void) getFigurePainted;
-- (void) drawBezierPathPainted;
 - (void) drawOvalCirclePainted;
 - (void) drawLineCurvesMixedPainted;
 

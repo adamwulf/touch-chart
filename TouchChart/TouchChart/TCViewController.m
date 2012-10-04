@@ -311,9 +311,11 @@
 
 - (void) drawOpenShape
 {
-    NSMutableArray *pointsToFit = [NSMutableArray arrayWithArray:listPoints];       // Points to follow replacing keypoints for the final key points
-    NSMutableArray *indexKeyPoints = [NSMutableArray array];                        // Index for all key points
+    NSDictionary *dataDict = [self reducePointsKey];
     
+    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
+    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
+    /*
     // --------------------------------------------------------------------------
     // Reduce Points
     // --------------------------------------------------------------------------
@@ -415,6 +417,46 @@
         }
     }
     
+    
+    // Clean all NSNull
+    cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
+    reducePointKeyArray = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [reducePointKeyArray addObject:keyPoint];
+    }
+    
+    
+    // Remove key points if the normal points between them are < 5
+    // --------------------------------------------------------------------------
+    // For the first point
+    if ([reducePointKeyArray count] > 2) {
+        NSValue *pointValueKeyA = [reducePointKeyArray objectAtIndex:0];
+        NSValue *pointValueKeyB = [reducePointKeyArray objectAtIndex:1];
+        
+        NSUInteger indexKeyPointA = [pointsToFit indexOfObject:pointValueKeyA];
+        NSUInteger indexKeyPointB = [pointsToFit indexOfObject:pointValueKeyB];
+        
+        NSUInteger numberOfPoints = indexKeyPointB - indexKeyPointA;
+        if (numberOfPoints < 6)
+            [reducePointKeyArray removeObject:pointValueKeyB];
+    }
+
+    // For the others points
+    for (int i = 0 ; i+2 < [reducePointKeyArray count]-1 ; i++) {
+        
+        NSValue *pointValueKeyA = [reducePointKeyArray objectAtIndex:i];
+        NSValue *pointValueKeyB = [reducePointKeyArray objectAtIndex:i+1];
+        
+        NSUInteger indexKeyPointA = [pointsToFit indexOfObject:pointValueKeyA];
+        NSUInteger indexKeyPointB = [pointsToFit indexOfObject:pointValueKeyB];
+        
+        NSUInteger numberOfPoints = indexKeyPointB - indexKeyPointA;
+        if (numberOfPoints < 6)
+            [reducePointKeyArray removeObject:pointValueKeyB];
+    }
+    
+    
     // Clean all NSNull
     cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
     reducePointKeyArray = [NSMutableArray array];
@@ -436,7 +478,7 @@
     }
     
     // --------------------------------------------------------------------------
-    /*
+    
     // DEBUG DRAW
     SYShape *keyPointShape = [[SYShape alloc]init];
     for (NSValue *pointValue in listPoints)
@@ -473,7 +515,7 @@
         // If there are only 4 points,
         // it's possible that the estimation won't be right
         if ([stretch count] < 4) {
-            NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
+
             if ([previousCurves count] != 0) {
                 [shape addCurve:previousCurves];
                 previousCurves = [NSMutableArray array];
@@ -601,38 +643,11 @@
         previousCurves = [NSMutableArray array];
     }
     
+    [self snapLinesAnglesForShape:shape];
     [vectorView addShape:shape];
     [shape release];
     
 }// drawOpenCurve
-
-
-
-
-- (void) drawBezierPathPainted
-{
-    for (NSValue *pointValue in pointKeyArray)
-        [self drawPoint:[pointValue CGPointValue]];
-    
-    for (NSValue *pointValue in [self reducePointsKey])
-        [self drawKeyPoint:[pointValue CGPointValue]];
-    
-    /*
-     // Create bezier curve
-     SYBezierController *bezierController = [[SYBezierController alloc]init];
-     NSArray *curves = [bezierController getBestCurveForListPoint:listPoints tolerance:0.01];
-     [bezierController release];
-     if (!curves)
-     return;
-     
-     [self drawBezierCurveWithPoints:curves];
-     */
-    
-    /*
-     for (NSUInteger i = 0 ; i < [listPoints count] ; i++)
-     [self drawPoint:[[listPoints objectAtIndex:i]CGPointValue]];
-     */
-}// getBezierPathPainted
 
 
 - (void) drawOvalCirclePainted
@@ -901,6 +916,24 @@
 }// drawLineCurvesMixedPainted
 
 
+- (CGFloat) getTotalLongitude
+{
+    CGFloat totalLongitude = .0;
+    
+    for (NSUInteger i = 1 ; i < [listPoints count] ; i++) {
+        CGPoint pointStart = [[listPoints objectAtIndex:i-1]CGPointValue];
+        CGPoint pointEnd = [[listPoints objectAtIndex:i]CGPointValue];
+        
+        SYSegment *segment = [[SYSegment alloc]initWithPoint:pointStart andPoint:pointEnd];
+        totalLongitude += [segment longitude];
+        [segment release];
+    }
+    
+    return totalLongitude;
+    
+}// getTotalLongitude
+
+
 #pragma mark - Cloud Points Methods
 
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
@@ -1092,70 +1125,77 @@
 }// addLastPoint:
 
 
-- (CGFloat) getTotalLongitude
+- (NSDictionary *) reducePointsKey
 {
-    CGFloat totalLongitude = .0;
+    NSMutableArray *pointsToFit = [NSMutableArray arrayWithArray:listPoints];       // Points to follow replacing keypoints for the final key points
+    NSMutableArray *indexKeyPoints = [NSMutableArray array];                        // Index for all key points
     
-    for (NSUInteger i = 1 ; i < [listPoints count] ; i++) {
-        CGPoint pointStart = [[listPoints objectAtIndex:i-1]CGPointValue];
-        CGPoint pointEnd = [[listPoints objectAtIndex:i]CGPointValue];
-        
-        SYSegment *segment = [[SYSegment alloc]initWithPoint:pointStart andPoint:pointEnd];
-        totalLongitude += [segment longitude];
-        [segment release];
-    }
+    // --------------------------------------------------------------------------
+    // Reduce Points
+    // --------------------------------------------------------------------------
     
-    return totalLongitude;
-    
-}// getTotalLongitude
-
-
-- (NSArray *) reducePointsKey
-{
     // Get radius to reduce point cloud
     CGFloat maxDeltaX = maxX.x - minX.x;
     CGFloat maxDeltaY = maxY.y - minY.y;
-    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.05;
+    CGFloat radiusCloud = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2)) * 0.038;
     
     // Point cloud simplification algorithm (using radiusCloud)
-    // --------------------------------------------------------------------------
     NSMutableArray *reducePointKeyArray = [NSMutableArray arrayWithArray:pointKeyArray];
-    NSMutableArray *indexKeyPoints = [NSMutableArray array];
     
     for (int i = 0 ; i < [reducePointKeyArray count] ; i++) {
         id pointID = [reducePointKeyArray objectAtIndex:i];
         
         if ((NSNull *) pointID != [NSNull null]) {
             CGPoint point = [pointID CGPointValue];
-            [indexKeyPoints addObject:[NSNumber numberWithInt:i]];
             
             // Take the neighbors points for which compose the cloud points
             NSMutableArray *localCloudPoint = [NSMutableArray array];
             [localCloudPoint addObject:pointID];
             
+            NSInteger firstIndex = -1;
+            
             for (int j = i+1 ; j < [pointKeyArray count] ; j++) {
+                
                 CGPoint nextPoint = [[pointKeyArray objectAtIndex:j]CGPointValue];
                 CGFloat distance = [self distanceBetweenPoint:point andPoint:nextPoint];
                 
                 if (distance < radiusCloud) {
                     [localCloudPoint addObject:[pointKeyArray objectAtIndex:j]];
                     [reducePointKeyArray replaceObjectAtIndex:j withObject:[NSNull null]];
+                    
+                    // Take the first index for the cloud points
+                    NSUInteger indexToRemove = [pointsToFit indexOfObject:[pointKeyArray objectAtIndex:j]];
+                    if (indexToRemove == NSNotFound)
+                        NSLog(@"error");
+                    else {
+                        [pointsToFit replaceObjectAtIndex:indexToRemove withObject:[NSNull null]];
+                        if (firstIndex == -1)
+                            firstIndex = indexToRemove;
+                    }
                 }
                 else
                     break;
             }
             
-            // Get the key point for this local cloud point
-            CGFloat xMid = .0; CGFloat yMid = .0; CGFloat countF = (CGFloat) [localCloudPoint count];
-            for (NSValue *pointCloudValue in localCloudPoint) {
-                CGPoint pointCloud = [pointCloudValue CGPointValue];
-                xMid += pointCloud.x;
-                yMid += pointCloud.y;
+            if ([localCloudPoint count] > 1) {
+                
+                NSUInteger indexMidPoint = (NSUInteger)[localCloudPoint count] * 0.5;
+                
+                // If the point is the first o last point, it will be the point key
+                if ([[localCloudPoint objectAtIndex:0]isEqual:[pointsToFit objectAtIndex:0]])
+                    indexMidPoint = 0;
+                else if ([[localCloudPoint lastObject]isEqual:[pointsToFit lastObject]])
+                    indexMidPoint = [localCloudPoint count]-1;
+                // else will be the index in the middle
+                
+                // Replace all the point from the cloud for the mid point
+                NSValue *midPoint = [localCloudPoint objectAtIndex:indexMidPoint];
+                [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
+                
+                // Replace the new point into pointsToFit
+                if (firstIndex != -1)
+                    [pointsToFit replaceObjectAtIndex:firstIndex withObject:midPoint];
             }
-            
-            // Replace all the point from the cloud for the mid point
-            NSValue *midPoint = [NSValue valueWithCGPoint:CGPointMake(xMid/countF, yMid/countF)];
-            [reducePointKeyArray replaceObjectAtIndex:i withObject:midPoint];
         }
     }
     
@@ -1184,13 +1224,13 @@
             
             if ([segment distanceToPoint:pointKeyB] < longitude * 0.12) {
                 [reducePointKeyArray replaceObjectAtIndex:i+1 withObject:[NSNull null]];
-                [indexKeyPoints replaceObjectAtIndex:i+1 withObject:[NSNull null]];
                 i = i+1;
             }
             
             [segment release];
         }
     }
+    
     
     // Clean all NSNull
     cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
@@ -1200,17 +1240,166 @@
             [reducePointKeyArray addObject:keyPoint];
     }
     
-    // Clean all NSNull
-    cleanerArray  = [NSMutableArray arrayWithArray:indexKeyPoints];
-    indexKeyPoints = [NSMutableArray array];
-    for (id keyPoint in cleanerArray) {
-        if ((NSNull *) keyPoint != [NSNull null])
-            [indexKeyPoints addObject:keyPoint];
+    
+    // Remove key points if the normal points between them are < 5
+    // --------------------------------------------------------------------------
+    // For the first point
+    if ([reducePointKeyArray count] > 2) {
+        NSValue *pointValueKeyA = [reducePointKeyArray objectAtIndex:0];
+        NSValue *pointValueKeyB = [reducePointKeyArray objectAtIndex:1];
+        
+        NSUInteger indexKeyPointA = [pointsToFit indexOfObject:pointValueKeyA];
+        NSUInteger indexKeyPointB = [pointsToFit indexOfObject:pointValueKeyB];
+        
+        NSUInteger numberOfPoints = indexKeyPointB - indexKeyPointA;
+        if (numberOfPoints < 6)
+            [reducePointKeyArray removeObject:pointValueKeyB];
     }
     
-    return [NSArray arrayWithArray:reducePointKeyArray];
+    // For the others points
+    for (int i = 0 ; i+2 < [reducePointKeyArray count]-1 ; i++) {
+        
+        NSValue *pointValueKeyA = [reducePointKeyArray objectAtIndex:i];
+        NSValue *pointValueKeyB = [reducePointKeyArray objectAtIndex:i+1];
+        
+        NSUInteger indexKeyPointA = [pointsToFit indexOfObject:pointValueKeyA];
+        NSUInteger indexKeyPointB = [pointsToFit indexOfObject:pointValueKeyB];
+        
+        NSUInteger numberOfPoints = indexKeyPointB - indexKeyPointA;
+        if (numberOfPoints < 6)
+            [reducePointKeyArray removeObject:pointValueKeyB];
+    }
+    
+    
+    // Clean all NSNull
+    cleanerArray  = [NSMutableArray arrayWithArray:reducePointKeyArray];
+    reducePointKeyArray = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [reducePointKeyArray addObject:keyPoint];
+    }
+    
+    // Identify the keypoints indexes
+    cleanerArray  = [NSMutableArray arrayWithArray:pointsToFit];
+    pointsToFit = [NSMutableArray array];
+    for (id keyPoint in cleanerArray) {
+        if ((NSNull *) keyPoint != [NSNull null])
+            [pointsToFit addObject:keyPoint];
+    }
+    for (NSValue *keyPoint in reducePointKeyArray) {
+        NSUInteger index = [pointsToFit indexOfObject:keyPoint];
+        [indexKeyPoints addObject:[NSNumber numberWithInteger:index]];
+    }
+    
+    // --------------------------------------------------------------------------
+    
+    // DEBUG DRAW
+    SYShape *keyPointShape = [[SYShape alloc]init];
+    for (NSValue *pointValue in listPoints)
+        [keyPointShape addPoint:[pointValue CGPointValue]];
+    [vectorView addShape:keyPointShape];
+    [keyPointShape release];
+    
+    // DEBUG DRAW
+    SYShape *reducePointKeyArrayShape = [[SYShape alloc]init];
+    for (NSValue *pointValue in reducePointKeyArray)
+        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
+    [vectorView addShape:reducePointKeyArrayShape];
+    [reducePointKeyArrayShape release];
+    
+    return [NSDictionary dictionaryWithObjectsAndKeys:pointsToFit, @"pointsToFit", indexKeyPoints, @"indexKeyPoints", nil];    
     
 }// reducePointsKey
+
+
+- (void) snapLinesAnglesForShape:(SYShape *)shape
+{
+    // Single line
+    if ([[shape geometries]count] == 1) {
+                
+        SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
+        
+        if (geometryCurrent.geometryType == LinesType) {
+            // Snap. Start point pivot
+            CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
+            CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
+            
+            SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+            
+            if ([segment isSnapAngle])
+                [segment snapAngleChangingFinalPoint];
+            
+            geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
+                                          [NSValue valueWithCGPoint:segment.pointFn], nil];
+        }
+    }
+    // Two o more lines
+    else {
+        // The first line
+        SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
+        if (geometryCurrent.geometryType == LinesType) {
+            
+            // Snap. Start point pivot
+            CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
+            CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
+            
+            SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+            if ([segment isSnapAngle])
+                [segment snapAngleChangingStartPoint];
+            
+            geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
+                                          [NSValue valueWithCGPoint:segment.pointFn], nil];
+        }
+        
+        for (int i = 1 ; i < [[shape geometries]count]-1 ; i++) {
+            
+            SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:i];
+            SYGeometry *geometryNext = [[shape geometries]objectAtIndex:i+1];
+            
+            if (geometryCurrent.geometryType == LinesType &&
+                geometryNext.geometryType == LinesType) {
+                
+                // Snap. Start point pivot
+                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
+                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
+                
+                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                if ([segment isSnapAngle])
+                    [segment snapAngleChangingFinalPoint];
+                
+                // Snap. Get the new points final point in the current line
+                // and it will be the first point in the next one
+                CGPoint pointStNext = [[geometryNext.pointArray objectAtIndex:0]CGPointValue];
+                CGPoint pointFnNext = [[geometryNext.pointArray objectAtIndex:1]CGPointValue];
+                
+                SYSegment *segmentNext = [[[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext]autorelease];
+                CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
+                
+                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
+                                              [NSValue valueWithCGPoint:intersectionPoint], nil];
+                geometryNext.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectionPoint],
+                                           [NSValue valueWithCGPoint:pointFnNext], nil];
+            }
+        }
+        
+        // The last line
+        geometryCurrent = [[shape geometries]objectAtIndex:[[shape geometries]count]-1];
+        if (geometryCurrent.geometryType == LinesType) {
+            
+            // Snap. Start point pivot
+            CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
+            CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
+            
+            SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+            if ([segment isSnapAngle])
+                [segment snapAngleChangingFinalPoint];
+            
+            geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
+                                          [NSValue valueWithCGPoint:segment.pointFn], nil];
+        }
+    }
+    
+}// snapLinesAnglesForShape:
 
 
 #pragma mark - Geometric calculations

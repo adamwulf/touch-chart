@@ -38,8 +38,8 @@
 		ED12DD3515F5295200FBDF00 /* LoginPopupBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */; };
 		ED12DD3615F5295200FBDF00 /* LoginPopupMiddle.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */; };
 		ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */; };
-		ED12DD3B15F537E400FBDF00 /* SYListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ED12DD3A15F537E400FBDF00 /* SYListButton.m */; };
 		ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */; };
+		ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ED22E38D161D9AA20092B432 /* Default-568h@2x.png */; };
 		ED256D26160B44980009C871 /* SYTableBase.m in Sources */ = {isa = PBXBuildFile; fileRef = ED256D25160B44980009C871 /* SYTableBase.m */; };
 		ED2592E815BECB4000DC1DF0 /* SYBezierController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED2592E715BECB4000DC1DF0 /* SYBezierController.m */; };
 		ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED646F1B15AED566006434F8 /* Accelerate.framework */; };
@@ -105,9 +105,8 @@
 		ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupBottom.png; path = TouchChart/Images/LoginPopupBottom.png; sourceTree = SOURCE_ROOT; };
 		ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupMiddle.png; path = TouchChart/Images/LoginPopupMiddle.png; sourceTree = SOURCE_ROOT; };
 		ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupTop.png; path = TouchChart/Images/LoginPopupTop.png; sourceTree = SOURCE_ROOT; };
-		ED12DD3915F537E400FBDF00 /* SYListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYListButton.h; path = Classes/Views/Buttons/SYListButton.h; sourceTree = "<group>"; };
-		ED12DD3A15F537E400FBDF00 /* SYListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYListButton.m; path = Classes/Views/Buttons/SYListButton.m; sourceTree = "<group>"; };
 		ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ListGlyphs.png; path = TouchChart/Images/ListGlyphs.png; sourceTree = SOURCE_ROOT; };
+		ED22E38D161D9AA20092B432 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		ED256D24160B44980009C871 /* SYTableBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYTableBase.h; path = Classes/Views/Buttons/SYTableBase.h; sourceTree = "<group>"; };
 		ED256D25160B44980009C871 /* SYTableBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYTableBase.m; path = Classes/Views/Buttons/SYTableBase.m; sourceTree = "<group>"; };
 		ED2592E615BECB4000DC1DF0 /* SYBezierController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYBezierController.h; path = Classes/NSObject/SYBezierController.h; sourceTree = "<group>"; };
@@ -281,8 +280,6 @@
 		ED12DD3815F537BA00FBDF00 /* Paint Code */ = {
 			isa = PBXGroup;
 			children = (
-				ED12DD3915F537E400FBDF00 /* SYListButton.h */,
-				ED12DD3A15F537E400FBDF00 /* SYListButton.m */,
 				ED669882160A30B900115E68 /* SYSaveMessageView.h */,
 				ED669883160A30B900115E68 /* SYSaveMessageView.m */,
 				ED256D24160B44980009C871 /* SYTableBase.h */,
@@ -331,6 +328,7 @@
 		ED923340156185D100B0F505 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				ED22E38D161D9AA20092B432 /* Default-568h@2x.png */,
 				ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */,
 				ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */,
 				ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */,
@@ -418,6 +416,7 @@
 				ED12DD3615F5295200FBDF00 /* LoginPopupMiddle.png in Resources */,
 				ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */,
 				ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */,
+				ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,7 +461,6 @@
 				ED2592E815BECB4000DC1DF0 /* SYBezierController.m in Sources */,
 				ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */,
 				ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */,
-				ED12DD3B15F537E400FBDF00 /* SYListButton.m in Sources */,
 				ED10653C15FF5E71005C233F /* SYShape.m in Sources */,
 				ED669884160A30B900115E68 /* SYSaveMessageView.m in Sources */,
 				ED256D26160B44980009C871 /* SYTableBase.m in Sources */,
@@ -593,6 +591,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -615,6 +614,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
