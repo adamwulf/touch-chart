@@ -206,9 +206,6 @@
             return M_PI;
     }
     
-    NSLog(@"%f", (atanf(deltaY/deltaX)/M_PI) * 180);
-    NSLog(@"%f", ([self normalizeAngleRad:atanf(deltaY/deltaX)]/M_PI) * 180);
-    
     // -/+ (from 0º to 90º)
     if (deltaY < .0 && deltaX > .0)
         return (2*M_PI) + atanf(deltaY/deltaX);

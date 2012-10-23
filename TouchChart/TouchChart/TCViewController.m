@@ -645,7 +645,7 @@
     }
     
     // Try to fit with a oval
-    if (shouldCheckOval && [self drawOvalCirclePainted])
+    if (/*shouldCheckOval && */[self drawOvalCirclePainted])
         return;
 
     // Snap angles
@@ -686,7 +686,6 @@
     
     // If horizontal or vertical oval, we don't need rotate it
     CGPoint center = [bigAxisSegment midPoint];
-    NSLog(@"angulo: %f", [bigAxisSegment angleDeg]);
     float deltaAngle = fabs([bigAxisSegment angleDeg]) - 90.0;
     
     if (fabs([bigAxisSegment angleDeg]) < 10.0 || fabs(deltaAngle) < 10.0) {
@@ -833,17 +832,15 @@
     
     // Get max and min XY
     SYSegment *newSegment = [[SYSegment alloc]initWithPoint:[bigAxisSegment pointSt] andPoint:[bigAxisSegment pointFn]];
-    CGFloat alfa = [newSegment angleRad];   // will be used for change system of reference
-    CGFloat alfaD  = [newSegment angleDeg];   // TEMPORAL
-    NSLog(@"alfaD: %f", alfaD);
     [newSegment setMiddlePointToDegree:90.0];
     minY = [newSegment pointSt];
     maxY = [newSegment pointFn];
     minX = CGPointMake([newSegment midPoint].x - smallAxisLongitude * 0.5, [newSegment midPoint].y);
     maxX = CGPointMake([newSegment midPoint].x + smallAxisLongitude * 0.5, [newSegment midPoint].y);
+    [newSegment release];
     
     // Transform, rotate a around the midpoint
-    float angleRad = M_PI_2 - [bigAxisSegment angleRad];
+    float angleRad = [bigAxisSegment angleRad] + M_PI_2;
     CGPoint pivotalPoint = CGPointMake([bigAxisSegment midPoint].x, [bigAxisSegment midPoint].y);
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(.0, -(maxY.y - minY.y)));
@@ -863,49 +860,37 @@
         smallAxisDistance = maxY.y - minY.y;
     }
     
-    // PROBAR SI ES UN OVALO O NO
-    //CGFloat error = .0;
-    CGFloat error2 = .0;
+    // PRUEBA SI ES UN OVALO O NO
+    CGFloat error = .0;
     
     CGFloat a = bigAxisDistance * 0.5;
     CGFloat b = smallAxisDistance * 0.5;
     
     for (NSValue *pointValue in listPoints) {
+        
         CGPoint pointOrig = [pointValue CGPointValue];
         
-        // Cambio de sistema de coordenadas (translacion + rotación)
-        SYSegment *hipSegment = [[SYSegment alloc]initWithPoint:center andPoint:pointOrig];
-        CGFloat hip = [hipSegment longitude];
-        CGFloat teta = [hipSegment angleRad];
-        NSLog(@"pointOrig: (%f, %f)", pointOrig.x, pointOrig.y);
-        NSLog(@"center: (%f, %f)", center.x, center.y);
-        NSLog(@"teta: %f (%f, %f) a (%f, %f)", [hipSegment angleDeg], center.x, center.y, pointOrig.x, pointOrig.y);
-        [hipSegment release];
+        // Traslacion del sistema de coordenadas, coordenada y flipped
+        CGPoint center_A = CGPointZero;
+        CGPoint pointOrig_A = CGPointMake(pointOrig.x - center.x, -(pointOrig.y - center.y));
         
-        CGFloat xCoord = hip * cos(teta-alfa);
-        CGFloat yCoord = hip * sin(teta-alfa);
-        CGPoint point = CGPointMake(xCoord, yCoord);
+        // Giro del sistema de coordenadas
+        SYSegment *point_A = [[SYSegment alloc]initWithPoint:center_A andPoint:pointOrig_A];
+        CGFloat angleAlfa = [point_A angleRad] - [bigAxisSegment angleRad];
+        
+        CGPoint pointOrig_B = CGPointMake([point_A longitude] * cos(angleAlfa), [point_A longitude] * sin(angleAlfa));
         
         // Error usando formular elemental de elipse: x2/a2 + y2/b2 = 1
-        NSLog(@"%f + %f = %f", pow(point.x, 2)/pow(a, 2) , pow(point.y, 2)/pow(b, 2), (pow(point.x, 2)/pow(a, 2)) + (pow(point.y, 2)/pow(b, 2)));
-        CGFloat error2Temp = (pow(point.x, 2)/pow(a, 2)) + (pow(point.y, 2)/pow(b, 2));
-        if (error2Temp > error2)
-            error2 = error2Temp;
-        /*
-        CGFloat denominator = sqrt(pow(b * point.x, 2) + pow(a * point.y, 2));
-        
-        CGFloat x = (a * b * point.x)/denominator;
-        CGFloat y = (a * b * point.y)/denominator;
-        
-        CGFloat distance = sqrt(pow(point.x - x, 2) + pow(point.y - y, 2));
-        if (distance > error)
-            error = distance;
-        */
+        CGFloat errorTemp = (pow(pointOrig_B.x, 2)/pow(a, 2)) + (pow(pointOrig_B.y, 2)/pow(b, 2));
+        CGFloat finalError = fabs(1 - errorTemp);
+        if (finalError > error)
+            error = finalError;
     }
     
-    NSLog(@"3. Error Oval A: %f", error2);
-    //NSLog(@"3. Error Oval B: %f", error);
-        
+    NSLog(@"3. Error Oval A: %f", error);
+    if (error > 0.72)
+        return NO;
+    
     // Create arc
     SYShape *shape = [[SYShape alloc]init];
     shape.openCurve = NO;
@@ -914,7 +899,6 @@
     [vectorView addShape:shape];
     [shape release];
             
-    [newSegment release];
     [bigAxisSegment release];
     [smallAxisSegment release];
      
