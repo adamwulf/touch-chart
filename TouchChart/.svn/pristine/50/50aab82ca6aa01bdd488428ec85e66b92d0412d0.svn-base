@@ -43,7 +43,6 @@
 
 #define limitDistace 2.99
 #define numberFakePoints 8.0
-#define ovaltolerace 1.8
 
 
 #pragma mark - Lifecycle Methods
@@ -159,7 +158,6 @@
                                               cancelButtonTitle:@"Accept"
                                               otherButtonTitles:nil];
         [alert show];
-        [alert release];
         return;
     }
     
@@ -292,37 +290,11 @@
     if ([listPoints count] < 5)
         return;
     
-    // Is the painted shape closed (almost closed)?
-    // --------------------------------------------------------------------------
-    // Get radius to reduce point cloud
-    CGFloat maxDeltaX = maxX.x - minX.x;
-    CGFloat maxDeltaY = maxY.y - minY.y;
-    
-    CGFloat deltaX = [[listPoints objectAtIndex:0]CGPointValue].x - [[listPoints lastObject]CGPointValue].x;
-    CGFloat deltaY = [[listPoints objectAtIndex:0]CGPointValue].y - [[listPoints lastObject]CGPointValue].y;
-    CGFloat distance = sqrtf(powf(deltaX, 2) + powf(deltaY, 2));
-    CGFloat delta = sqrtf(powf(maxDeltaX, 2) + powf(maxDeltaY, 2));
-    if (delta < 5.0)
-        return;
-    CGFloat ratioDistance = distance / delta;
-        
-    // It's open, do nothing, exit
-    if (fabs(ratioDistance) > 0.25)
-        [self drawOpenShape];
-    else {
-        // If the resulting points number is insufficient, exit
-        if ([pointKeyArray count] < 2)
-            return;
-        
-        [self drawCloseShape];
-    }
-    
-    /*
     if ([openShapeButton isSelected])
         [self drawOpenShape];
     else
         [self drawCloseShape];
-    */
+    
     [vectorView setNeedsDisplay];
     
 }// getFigurePainted
@@ -384,13 +356,9 @@
                 
                 CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
-                [fromStartToStudyPoint release];
-                [fromStudyPointToEnd release];
-                
                 CGFloat minumumLongitude = [segment longitude] * 0.25;
                 if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
                     maxCurvature = [segment distanceToPoint:aPoint];
-                
                 
                 CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
                 SYSegment *segmentCalculateLongitude = [[SYSegment alloc]initWithPoint:previousPoint andPoint:aPoint];
@@ -483,8 +451,10 @@
     }
     
     // If finish with curve, it should add this last stretch
-    if ([previousCurves count] != 0)
+    if ([previousCurves count] != 0) {
         [shape addCurve:previousCurves];
+        previousCurves = [NSMutableArray array];
+    }
     
     [shape snapLinesAngles];
     [vectorView addShape:shape];
@@ -496,7 +466,6 @@
 
 - (void) drawCloseShape
 {
-    /*
     // Is the painted shape closed (almost closed)?
     // --------------------------------------------------------------------------
     // Get radius to reduce point cloud
@@ -514,7 +483,7 @@
 
     // If the resulting points number is insufficient, exit
     if ([pointKeyArray count] < 2)
-        return;*/
+        return;
     
     // Reduce Points
     // --------------------------------------------------------------------------
@@ -572,9 +541,6 @@
                 
                 CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
-                [fromStartToStudyPoint release];
-                [fromStudyPointToEnd release];
-                
                 CGFloat minumumLongitude = [segment longitude] * 0.25;
                 if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
                     maxCurvature = [segment distanceToPoint:aPoint];
@@ -673,14 +639,14 @@
     }
     
     // If finish with curve, it should add this last stretch
-    if ([previousCurves count] != 0)
+    if ([previousCurves count] != 0) {
         [shape addCurve:previousCurves];
+        previousCurves = [NSMutableArray array];
+    }
     
     // Try to fit with a oval
-    if (shouldCheckOval && [self drawOvalCirclePainted]) {
-        [shape release];
+    if (/*shouldCheckOval && */[self drawOvalCirclePainted])
         return;
-    }
 
     // Snap angles
     [shape snapLinesAngles];
@@ -779,7 +745,7 @@
         
         // It isn't a oval
         NSLog(@"1. Error Oval: %f", error);        
-        if (error > ovaltolerace)
+        if (error > 0.72)
             return NO;
                 
         // It's a oval and add to the shape list
@@ -847,11 +813,8 @@
         
         // It isn't a circle
         NSLog(@"2. Error Oval B: %f", error);
-        if (error > 30.0) {
-            [bigAxisSegment release];
-            [smallAxisSegment release];
+        if (error > 30.0)
             return NO;
-        }
         
         // It's a circle and add to the shape list
         SYShape *shape = [[SYShape alloc]init];
@@ -863,9 +826,6 @@
             clockwise:YES];
         [vectorView addShape:shape];
         [shape release];
-        
-        [bigAxisSegment release];
-        [smallAxisSegment release];
         
         return YES;
     }
@@ -887,7 +847,7 @@
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(-pivotalPoint.x, -pivotalPoint.y));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(angleRad));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(pivotalPoint.x, pivotalPoint.y));
-    /*
+    
     // Check error
     CGFloat smallAxisDistance = .0;
     CGFloat bigAxisDistance = .0;
@@ -899,36 +859,37 @@
         bigAxisDistance = maxX.x - minX.x;
         smallAxisDistance = maxY.y - minY.y;
     }
-    */
+    
     // PRUEBA SI ES UN OVALO O NO
     CGFloat error = .0;
     
-    CGFloat a = [bigAxisSegment longitude] * 0.5;
-    CGFloat b = [smallAxisSegment longitude];
+    CGFloat a = bigAxisDistance * 0.5;
+    CGFloat b = smallAxisDistance * 0.5;
     
     for (NSValue *pointValue in listPoints) {
         
         CGPoint pointOrig = [pointValue CGPointValue];
         
-        // Proyeccion del punto sobre el eje mayor y menor
-        SYSegment *lineToPoint = [[SYSegment alloc]initWithPoint:center andPoint:pointOrig];
-        CGFloat projBigAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
-        CGFloat projSmallAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[smallAxisSegment angleRad]);;
-        [lineToPoint release];
+        // Traslacion del sistema de coordenadas, coordenada y flipped
+        CGPoint center_A = CGPointZero;
+        CGPoint pointOrig_A = CGPointMake(pointOrig.x - center.x, -(pointOrig.y - center.y));
         
-        CGFloat errorTemp = (pow(projBigAxis, 2)/pow(a, 2)) + (pow(projSmallAxis, 2)/pow(b, 2));
-        //NSLog(@"%f = %f + %f", errorTemp, pow(projBigAxis, 2)/pow(a, 2) , pow(projSmallAxis, 2)/pow(b, 2));
+        // Giro del sistema de coordenadas
+        SYSegment *point_A = [[SYSegment alloc]initWithPoint:center_A andPoint:pointOrig_A];
+        CGFloat angleAlfa = [point_A angleRad] - [bigAxisSegment angleRad];
+        
+        CGPoint pointOrig_B = CGPointMake([point_A longitude] * cos(angleAlfa), [point_A longitude] * sin(angleAlfa));
+        
+        // Error usando formular elemental de elipse: x2/a2 + y2/b2 = 1
+        CGFloat errorTemp = (pow(pointOrig_B.x, 2)/pow(a, 2)) + (pow(pointOrig_B.y, 2)/pow(b, 2));
         CGFloat finalError = fabs(1 - errorTemp);
         if (finalError > error)
             error = finalError;
     }
     
     NSLog(@"3. Error Oval A: %f", error);
-    if (error > ovaltolerace) {
-        [bigAxisSegment release];
-        [smallAxisSegment release];
+    if (error > 0.72)
         return NO;
-    }
     
     // Create arc
     SYShape *shape = [[SYShape alloc]init];
@@ -1532,7 +1493,6 @@
         
         SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
         longitude += [segment longitude];
-        [segment release];
         
     }
     
@@ -1650,7 +1610,7 @@
 - (void) drawBezierCurvesWithPoints:(NSArray *) arrayData
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createBezierCurvesWithPoints:arrayData];
     if (shapeToAdd)
@@ -1662,7 +1622,7 @@
 - (void) drawPolygonal:(NSArray *) pointKeyList
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createPolygonal:pointKeyList];
     if (shapeToAdd)
@@ -1674,7 +1634,7 @@
 - (void) drawPolygonalFromSegment:(SYSegment *) segment
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createPolygonalFromSegment:segment];
     if (shapeToAdd)
@@ -1686,7 +1646,7 @@
 - (void) drawSquare:(CGRect) squareRect
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createSquare:squareRect];
     if (shapeToAdd)
@@ -1698,7 +1658,7 @@
 - (void) drawDiamond:(CGRect) diamondRect
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createDiamond:diamondRect];
     if (shapeToAdd)
@@ -1710,7 +1670,7 @@
 - (void) drawCircle:(CGRect) circleRect
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createCircle:circleRect];
     if (shapeToAdd)
@@ -1731,7 +1691,7 @@
 - (void) drawCircleWithTransform:(CGAffineTransform) transform
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createCircleWithTransform:transform];
     if (shapeToAdd)
@@ -1743,7 +1703,7 @@
 - (void) drawArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
 {
     //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
+    vectorView.shapeList = [[NSMutableArray alloc]init];
     
     SYGeometry *shapeToAdd = [self createArc:midPoint radius:radius startAngle:startAngle endAngle:endAngle clockwise:clockwise];
     if (shapeToAdd)
@@ -1810,7 +1770,7 @@
         }
     }
     
-    geometry.pointArray = [NSArray arrayWithArray:finalArray];
+    geometry.pointArray = [[NSArray alloc]initWithArray:finalArray];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -1825,13 +1785,12 @@
 - (SYGeometry *) createPolygonalFromSegment:(SYSegment *) segment
 {
     // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = LinesType;
-    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:[segment pointSt]],
+    geometry.pointArray = [[NSArray alloc]initWithObjects:[NSValue valueWithCGPoint:[segment pointSt]],
                            [NSValue valueWithCGPoint:[segment pointFn]], nil];
-    
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
@@ -1844,7 +1803,7 @@
 
 - (SYGeometry *) createSquare:(CGRect) squareRect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = SquareType;
@@ -1862,7 +1821,7 @@
 
 - (SYGeometry *) createDiamond:(CGRect) diamondRect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = DiamondType;
@@ -1880,7 +1839,7 @@
 
 - (SYGeometry *) createCircle:(CGRect) rect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1898,7 +1857,7 @@
 
 - (SYGeometry *) createPoint:(CGPoint) point
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1916,7 +1875,7 @@
 
 - (SYGeometry *) createCircleWithTransform:(CGAffineTransform) transform
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1936,7 +1895,7 @@
 
 - (SYGeometry *) createArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = ArcType;

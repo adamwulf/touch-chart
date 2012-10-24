@@ -81,7 +81,9 @@
                                                            delegate:self
                                                   cancelButtonTitle:@"Accept"
                                                   otherButtonTitles:nil];
-            [alert show];            
+            [alert show];
+            [alert release];
+
         }
     }];
     
@@ -232,6 +234,7 @@
     UILabel *month = (UILabel *)[cell viewWithTag:2];
     [dateFormatter setDateFormat:@"MMM"];
     month.text = [[dateFormatter stringFromDate:[pfObject createdAt]]uppercaseString];
+    [dateFormatter release];
 
     // Preview
     SYUnitPreview *preview = (SYUnitPreview *)[cell viewWithTag:3];

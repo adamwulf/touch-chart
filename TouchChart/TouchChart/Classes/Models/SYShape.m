@@ -123,6 +123,7 @@
     geometry.strokeColor = [UIColor redColor];
     
     [geometriesArray addObject:geometry];
+    [geometry release];
     
 }// addKeyPoint:
 
@@ -141,6 +142,7 @@
     geometry.strokeColor = [UIColor orangeColor];
     
     [geometriesArray addObject:geometry];
+    [geometry release];
     
 }// addKeyPoint:
 
@@ -237,6 +239,7 @@
     geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     [geometriesArray addObject:geometry];
+    [geometry release];
     
 }// addCircle:
 
@@ -263,6 +266,7 @@
     geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     [geometriesArray addObject:geometry];
+    [geometry release];
     
 }// addArc:radius:startAngle:endAngle:clockwise:
 
@@ -283,6 +287,7 @@
     geometry.transform = transform;
     
     [geometriesArray addObject:geometry];
+    [geometry release];
     
 }// createCircleWithTransform
 
@@ -665,6 +670,9 @@
         
         [self replaceElementAtIndex:0 withElement:newFirstSegment];
         [self replaceLastElementWithElement:newLastSegment];
+        
+        [newFirstSegment release];
+        [newLastSegment release];
     }
     else if ([firstShape geometryType] == BezierType &&
              [lastShape geometryType] == LinesType) {
@@ -697,6 +705,7 @@
         // Move the last point in the line
         SYSegment *newLastSegment = [[SYSegment alloc]initWithPoint:[[[lastShape pointArray]objectAtIndex:0]CGPointValue] andPoint:midPoint];
         [self replaceLastElementWithElement:newLastSegment];
+        [newLastSegment release];
         
     }
     else if ([firstShape geometryType] == LinesType &&
@@ -712,7 +721,8 @@
         // Move the first point in the line
         SYSegment *newFirstSegment = [[SYSegment alloc]initWithPoint:midPoint andPoint:[[[firstShape pointArray]objectAtIndex:1]CGPointValue]];
         [self replaceElementAtIndex:0 withElement:newFirstSegment];
-
+        [newFirstSegment release];
+        
         // Move the last point in the bezier
         NSMutableArray *curves = [NSMutableArray arrayWithArray:lastShape.pointArray];
         NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves lastObject]];
