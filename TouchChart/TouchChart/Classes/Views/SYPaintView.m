@@ -93,7 +93,7 @@
 	CGContextSetLineCap(context, kCGLineCapButt);
 	CGContextSetLineJoin(context, kCGLineJoinRound);
 	CGContextBeginPath(context);
-	
+    
 	// This flag tells us to move to the point
 	// rather than draw a line to the point
 	BOOL isFirstPoint = YES;
