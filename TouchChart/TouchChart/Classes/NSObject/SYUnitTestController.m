@@ -8,9 +8,7 @@
 
 #import "SYUnitTestController.h"
 #import "SYUnitPreview.h"
-
 #import "SYPaintView.h"
-#import "TCViewController.h"
 
 @interface SYUnitTestController () {
 
@@ -25,6 +23,14 @@
 
 @synthesize unitTestCell;
 
+- (void) awakeFromNib
+{
+    // Observer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveFromNotification:) name:@"saveListPoints" object:nil];
+    
+}// awakeFromNib
+
+
 - (void) dealloc
 {
     [pfObjects release];
@@ -32,12 +38,25 @@
     
     myTableView = nil;
     closeButton = nil;
-
-    viewController = nil;
-        
+    
     [super dealloc];
     
 }// dealloc
+
+
+#pragma mark - Notifications Methods
+
+
+- (void) saveFromNotification:(NSNotification *) note
+{
+    NSDictionary *d = [note userInfo];
+    
+    NSString *name = [d valueForKey:@"name"];
+    NSArray *allpoints = [d valueForKey:@"allPoints"];
+    
+    [self saveListPoints:allpoints withName:name];
+    
+}// saveFromNotification
 
 
 #pragma mark - Save/Load Operations
@@ -52,7 +71,7 @@
         [listPoints addObject:[NSValue valueWithCGPoint:point]];
     }
     
-    [viewController importCase:listPoints];    
+    [_delegate importCase:listPoints];
 
 }// importPointsStored
 
@@ -112,6 +131,27 @@
 }// updateListPointStored
 
 
+#pragma mark - Other Table Methods
+
+- (IBAction) switchShowTable:(id)sender
+{
+    if ([tableBase isHidden]) {
+        [tableBase setHidden:NO];
+        [UIView animateWithDuration:0.2 animations:^{
+            [tableBase setAlpha:1.0];
+        }];
+    }
+    else {
+        [UIView animateWithDuration:0.2 animations:^{
+            [tableBase setAlpha:.0];
+        }completion:^(BOOL finished){
+            [tableBase setHidden:YES];
+        }];
+    }
+    
+}// switchShowTable
+
+
 #pragma mark - UITableViewDelegate Protocol
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -136,7 +176,7 @@
         
         // If it's the last case, close tableview
         if ([pfObjects count] == 0)
-            [viewController switchShowTable:nil];
+            [self switchShowTable:nil];
     }
     
 }// tableView:commitEditingStyle:forRowAtIndexPath:
@@ -226,7 +266,6 @@
     // Day
     UILabel *day = (UILabel *)[cell viewWithTag:1];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //[dateFormatter setDateFormat:@"yyyy' 'MMM' 'd' at 'HH':'mm"];
     [dateFormatter setDateFormat:@"d"];
     day.text = [dateFormatter stringFromDate:[pfObject createdAt]];
     

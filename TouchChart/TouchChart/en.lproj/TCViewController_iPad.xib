@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
 		<string key="IBDocument.SystemVersion">11G63</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
 		<string key="IBDocument.AppKitVersion">1138.51</string>
 		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1929</string>
+			<string key="NS.object.0">1930</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -47,6 +47,7 @@
 								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{1024, 748}</string>
 								<reference key="NSSuperview" ref="270951733"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="723442463"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
@@ -59,6 +60,7 @@
 						</array>
 						<string key="NSFrameSize">{1024, 748}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="208123881"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -72,6 +74,7 @@
 						<int key="NSvFlags">-2147483380</int>
 						<string key="NSFrame">{{246, 691}, {105, 37}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="278464134"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -113,6 +116,8 @@
 						<int key="NSvFlags">-2147483380</int>
 						<string key="NSFrame">{{359, 691}, {105, 37}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="83266001"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<int key="IBUITag">2</int>
@@ -139,6 +144,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{47, 0}, {56, 53}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="104402610"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -173,6 +179,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrameSize">{48, 46}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="9417052"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -205,6 +212,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{936, 685}, {88, 63}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -232,6 +240,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrameSize">{1024, 749}</string>
 								<reference key="NSSuperview" ref="9417052"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="571293737"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -252,6 +261,7 @@
 								<int key="NSvFlags">274</int>
 								<string key="NSFrame">{{36, 81}, {450, 473}}</string>
 								<reference key="NSSuperview" ref="9417052"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="276422946"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="694596509">
@@ -273,6 +283,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{36, 81}, {450, 1}}</string>
 								<reference key="NSSuperview" ref="9417052"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="255003676"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
@@ -284,6 +295,7 @@
 						</array>
 						<string key="NSFrameSize">{1024, 748}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1056403433"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="694596509"/>
@@ -298,6 +310,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{34, 85}, {254, 31}}</string>
 								<reference key="NSSuperview" ref="104402610"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="602794524"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -327,6 +340,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{172, 134}, {104, 25}}</string>
 								<reference key="NSSuperview" ref="104402610"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="229342235"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="694596509"/>
@@ -355,6 +369,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{52, 134}, {104, 25}}</string>
 								<reference key="NSSuperview" ref="104402610"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="820647676"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -373,6 +388,7 @@
 						</array>
 						<string key="NSFrame">{{369, 217}, {325, 180}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="499998246"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="694596509"/>
@@ -381,6 +397,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="270951733"/>
 				<reference key="IBUIBackgroundColor" ref="763054127"/>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
@@ -448,22 +465,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">closeShapeButton</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="278464134"/>
-					</object>
-					<int key="connectionID">107</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">openShapeButton</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="229342235"/>
-					</object>
-					<int key="connectionID">108</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">viewController</string>
 						<reference key="source" ref="270951733"/>
 						<reference key="destination" ref="841351856"/>
@@ -477,24 +478,6 @@
 						<reference key="destination" ref="1071268388"/>
 					</object>
 					<int key="connectionID">101</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">switchDrawModes:</string>
-						<reference key="source" ref="229342235"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">34</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">switchDrawModes:</string>
-						<reference key="source" ref="278464134"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">35</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -532,11 +515,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">viewController</string>
+						<string key="label">delegate</string>
 						<reference key="source" ref="1071268388"/>
 						<reference key="destination" ref="841351856"/>
 					</object>
-					<int key="connectionID">99</int>
+					<int key="connectionID">109</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">tableBase</string>
+						<reference key="source" ref="1071268388"/>
+						<reference key="destination" ref="9417052"/>
+					</object>
+					<int key="connectionID">110</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -558,10 +549,10 @@
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">switchShowTable:</string>
 						<reference key="source" ref="255003676"/>
-						<reference key="destination" ref="841351856"/>
+						<reference key="destination" ref="1071268388"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">90</int>
+					<int key="connectionID">111</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -576,10 +567,10 @@
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">switchShowTable:</string>
 						<reference key="source" ref="1056403433"/>
-						<reference key="destination" ref="841351856"/>
+						<reference key="destination" ref="1071268388"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">95</int>
+					<int key="connectionID">113</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -761,9 +752,173 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">108</int>
+			<int key="maxID">113</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">SYPaintView</string>
+					<string key="superclassName">UIView</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="unitTestController">SYUnitTestController</string>
+						<string key="viewController">TCViewController</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="unitTestController">
+							<string key="name">unitTestController</string>
+							<string key="candidateClassName">SYUnitTestController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="viewController">
+							<string key="name">viewController</string>
+							<string key="candidateClassName">TCViewController</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYPaintView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SYSaveMessageView</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYSaveMessageView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SYTableBase</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYTableBase.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SYUnitTestController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">switchShowTable:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">switchShowTable:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">switchShowTable:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="closeButton">UIButton</string>
+						<string key="delegate">id</string>
+						<string key="myTableView">UITableView</string>
+						<string key="tableBase">SYTableBase</string>
+						<string key="unitTestCell">UITableViewCell</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="closeButton">
+							<string key="name">closeButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="delegate">
+							<string key="name">delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="myTableView">
+							<string key="name">myTableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableBase">
+							<string key="name">tableBase</string>
+							<string key="candidateClassName">SYTableBase</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="unitTestCell">
+							<string key="name">unitTestCell</string>
+							<string key="candidateClassName">UITableViewCell</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYUnitTestController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SYVectorView</string>
+					<string key="superclassName">UIView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">clear:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">clear:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">clear:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SYVectorView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">TCViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="cancelCase:">id</string>
+						<string key="saveCase:">id</string>
+						<string key="selectName:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="cancelCase:">
+							<string key="name">cancelCase:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveCase:">
+							<string key="name">saveCase:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectName:">
+							<string key="name">selectName:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="nameTextField">UITextField</string>
+						<string key="paintView">SYPaintView</string>
+						<string key="selectCaseNameView">SYSaveMessageView</string>
+						<string key="tableBase">SYTableBase</string>
+						<string key="vectorView">SYVectorView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="nameTextField">
+							<string key="name">nameTextField</string>
+							<string key="candidateClassName">UITextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="paintView">
+							<string key="name">paintView</string>
+							<string key="candidateClassName">SYPaintView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="selectCaseNameView">
+							<string key="name">selectCaseNameView</string>
+							<string key="candidateClassName">SYSaveMessageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableBase">
+							<string key="name">tableBase</string>
+							<string key="candidateClassName">SYTableBase</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="vectorView">
+							<string key="name">vectorView</string>
+							<string key="candidateClassName">SYVectorView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/TCViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
@@ -776,6 +931,6 @@
 			<string key="NS.key.0">ListGlyphs.png</string>
 			<string key="NS.object.0">{23, 17}</string>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">1929</string>
+		<string key="IBCocoaTouchPluginVersion">1930</string>
 	</data>
 </archive>

@@ -12,11 +12,11 @@
 
 - (void) drawRect:(CGRect)rect
 {
-    //// General Declarations
+    // General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //// Color Declarations
+    // Color Declarations
     UIColor* gradientColor = [UIColor colorWithRed: 0.16 green: 0.16 blue: 0.16 alpha: 1];
     UIColor* gradientColor2 = [UIColor colorWithRed: 0.11 green: 0.11 blue: 0.11 alpha: 1];
     UIColor* strokeColor = [UIColor colorWithRed: 0.36 green: 0.36 blue: 0.36 alpha: 0.5];
@@ -30,7 +30,7 @@
     UIColor* textfieldGradientColor = [UIColor colorWithRed: 0.1 green: 0.1 blue: 0.1 alpha: 1];
     UIColor* textfieldGradientColor2 = [UIColor colorWithRed: 0.15 green: 0.15 blue: 0.15 alpha: 1];
     
-    //// Gradient Declarations
+    // Gradient Declarations
     NSArray* baseGradientColors = [NSArray arrayWithObjects:
                                    (id)gradientColor.CGColor,
                                    (id)gradientColor2.CGColor, nil];
@@ -58,19 +58,19 @@
     CGFloat textfieldGradientLocations[] = {0, 1};
     CGGradientRef textfieldGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)textfieldGradientColors, textfieldGradientLocations);
     
-    //// Shadow Declarations
+    // Shadow Declarations
     UIColor* buttonLabelShadow = [UIColor blackColor];
     CGSize buttonLabelShadowOffset = CGSizeMake(0, 1);
     CGFloat buttonLabelShadowBlurRadius = 0;
     
-    //// Abstracted Graphic Attributes
+    // Abstracted Graphic Attributes
     NSString* titleContent = @"Select Name";
     NSString* subtitleContent = @"Write the name for this case";
     NSString* buttonNormalLabelContent = @"Cancel";
     NSString* buttonHighlightLabelContent = @"Save";
     
     
-    //// Base Color Fill Drawing
+    // Base Color Fill Drawing
     UIBezierPath* baseColorFillPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(0, 0, 325, 180) cornerRadius: 8];
     CGContextSaveGState(context);
     [baseColorFillPath addClip];
@@ -79,14 +79,14 @@
     
     
     
-    //// Stroke Base Drawing
+    // Stroke Base Drawing
     UIBezierPath* strokeBasePath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(1, 1, 323, 178) cornerRadius: 8];
     [strokeColor setStroke];
     strokeBasePath.lineWidth = 2;
     [strokeBasePath stroke];
     
     
-    //// Base Color Fill 2 Drawing
+    // Base Color Fill 2 Drawing
     UIBezierPath* baseColorFill2Path = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(0, -0.5, 325, 179.5) cornerRadius: 8];
     CGContextSaveGState(context);
     [baseColorFill2Path addClip];
@@ -95,26 +95,26 @@
     
     
     
-    //// Title Drawing
+    // Title Drawing
     CGRect titleRect = CGRectMake(1, 24, 323, 32);
     [[UIColor whiteColor] setFill];
     [titleContent drawInRect: titleRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 16] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
     
     
-    //// Subtitle Drawing
+    // Subtitle Drawing
     CGRect subtitleRect = CGRectMake(1, 52, 323, 32);
     [[UIColor whiteColor] setFill];
     [subtitleContent drawInRect: subtitleRect withFont: [UIFont fontWithName: @"HelveticaNeue" size: [UIFont systemFontSize]] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
     
     
-    //// Button Normal Outter Stroke Drawing
+    // Button Normal Outter Stroke Drawing
     UIBezierPath* buttonNormalOutterStrokePath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(50.5, 135.5, 104, 24) cornerRadius: 4];
     [outterShadowButtonColor setStroke];
     buttonNormalOutterStrokePath.lineWidth = 1;
     [buttonNormalOutterStrokePath stroke];
     
     
-    //// Button Normal Cancel Drawing
+    // Button Normal Cancel Drawing
     UIBezierPath* buttonNormalCancelPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(50.5, 134.5, 104, 24) cornerRadius: 4];
     CGContextSaveGState(context);
     [buttonNormalCancelPath addClip];
@@ -126,7 +126,7 @@
     [buttonNormalCancelPath stroke];
     
     
-    //// Button Normal Label Drawing
+    // Button Normal Label Drawing
     CGRect buttonNormalLabelRect = CGRectMake(50, 137, 104, 23);
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
@@ -136,14 +136,14 @@
     
     
     
-    //// Button Highlight Outter Stroke Drawing
+    // Button Highlight Outter Stroke Drawing
     UIBezierPath* buttonHighlightOutterStrokePath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(171.5, 135.5, 104, 24) cornerRadius: 4];
     [outterShadowButtonColor setStroke];
     buttonHighlightOutterStrokePath.lineWidth = 1;
     [buttonHighlightOutterStrokePath stroke];
     
     
-    //// Button Highlight Cancel Drawing
+    // Button Highlight Cancel Drawing
     UIBezierPath* buttonHighlightCancelPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(171.5, 134.5, 104, 24) cornerRadius: 4];
     CGContextSaveGState(context);
     [buttonHighlightCancelPath addClip];
@@ -155,7 +155,7 @@
     [buttonHighlightCancelPath stroke];
     
     
-    //// Button Highlight Label Drawing
+    // Button Highlight Label Drawing
     CGRect buttonHighlightLabelRect = CGRectMake(171, 137, 104, 23);
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
@@ -165,14 +165,14 @@
     
     
     
-    //// Rounded Rectangle 2 Drawing
+    // Rounded Rectangle 2 Drawing
     UIBezierPath* roundedRectangle2Path = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(25, 88, 274, 24) cornerRadius: 4];
     [[UIColor blackColor] setStroke];
     roundedRectangle2Path.lineWidth = 2;
     [roundedRectangle2Path stroke];
     
     
-    //// Rounded Rectangle Drawing
+    // Rounded Rectangle Drawing
     UIBezierPath* roundedRectanglePath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(25, 88, 274, 24) cornerRadius: 4];
     CGContextSaveGState(context);
     [roundedRectanglePath addClip];
@@ -180,7 +180,7 @@
     CGContextRestoreGState(context);
     
     
-    //// Cleanup
+    // Cleanup
     CGGradientRelease(baseGradient);
     CGGradientRelease(strokeGradient);
     CGGradientRelease(buttonGradient);

@@ -13,8 +13,17 @@
 
 @interface SYShape : NSObject
 
-@property (nonatomic, assign) BOOL closeCurve;
-@property (nonatomic, assign) BOOL openCurve;
+@property (readonly, assign) BOOL closeCurve;
+@property (readonly, assign) BOOL openCurve;
+
+// Setter Methods
+- (void) setCloseCurve: (BOOL) isCloseCurve;
+- (void) setOpenCurve:(BOOL)isOpenCurve;
+
+// Getter Methods
+- (SYGeometry *) getElement:(NSUInteger) index;
+- (SYGeometry *) getLastElement;
+- (NSArray *) geometries;
 
 // Adding Elements
 - (void) addPoint:(CGPoint) keyPoint;
@@ -25,21 +34,12 @@
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform;
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
 
-// Modify shape
-- (void) snapLinesAngles;
-- (void) checkCloseShape;
-
 // Replace Elements
 - (void) replaceElementAtIndex:(NSUInteger) index withElement:(id) element;
 - (void) replaceLastElementWithElement:(id) element;
 
-- (SYGeometry *) getElement:(NSUInteger) index;
-- (SYGeometry *) getLastElement;
-
-// Get elements
-- (NSArray *) geometries;
-
-// Other Methods
-- (CGPoint) midPointBetweenPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+// Modify shape
+- (void) snapLinesAngles;
+- (void) checkCloseShape;
 
 @end

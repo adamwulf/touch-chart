@@ -93,25 +93,26 @@
 }// moduleTwo:and:
 
 
-// Distance between two points (2D)
 - (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB
 {
+    // Distance between two points (2D)
     return sqrt([self moduleTwo:puntoA and:puntoB]);
 
 }// distance:and:
 
 
-// Vector longitude
 - (CGFloat) longitude
 {
+    // Vector longitude
     return sqrt([self moduleTwo:pointSt and:pointFn]);
     
 }// longitude
 
 
-// Distance between point C to segment
 - (CGFloat) distanceToPoint:(CGPoint) C
 {
+    // Distance between point C to segment
+    
     // Punto en el segmento sobre el cual se calculará la distancia
     // iniciamos en uno de los extremos
     CGPoint P = CGPointZero;
@@ -147,9 +148,10 @@
 }// distanceToPoint:
 
 
-// Intersect point between the current segment and other
 - (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment
 {
+    // Intersect point between the current segment and other
+    
     // Check if they have equal slope
     float fS1ope1 = (equal(self.pointSt.x, self.pointFn.x)) ? (inf) : ((self.pointFn.y - self.pointSt.y)/(self.pointFn.x - self.pointSt.x));
     float fS1ope2 = (equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x)) ? (inf) : ((anotherSegment.pointFn.y - anotherSegment.pointSt.y)/(anotherSegment.pointFn.x - anotherSegment.pointSt.x));
@@ -186,9 +188,11 @@
 
 #pragma mark - Angles Methods
 
-// Segment angle radian
+
 - (CGFloat) angleRad
 {
+    // Segment angle radian
+    
     CGFloat deltaX = pointFn.x - pointSt.x;
     CGFloat deltaY = pointFn.y - pointSt.y;
     
@@ -227,18 +231,19 @@
 }// angleRad
 
 
-// Segment angle degrees
 - (CGFloat) angleDeg
 {
+    // Segment angle degrees
     CGFloat angle = [self angleRad];
     return (angle/M_PI) * 180.0;
     
 }// angleDeg
 
 
-// Snap pivotal around the start point
 - (void) setStartPointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the start point
+    
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
@@ -256,9 +261,10 @@
 }// setStartPointToDegree:
 
 
-// Snap pivotal around the middle point
 - (void) setMiddlePointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the middle point
+    
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
 
@@ -300,9 +306,10 @@
 }// setMiddlePointToDegree
 
 
-// Snap pivotal around the final point
 - (void) setFinalPointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the final point
+    
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
@@ -319,10 +326,9 @@
 }// setFinalPointToDegree:
 
 
-// Check angle to snap
 - (void) snapAngleChangingStartPoint
 {
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
     
     if ([self isSnapAngle]) {
@@ -403,11 +409,11 @@
 }// snapAngleChangingStartPoint
 
 
-// Check angle to snap
 - (void) snapAngleChangingFromMiddlePoint
 {
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
+    
     if ([self isSnapAngle]) {
         if (angleDeg > .0) {
             if (angleDeg < 15.0)
@@ -486,10 +492,9 @@
 }// snapAngleChangingFromMiddlePoint
 
 
-// Check angle to snap
 - (void) snapAngleChangingFinalPoint
-{    
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+{
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
     
     if ([self isSnapAngle]) {
@@ -570,9 +575,9 @@
 }// snapAngleChangingFinalPoint
 
 
-// do the segment need to snap?
 - (BOOL) isSnapAngle
 {
+    // do the segment need to snap?
     CGFloat angleDeg = [self angleDeg];
 
     // Si no esta ajustado responde que no

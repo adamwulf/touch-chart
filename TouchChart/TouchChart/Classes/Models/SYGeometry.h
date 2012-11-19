@@ -11,7 +11,6 @@
 typedef enum {
 	SquareType,
 	CircleType,
-	DiamondType,
     TriangleType,
     LinesType,
     BezierType,

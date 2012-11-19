@@ -8,7 +8,6 @@
 
 #import "SYPaintView.h"
 #import "TCViewController.h"
-#import "SYUnitTestController.h"
 
 #pragma mark - Private Interface
 
@@ -145,9 +144,6 @@
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    // TEMP
-    //[self clearPaint];
-    
     // CGPoint to NSValue and add it to list
     [viewController resetData];
     
@@ -218,15 +214,6 @@
     [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesCancelled:withEvent:
-
-
-#pragma mark - Unit Test Methods
-
-- (void) saveCase:(NSString *) caseName
-{
-    [unitTestController saveListPoints:allPoints withName:caseName];
-    
-}// saveCase:
 
 
 #pragma mark - Private Methods

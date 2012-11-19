@@ -14,6 +14,7 @@
 
 @property (nonatomic, retain) NSMutableArray *shapeList;
 
+// Shapes List Management
 - (void) addShape:(SYShape *)shape;
 - (IBAction)clear:(id)sender;
 

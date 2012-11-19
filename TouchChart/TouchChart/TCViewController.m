@@ -6,19 +6,13 @@
 //  Copyright (c) 2012 Sylion. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
 #import "TCViewController.h"
 #import "SYVectorView.h"
-#import "SYGeometry.h"
 #import "SYSegment.h"
 #import "SYBezierController.h"
 #import "SYPaintView.h"
 #import "SYSaveMessageView.h"
-
 #import "SYShape.h"
-
-#import "SYUnitTestController.h"
-
 
 @interface TCViewController () {
     
@@ -36,15 +30,24 @@
     
 }
 
+// Calculate Shapes
+- (void) drawOpenShape;
+- (void) drawCloseShape;
+- (BOOL) drawOvalCirclePainted;
+
+// Geometric calculations
+- (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2;
+- (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
+- (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
+- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC;
+
 @end
 
 
 @implementation TCViewController
 
 #define limitDistace 2.99
-#define numberFakePoints 8.0
 #define ovaltolerace 1.8
-
 
 #pragma mark - Lifecycle Methods
 
@@ -69,12 +72,6 @@
     [vectorView release];
     vectorView = nil;
     
-    [openShapeButton release];
-    openShapeButton = nil;
-    
-    [closeShapeButton release];
-    closeShapeButton = nil;
-    
 }// viewDidUnload
 
 
@@ -86,9 +83,7 @@
 
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    //UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-    
+{    
     [selectCaseNameView setAlpha:.0];
     [vectorView setNeedsDisplay];
     
@@ -121,33 +116,11 @@
     [paintView release];
     [vectorView release];
     
-    [openShapeButton release];
-    [closeShapeButton release];
-    
 }// dealloc
 
 
 
 #pragma mark - Unit Test Methods
-
-- (IBAction) switchShowTable:(id)sender
-{
-    if ([tableBase isHidden]) {
-        [tableBase setHidden:NO];
-        [UIView animateWithDuration:0.2 animations:^{
-            [tableBase setAlpha:1.0];
-        }];
-    }
-    else {
-        [UIView animateWithDuration:0.2 animations:^{
-            [tableBase setAlpha:.0];
-        }completion:^(BOOL finished){
-            [tableBase setHidden:YES];
-        }];
-    }
-    
-}// switchShowTable
-
 
 - (IBAction) selectName:(id)sender
 {
@@ -196,9 +169,12 @@
         nameTextField.text = @"";
     }];
     
-    [paintView saveCase:nameTextField.text];
-    
-}// save
+    // Send notification to Test controller
+    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:paintView.allPoints, @"allPoints", nameTextField.text, @"name", nil];
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc postNotificationName:@"saveListPoints" object:self userInfo:d];
+        
+}// saveCase:
 
 
 - (IBAction) cancelCase:(id)sender
@@ -211,31 +187,6 @@
     }];
     
 }// cancelCase
-
-
-
-#pragma mark - Button Draw Modes
-
-- (IBAction) switchDrawModes:(id)sender
-{
-    switch ([sender tag]) {
-        case 1:
-            openShapeButton.selected = YES;
-            closeShapeButton.selected = NO;
-            break;
-        case 2:
-            openShapeButton.selected = NO;
-            closeShapeButton.selected = YES;
-            break;
-        case 3:
-            openShapeButton.selected = NO;
-            closeShapeButton.selected = NO;
-            break;
-        default:
-            break;
-    }
-    
-}// switchDrawModes
 
 
 #pragma mark - Unit Test Operations
@@ -266,7 +217,6 @@
 
 #pragma mark - Management Operations
 
-// Clean Data
 - (void) resetData
 {
     // Init all the data and set ready them
@@ -316,13 +266,7 @@
         
         [self drawCloseShape];
     }
-    
-    /*
-    if ([openShapeButton isSelected])
-        [self drawOpenShape];
-    else
-        [self drawCloseShape];
-    */
+
     [vectorView setNeedsDisplay];
     
 }// getFigurePainted
@@ -412,13 +356,11 @@
             CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
             CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
-            //NSLog(@"%u - %u : longitude: %f  |  maxCurvature: %f  |  ratioSumDistance: %f  |  alignedCPRatio: %f  |  bezierRatioError: %f", fromIndex, toIndex, longitude, maxCurvature, ratioSumDistance, alignedCPRatio, bezierRatioError);
             
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
             if (longitude > 65.0) {
                 if (maxCurvature < 6.3) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -426,7 +368,6 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
@@ -434,7 +375,6 @@
             }
             else if (bezierRatioError < 0.29) {
                 if (alignedCPRatio < 0.037) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -442,13 +382,11 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18) {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
                 else if (ratioSumDistance < 1.0) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -456,7 +394,6 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                     //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
@@ -464,7 +401,6 @@
                 
             }
             else if (ratioSumDistance < 2.1) {
-                //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                 if ([previousCurves count] != 0) {
                     [shape addCurve:previousCurves];
                     previousCurves = [NSMutableArray array];
@@ -472,7 +408,6 @@
                 [shape addPolygonalFromSegment:segment];
             }
             else {
-                //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                 if ([previousCurves count] != 0)
                     [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                 [previousCurves addObjectsFromArray:stretch];
@@ -495,27 +430,7 @@
 
 
 - (void) drawCloseShape
-{
-    /*
-    // Is the painted shape closed (almost closed)?
-    // --------------------------------------------------------------------------
-    // Get radius to reduce point cloud
-    CGFloat maxDeltaX = maxX.x - minX.x;
-    CGFloat maxDeltaY = maxY.y - minY.y;
-    
-    CGFloat deltaX = [[listPoints objectAtIndex:0]CGPointValue].x - [[listPoints lastObject]CGPointValue].x;
-    CGFloat deltaY = [[listPoints objectAtIndex:0]CGPointValue].y - [[listPoints lastObject]CGPointValue].y;
-    CGFloat ratioXClose = deltaX / maxDeltaX;
-    CGFloat ratioYClose = deltaY / maxDeltaY;
-    
-    // It's open, do nothing, exit
-    if (fabs(ratioXClose) > 0.25 || fabs(ratioYClose) > 0.25)
-        return;
-
-    // If the resulting points number is insufficient, exit
-    if ([pointKeyArray count] < 2)
-        return;*/
-    
+{    
     // Reduce Points
     // --------------------------------------------------------------------------
     NSDictionary *dataDict = [self reducePointsKey];
@@ -599,7 +514,6 @@
             CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
             CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
-            //NSLog(@"%u - %u : longitude: %f  |  maxCurvature: %f  |  ratioSumDistance: %f  |  alignedCPRatio: %f  |  bezierRatioError: %f", fromIndex, toIndex, longitude, maxCurvature, ratioSumDistance, alignedCPRatio, bezierRatioError);
             
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
@@ -614,7 +528,6 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
@@ -622,7 +535,6 @@
             }
             else if (bezierRatioError < 0.29) {
                 if (alignedCPRatio < 0.037) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     shouldCheckOval = NO;
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
@@ -631,13 +543,11 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18) {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
                 else if (ratioSumDistance < 1.0) {
-                    //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -645,7 +555,6 @@
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                     if ([previousCurves count] != 0)
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
@@ -653,7 +562,6 @@
                 
             }
             else if (ratioSumDistance < 2.1) {
-                //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                 shouldCheckOval = NO;
                 if ([previousCurves count] != 0) {
                     [shape addCurve:previousCurves];
@@ -662,7 +570,6 @@
                 [shape addPolygonalFromSegment:segment];
             }
             else {
-                //NSLog(@"%u - %u   :   CURVA", fromIndex, toIndex);
                 if ([previousCurves count] != 0)
                     [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                 [previousCurves addObjectsFromArray:stretch];
@@ -778,7 +685,6 @@
         }
         
         // It isn't a oval
-        NSLog(@"1. Error Oval: %f", error);        
         if (error > ovaltolerace)
             return NO;
                 
@@ -846,7 +752,6 @@
         }
         
         // It isn't a circle
-        NSLog(@"2. Error Oval B: %f", error);
         if (error > 30.0) {
             [bigAxisSegment release];
             [smallAxisSegment release];
@@ -887,19 +792,7 @@
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(-pivotalPoint.x, -pivotalPoint.y));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(angleRad));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(pivotalPoint.x, pivotalPoint.y));
-    /*
-    // Check error
-    CGFloat smallAxisDistance = .0;
-    CGFloat bigAxisDistance = .0;
-    if (fabs(deltaAngle) < 10.0) {
-        smallAxisDistance = maxX.x - minX.x;
-        bigAxisDistance = maxY.y - minY.y;
-    }
-    else {
-        bigAxisDistance = maxX.x - minX.x;
-        smallAxisDistance = maxY.y - minY.y;
-    }
-    */
+
     // PRUEBA SI ES UN OVALO O NO
     CGFloat error = .0;
     
@@ -923,7 +816,6 @@
             error = finalError;
     }
     
-    NSLog(@"3. Error Oval A: %f", error);
     if (error > ovaltolerace) {
         [bigAxisSegment release];
         [smallAxisSegment release];
@@ -944,25 +836,6 @@
     return YES;
     
 }// drawOvalCirclePainted
-
-
-
-- (CGFloat) getTotalLongitude
-{
-    CGFloat totalLongitude = .0;
-    
-    for (NSUInteger i = 1 ; i < [listPoints count] ; i++) {
-        CGPoint pointStart = [[listPoints objectAtIndex:i-1]CGPointValue];
-        CGPoint pointEnd = [[listPoints objectAtIndex:i]CGPointValue];
-        
-        SYSegment *segment = [[SYSegment alloc]initWithPoint:pointStart andPoint:pointEnd];
-        totalLongitude += [segment longitude];
-        [segment release];
-    }
-    
-    return totalLongitude;
-    
-}// getTotalLongitude
 
 
 #pragma mark - Cloud Points Methods
@@ -1130,29 +1003,6 @@
     [pointKeyArray addObject:[NSValue valueWithCGPoint:lastPoint]];
     [pointKeyArray insertObject:[listPoints objectAtIndex:0] atIndex:0];
     
-    /*
-    for (int i = 1; i < [listPoints count]; i++) {
-     
-    }
-    
-    // ANGLES
-    NSValue *vertexValue = [listPoints objectAtIndex:[listPoints count]-3];
-    CGFloat angle = [self getAngleBetweenVertex:pointA
-                                      andPointA:pointB
-                                      andPointB:[vertexValue CGPointValue]];
-    
-    CGFloat angleDeg = (angle / M_PI_2) * 90.0;
-    if (angleDeg < 170.0) {
-        // A or B was adding to the pointKeyPoint...
-        if ([[pointKeyArray lastObject]isEqual:pointAValue] || [[pointKeyArray lastObject]isEqual:pointBValue]) {
-            // we don't need add vertex
-        }
-        else {
-            if (![[pointKeyArray lastObject]isEqual:vertexValue])
-                [pointKeyArray addObject:vertexValue];
-        }
-    }
-    */
 }// addLastPoint:
 
 
@@ -1343,207 +1193,11 @@
 }// reducePointsKey
 
 
-- (void) snapLinesAnglesForShape:(SYShape *)shape
-{
-    if (shape.openCurve) {
-        // Single line
-        if ([[shape geometries]count] == 1) {
-            
-            SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
-            
-            if (geometryCurrent.geometryType == LinesType) {
-                // Snap. Start point pivot
-                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                [segment snapAngleChangingFinalPoint];
-                
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
-            }
-        }
-        // Two o more lines
-        else {
-            // The first line
-            SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
-            if (geometryCurrent.geometryType == LinesType) {
-                
-                // Snap. Start point pivot
-                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                if ([segment isSnapAngle])
-                    [segment snapAngleChangingStartPoint];
-                
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
-            }
-            
-            for (int i = 1 ; i < [[shape geometries]count]-1 ; i++) {
-                
-                SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:i];
-                SYGeometry *geometryNext = [[shape geometries]objectAtIndex:i+1];
-                
-                if (geometryCurrent.geometryType == LinesType &&
-                    geometryNext.geometryType == LinesType) {
-                    
-                    // Snap. Start point pivot
-                    CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                    CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                    
-                    SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                    [segment snapAngleChangingFinalPoint];
-                    
-                    // Snap. Get the new points final point in the current line
-                    // and it will be the first point in the next one
-                    CGPoint pointStNext = [[geometryNext.pointArray objectAtIndex:0]CGPointValue];
-                    CGPoint pointFnNext = [[geometryNext.pointArray objectAtIndex:1]CGPointValue];
-                    
-                    SYSegment *segmentNext = [[[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext]autorelease];
-                    CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
-                    
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
-                                                  [NSValue valueWithCGPoint:intersectionPoint], nil];
-                    geometryNext.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectionPoint],
-                                               [NSValue valueWithCGPoint:pointFnNext], nil];
-                }
-            }
-            
-            // The last line
-            geometryCurrent = [[shape geometries]lastObject];
-            if (geometryCurrent.geometryType == LinesType) {
-                
-                // Snap. Start point pivot
-                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                [segment snapAngleChangingFinalPoint];
-                
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
-            }
-        }
-    }
-    else {
-        // Single line
-        if ([[shape geometries]count] == 1) {
-            
-            SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
-            
-            if (geometryCurrent.geometryType == LinesType) {
-                // Snap. Start point pivot
-                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                [segment snapAngleChangingFinalPoint];
-                
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
-            }
-        }
-        // Two o more lines
-        else {
-            
-            for (int i = 1 ; i < [[shape geometries]count]-1 ; i++) {
-                
-                SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:i];
-                SYGeometry *geometryNext = [[shape geometries]objectAtIndex:i+1];
-                
-                if (geometryCurrent.geometryType == LinesType &&
-                    geometryNext.geometryType == LinesType) {
-                    
-                    // Snap. Start point pivot
-                    CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                    CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                    
-                    SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                    [segment snapAngleChangingFinalPoint];
-                    
-                    // Snap. Get the new points final point in the current line
-                    // and it will be the first point in the next one
-                    CGPoint pointStNext = [[geometryNext.pointArray objectAtIndex:0]CGPointValue];
-                    CGPoint pointFnNext = [[geometryNext.pointArray objectAtIndex:1]CGPointValue];
-                    
-                    SYSegment *segmentNext = [[[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext]autorelease];
-                    CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
-                    
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
-                                                  [NSValue valueWithCGPoint:intersectionPoint], nil];
-                    geometryNext.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectionPoint],
-                                               [NSValue valueWithCGPoint:pointFnNext], nil];
-                }
-            }
-            
-            // The first line
-            SYGeometry *geometryCurrent = [[shape geometries]objectAtIndex:0];
-            SYGeometry *geometryLast = [[shape geometries]lastObject];
-            
-            if (geometryCurrent.geometryType == LinesType &&
-                geometryLast.geometryType == LinesType) {
-                
-                // Snap. Start point pivot
-                CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
-                CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *firstSegment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                if ([firstSegment isSnapAngle])
-                    [firstSegment snapAngleChangingStartPoint];
-                
-                // Snap. Final point pivot
-                pointSt = [[geometryLast.pointArray objectAtIndex:0]CGPointValue];
-                pointFn = [[geometryLast.pointArray objectAtIndex:1]CGPointValue];
-                
-                SYSegment *lastSegment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
-                [lastSegment snapAngleChangingFinalPoint];
-                
-                // Intersection between the two snap lines
-                CGPoint intersectPoint = [firstSegment pointIntersectWithSegment:lastSegment];
-                
-                // Update geometries
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
-                                              [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
-                
-                geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
-                                              [NSValue valueWithCGPoint:intersectPoint], nil];
-            }
-        }
-    }
-    
-}// snapLinesAnglesForShape:
-
-
 #pragma mark - Geometric calculations
 
-// Return shape/curve contour longitude (aprox)
-- (CGFloat) lengthFromPointList
-{
-    // If there isn't enough points, exit
-    if ([listPoints count] < 2)
-        return .0;
-    
-    CGFloat longitude = .0;
-    for (int i = 1 ; i < [listPoints count] ; i++) {
-        CGPoint startSegment = [[listPoints objectAtIndex:i-1]CGPointValue];
-        CGPoint endSegment = [[listPoints objectAtIndex:i]CGPointValue];
-        
-        SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
-        longitude += [segment longitude];
-        [segment release];
-        
-    }
-    
-    return longitude;
-    
-}// lengthFromPointList
-
-
-// Rewrite your TCChartView method ObjC native
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2
 {
+    // Rewrite your TCChartView method ObjC native
     CGFloat dx = point2.x - point1.x;
     CGFloat dy = point2.y - point1.y;
     
@@ -1552,11 +1206,9 @@
 }// distanceBetweenPoint:andPoint:
 
 
-// Rewrite your TCChartView method ObjC native
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB
 {
-    // cos-1((P122 + P132 - P232)/(2 * P12 * P13))
-    
+    // Rewrite your TCChartView method ObjC native
     CGFloat P12 = [self distanceBetweenPoint:vertex andPoint:pointA];
     CGFloat P13 = [self distanceBetweenPoint:vertex andPoint:pointB];
     CGFloat P23 = [self distanceBetweenPoint:pointA andPoint:pointB];
@@ -1568,7 +1220,7 @@
     
     return ret;
     
-}// getAngleBetween
+}// getAngleBetweenVertex:andPointA:andPointB:
 
 
 - (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey
@@ -1602,357 +1254,5 @@
     return NO;
     
 }// point:andPoint:isAlignedWithPoint:
-
-
-- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointC isAlignedWithPoint:(CGPoint)pointB withDistance:(float) ratio
-{
-    // Ecuacion de la recta y = mx + d
-    // -------------------------------
-    // Se calcula distancia
-    float dist = [self distanceFrom:pointC toLineBuildForPoint:pointA andPoint:pointB];
-    
-    // Si esta alineado responde si
-    if (dist < ratio)
-        return YES;
-    
-    // Si no NO
-    return NO;
-    
-}// point:andPoint:isAlignedWithPoint:
-
-
-
-#pragma mark - Auxiliar calculations
-
-- (NSUInteger) getFactorial:(NSUInteger) intNumber
-{
-    NSUInteger result = 1;
-    
-    for (NSUInteger i = 0; i < intNumber ; i++)
-        result = result * (intNumber-i);
-    
-    return result;
-    
-}// getFactorial:
-
-
-#pragma mark - Draw Geometric Methods
-
-- (void) drawBezierCurveWithPoints:(NSDictionary *) data
-{
-    SYGeometry *shapeToAdd = [self createBezierCurveWithPoints:data];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawBezierCurveWithPoints:
-
-
-- (void) drawBezierCurvesWithPoints:(NSArray *) arrayData
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createBezierCurvesWithPoints:arrayData];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawBezierCurvesWithPoints:
-
-
-- (void) drawPolygonal:(NSArray *) pointKeyList
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createPolygonal:pointKeyList];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawPolygonal:
-
-
-- (void) drawPolygonalFromSegment:(SYSegment *) segment
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createPolygonalFromSegment:segment];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawPolygonalFromSegment:
-
-
-- (void) drawSquare:(CGRect) squareRect
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createSquare:squareRect];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawPolygonalFromSegment:
-
-
-- (void) drawDiamond:(CGRect) diamondRect
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createDiamond:diamondRect];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawDiamond:
-
-
-- (void) drawCircle:(CGRect) circleRect
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createCircle:circleRect];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawDiamond:
-
-
-- (void) drawPoint:(CGPoint) point
-{
-    SYGeometry *shapeToAdd = [self createPoint:point];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawPoint:
-
-
-- (void) drawCircleWithTransform:(CGAffineTransform) transform
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createCircleWithTransform:transform];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawCircleWithTransform:
-
-
-- (void) drawArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
-{
-    //TEMPORAL
-    vectorView.shapeList = [NSMutableArray array];
-    
-    SYGeometry *shapeToAdd = [self createArc:midPoint radius:radius startAngle:startAngle endAngle:endAngle clockwise:clockwise];
-    if (shapeToAdd)
-        [vectorView.shapeList addObject:shapeToAdd];
-    
-}// drawArc:radius:startAngle:endAngle:clockwise:
-
-
-
-#pragma mark - Create Geometric Methods
-
-- (SYGeometry *) createBezierCurveWithPoints:(NSDictionary *) data
-{
-    // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = BezierType;
-    geometry.pointArray = [NSArray arrayWithObject:data];
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createBezierCurveWithPoints
-
-
-- (SYGeometry *) createBezierCurvesWithPoints:(NSArray *) arrayData
-{
-    // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = BezierType;
-    geometry.pointArray = [NSArray arrayWithArray:arrayData];
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createBezierCurvesWithPoints
-
-
-- (SYGeometry *) createPolygonal:(NSArray *) pointKeyList
-{
-    // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = LinesType;
-    
-    // Origin XY conversion
-    NSMutableArray *finalArray = [NSMutableArray array];
-    for (id keyPoint in pointKeyList) {
-        if ((NSNull *) keyPoint != [NSNull null]) {
-            NSValue *newPoint = [NSValue valueWithCGPoint:[keyPoint CGPointValue]];
-            [finalArray addObject:newPoint];
-        }
-    }
-    
-    geometry.pointArray = [NSArray arrayWithArray:finalArray];
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createPolygonal:
-
-
-- (SYGeometry *) createPolygonalFromSegment:(SYSegment *) segment
-{
-    // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = LinesType;
-    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:[segment pointSt]],
-                           [NSValue valueWithCGPoint:[segment pointFn]], nil];
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createPolygonalFromSegment
-
-
-- (SYGeometry *) createSquare:(CGRect) squareRect
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = SquareType;
-    geometry.rectGeometry = squareRect;
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor whiteColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createSquare
-
-
-- (SYGeometry *) createDiamond:(CGRect) diamondRect
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = DiamondType;
-    geometry.rectGeometry = diamondRect;
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor whiteColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createDiamond
-
-
-- (SYGeometry *) createCircle:(CGRect) rect
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = rect;
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createCircle:
-
-
-- (SYGeometry *) createPoint:(CGPoint) point
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = CGRectMake( point.x - 2.5, point.y - 2.5, 5.0, 5.0);
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createPoint:
-
-
-- (SYGeometry *) createCircleWithTransform:(CGAffineTransform) transform
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = CGRectMake(minX.x, maxY.y, (maxX.x - minX.x), (maxY.y - minY.y));
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    geometry.transform = transform;
-    
-    return geometry;
-    
-}// createCircleWithTransform
-
-
-- (SYGeometry *) createArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
-{
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-    
-    // Geometry parameters
-    geometry.geometryType = ArcType;
-    [geometry setArcParametersWithMidPoint:midPoint
-                                    radius:radius
-                                startAngle:startAngle
-                                  endAngle:endAngle
-                              andClockWise:clockwise];
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    return geometry;
-    
-}// createArc:endAngle:
 
 @end

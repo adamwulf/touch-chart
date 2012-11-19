@@ -27,7 +27,4 @@
 // Setter Parameters Drawing
 - (void) setLineWidth:(float)lineWidth;
 
-// Unit Test Methods
-- (void) saveCase:(NSString *) caseName;
-
 @end

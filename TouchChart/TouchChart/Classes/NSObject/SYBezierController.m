@@ -11,7 +11,7 @@
 
 @implementation SYBezierController
 
-#pragma mark - Getter Curves
+#pragma mark - Build Beziers
 
 - (NSArray *) addPointBasedQuadraticBezier:(NSArray *) listPoints
 {
@@ -292,36 +292,6 @@
         CGPoint P2 = [[[array objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
         
         // Continuity
-//      if (i != 0/* && i != ntimes-1*/) {
-        /*
-        if (i != 0) {
-            // Compare with the previous curve
-            NSMutableDictionary *curve = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:i-1]];
-            
-            // Get the last control point in the last curve stored.
-            // I have to do the inverse conversion
-            CGPoint controlPointEndPrevious = CGPointMake([[curve valueForKey:@"cPointB"]CGPointValue].x,
-                                                          [[curve valueForKey:@"cPointB"]CGPointValue].y);
-            
-            // Get pivotal (the last point in this
-            CGPoint controlPointStartCurrent = P1;
-            CGPoint pivotalPoint = [[splitList objectAtIndex:0]CGPointValue];
-            
-            // Slope for the first CP
-            CGFloat deltaX1 = controlPointEndPrevious.x - pivotalPoint.x;
-            CGFloat deltaY1 = controlPointEndPrevious.y - pivotalPoint.y;
-            CGFloat m1 = deltaY1/deltaX1;
-            
-            // Slope for the second CP
-            CGFloat deltaX2 = controlPointStartCurrent.x - pivotalPoint.x;
-            CGFloat deltaY2 = controlPointStartCurrent.y - pivotalPoint.y;
-            CGFloat m2 = deltaY2/deltaX2;
-            
-            // Get the average value
-            CGFloat mMid = (fabsf(m1) + fabsf(m2)) * 0.5;
-        }
-        */
-        
         if (i != 0) {
             
             // Compare with the previous curve
@@ -452,15 +422,6 @@
         }
     }
     
-    // LOG
-    /*
-     for (NSUInteger i = 0; i <= limit; i++) {
-     // Calculate error ratio
-     CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
-     NSLog(@"Para %u hay un %f", i, errorRatio);
-     }
-     */
-    //NSLog(@"Elegido -> %u", splitParts);
     return [self getCubicBezierPointsForListPoint:listPoints splitIn:splitParts];
     
 }// getBestCurveForListPoint:tolerance:

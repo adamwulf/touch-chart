@@ -196,6 +196,7 @@
 		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
 			isa = PBXGroup;
 			children = (
+				ED66A49316513D59002F427B /* Test Classes */,
 				ED92333E1561825D00B0F505 /* View Controllers */,
 				ED9233351561774000B0F505 /* Views */,
 				ED10585815640D9C00B10043 /* Model */,
@@ -288,10 +289,21 @@
 			name = "Paint Code";
 			sourceTree = "<group>";
 		};
+		ED66A49316513D59002F427B /* Test Classes */ = {
+			isa = PBXGroup;
+			children = (
+				ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */,
+				ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */,
+				ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */,
+				ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */,
+				ED12DD3815F537BA00FBDF00 /* Paint Code */,
+			);
+			name = "Test Classes";
+			sourceTree = "<group>";
+		};
 		ED9233351561774000B0F505 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				ED12DD3815F537BA00FBDF00 /* Paint Code */,
 				EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */,
 				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
@@ -307,10 +319,6 @@
 			children = (
 				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
 				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
-				ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */,
-				ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */,
-				ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */,
-				ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

@@ -17,6 +17,9 @@
     
 }
 
+// Other Methods
+- (CGPoint) midPointBetweenPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+
 @end
 
 
@@ -54,27 +57,16 @@
     NSMutableString *string = [NSMutableString string];
     
     for (SYGeometry *geometry in geometriesArray) {
-        if (geometry.geometryType == SquareType) {
+        if (geometry.geometryType == SquareType)
             [string appendString:@"type: Square\n"];
-        }
-        else if (geometry.geometryType == CircleType) {
+        else if (geometry.geometryType == CircleType)
             [string appendFormat:@"type: CircleType: (%f, %f)\n", geometry.rectGeometry.origin.x, geometry.rectGeometry.origin.y];
-        }
-        else if (geometry.geometryType == DiamondType) {
-            [string appendString:@"type: DiamondType\n"];
-        }
-        else if (geometry.geometryType == TriangleType) {
-            [string appendString:@"type: TriangleType\n"];
-        }
-        else if (geometry.geometryType == LinesType) {
+        else if (geometry.geometryType == LinesType)
             [string appendString:@"type: LinesType\n"];
-        }
-        else if (geometry.geometryType == BezierType) {
+        else if (geometry.geometryType == BezierType)
             [string appendString:@"type: BezierType\n"];
-        }
-        else if (geometry.geometryType == ArcType) {
+        else if (geometry.geometryType == ArcType)
             [string appendString:@"type: ArcType\n"];
-        }
     }
     
     return [NSString stringWithString:string];
@@ -100,14 +92,36 @@
 }// setOpenCurve
 
 
-#pragma mark - Adding Elements
+#pragma mark - Getter elements
 
-- (void) addGeometry:(SYGeometry *) geometry
+- (SYGeometry *) getElement:(NSUInteger) index
 {
-    [geometriesArray addObject:geometry];
+    if ([geometriesArray count] <= index || !geometriesArray)
+        return nil;
     
-}// addGeometry:
+    return [geometriesArray objectAtIndex:index];
+    
+}// getShape:
 
+
+- (SYGeometry *) getLastElement
+{
+    if ([geometriesArray count] == 0 || !geometriesArray)
+        return nil;
+    
+    return [geometriesArray objectAtIndex:[geometriesArray count]-1];
+    
+}// getLastShape
+
+
+- (NSArray *) geometries
+{
+    return [NSArray arrayWithArray:geometriesArray];
+    
+}// geometries
+
+
+#pragma mark - Adding Elements
 
 - (void) addPoint:(CGPoint) keyPoint
 {
@@ -244,6 +258,27 @@
 }// addCircle:
 
 
+- (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = CircleType;
+    geometry.rectGeometry = rect;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    geometry.transform = transform;
+    
+    [geometriesArray addObject:geometry];
+    [geometry release];
+    
+}// addCircleWithRect:andTransform:
+
+
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
 {
     if (radius == 0 ||
@@ -269,27 +304,6 @@
     [geometry release];
     
 }// addArc:radius:startAngle:endAngle:clockwise:
-
-
-- (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
-{
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
-    // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = rect;
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    geometry.transform = transform;
-    
-    [geometriesArray addObject:geometry];
-    [geometry release];
-    
-}// createCircleWithTransform
 
 
 #pragma mark - Replace Elements
@@ -657,9 +671,7 @@
     
     if ([firstShape geometryType] == LinesType &&
         [lastShape geometryType] == LinesType) {
-        
-        NSLog(@"lines - lines");
-        
+                
         CGPoint firstPointSt = [[[firstShape pointArray]objectAtIndex:0]CGPointValue];
         CGPoint lastPointFn = [[[lastShape pointArray]objectAtIndex:1]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
@@ -676,9 +688,7 @@
     }
     else if ([firstShape geometryType] == BezierType &&
              [lastShape geometryType] == LinesType) {
-        
-        NSLog(@"bezier - lines");
-        
+                
         CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
         CGPoint lastPointFn = [[[lastShape pointArray]objectAtIndex:1]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
@@ -710,9 +720,7 @@
     }
     else if ([firstShape geometryType] == LinesType &&
              [lastShape geometryType] == BezierType) {
-        
-        NSLog(@"lines - bezier");
-        
+                
         CGPoint firstPointSt = [[[firstShape pointArray]objectAtIndex:0]CGPointValue];
         CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
@@ -743,7 +751,7 @@
                 
     }
     else {
-        NSLog(@"bezier - bezier");
+
         CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
         CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
@@ -787,35 +795,6 @@
     }
     
 }// checkCloseShape
-
-
-#pragma mark - Get elements
-
-- (SYGeometry *) getElement:(NSUInteger) index
-{
-    if ([geometriesArray count] <= index || !geometriesArray)
-        return nil;
-
-    return [geometriesArray objectAtIndex:index];
-    
-}// getShape:
-
-
-- (SYGeometry *) getLastElement
-{
-    if ([geometriesArray count] == 0 || !geometriesArray)
-        return nil;
-
-    return [geometriesArray objectAtIndex:[geometriesArray count]-1];
-    
-}// getLastShape
-
-
-- (NSArray *) geometries
-{
-    return [NSArray arrayWithArray:geometriesArray];
-    
-}// geometries
 
 
 #pragma mark - Other Methods

@@ -24,11 +24,14 @@
 }// awakeFromNib
 
 
+#pragma mark - Shapes List Management
+
 - (void) addShape:(SYShape *)shape
 {
     [shapeList addObject:shape];
     
 }// addShape
+
 
 - (IBAction) clear:(id)sender
 {
@@ -36,6 +39,7 @@
     [self setNeedsDisplay];
     
 }// clear
+
 
 - (void) drawRect: (CGRect)rect
 {
@@ -65,9 +69,6 @@
                 
                 [[geometry strokeColor] set];
                 [path stroke];
-                
-                //if ([geometry transform])
-                //    [path applyTransform:[geometry transform]];
                 
                 for (int i = 0; i < [[geometry pointArray]count] ; i++) {
                     CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
@@ -289,65 +290,6 @@
                 [[geometry strokeColor] set];
                 [path stroke];
             }
-            
-            /*
-            if ([geometry geometryType] == DiamondType) {
-                
-                CGRect rectGeometry = [geometry rectGeometry];
-                
-                UIBezierPath * path = [UIBezierPath bezierPath];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [path  moveToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width , rectGeometry.origin.y + rectGeometry.size.height * 0.5)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y + rectGeometry.size.height)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x, rectGeometry.origin.y + rectGeometry.size.height * 0.5)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y)];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else if ([geometry geometryType] == SquareType) {
-                // Drawing code
-                UIBezierPath * path = [UIBezierPath bezierPathWithRect:[geometry rectGeometry]];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else if ([geometry geometryType] == TriangleType) {
-                
-                CGPoint pointA = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
-                CGPoint pointB = [[[geometry pointArray]objectAtIndex:1]CGPointValue];
-                CGPoint pointC = [[[geometry pointArray]objectAtIndex:2]CGPointValue];
-                
-                // Drawing code
-                UIBezierPath * path = [UIBezierPath bezierPath];
-                [path moveToPoint:pointA];
-                [path addLineToPoint:pointB];
-                [path addLineToPoint:pointC];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else*/
-            
             else if ([geometry geometryType] == ArcType) {
                 
                 // Drawing code            
