@@ -21,6 +21,8 @@
 		6691AA59150DCFBD00D4A47A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
 		6691AA61150DCFBD00D4A47A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */; };
 		6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA63150DCFBD00D4A47A /* TouchChartTests.m */; };
+		66A53A04163F1A1C003EAEC0 /* shape.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A03163F1A1C003EAEC0 /* shape.png */; };
+		66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A06163F1A20003EAEC0 /* shape@2x.png */; };
 		ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */; };
 		ED0BE5C315F0C7AE00EBE866 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */; };
 		ED0BE5C515F0C7C300EBE866 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C415F0C7C300EBE866 /* CFNetwork.framework */; };
@@ -84,6 +86,8 @@
 		6691AA62150DCFBD00D4A47A /* TouchChartTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchChartTests.h; sourceTree = "<group>"; };
 		6691AA63150DCFBD00D4A47A /* TouchChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchChartTests.m; sourceTree = "<group>"; };
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shape.png; sourceTree = "<group>"; };
+		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shape@2x.png"; sourceTree = "<group>"; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
 		ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitTestController.m; path = Classes/NSObject/SYUnitTestController.m; sourceTree = "<group>"; };
 		ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -163,6 +167,8 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
+				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
+				66A53A03163F1A1C003EAEC0 /* shape.png */,
 				6691AA3B150DCFBC00D4A47A /* TouchChart */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -425,6 +431,8 @@
 				ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */,
 				ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */,
 				ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */,
+				66A53A04163F1A1C003EAEC0 /* shape.png in Resources */,
+				66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,7 +600,7 @@
 		6691AA68150DCFBD00D4A47A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Fernando Garcia Torcelly (M8HYXSG43T)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -607,7 +615,7 @@
 					"\"$(SRCROOT)/TouchChart/External Libraries\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BFDBA391-B6A1-413C-96A7-8878F75A7BA3";
+				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
