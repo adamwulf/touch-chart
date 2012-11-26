@@ -188,49 +188,23 @@
     if (!curvePoints || [curvePoints count] == 0)
         return;
     
-    SYSegment *segment = [[SYSegment alloc]initWithPoint:[[curvePoints objectAtIndex:0]CGPointValue]
-                                                andPoint:[[curvePoints lastObject]CGPointValue]];
-    CGFloat longitude = [segment longitude];
-    [segment release];
+    SYBezierController *bezierController = [[SYBezierController alloc]init];
+    NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
+    [bezierController release];
     
-    if (longitude < 80.0) {
-        SYBezierController *bezierController = [[SYBezierController alloc]init];
-        NSArray *curves = [bezierController getCubicBezierPointsForListPoint:curvePoints];
-        [bezierController release];
-        
-        // Draw the resulting shape
-        SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-        
-        // Geometry parameters
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
-        
-        // Draw properties
-        geometry.lineWidth = 4.0;
-        geometry.fillColor = [UIColor clearColor];
-        geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-        
-        [geometriesArray addObject:geometry];
-    }
-    else {
-        SYBezierController *bezierController = [[SYBezierController alloc]init];
-        NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
-        [bezierController release];
-        
-        // Draw the resulting shape
-        SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
-        
-        // Geometry parameters
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
-        
-        // Draw properties
-        geometry.lineWidth = 4.0;
-        geometry.fillColor = [UIColor clearColor];
-        geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-        
-        [geometriesArray addObject:geometry];
-    }
+    // Draw the resulting shape
+    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    
+    // Geometry parameters
+    geometry.geometryType = BezierType;
+    geometry.pointArray = curves;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
     
 }// addCurve:
 

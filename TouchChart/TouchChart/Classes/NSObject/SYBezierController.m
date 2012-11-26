@@ -290,7 +290,7 @@
             [[[array objectAtIndex:0] valueForKey:@"t3Point"]CGPointValue]};
         CGPoint P1 = [[[array objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
         CGPoint P2 = [[[array objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
-        
+/*
         // Continuity
         if (i != 0) {
             
@@ -349,7 +349,7 @@
             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
          
         }
-
+*/
         // Save the points to the array to paint
         NSDictionary *convertPoint = [NSDictionary dictionaryWithObjectsAndKeys:
                                       [NSValue valueWithCGPoint:cPoint[0]], @"t0Point",
@@ -407,7 +407,7 @@
         // Calculate error ratio
         CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
 
-        if (errorRatio < 0.025) {
+        if (errorRatio < ratioError || i == 21) {
             splitParts = i;
             break;
         }

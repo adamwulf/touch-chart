@@ -600,7 +600,7 @@
 		6691AA68150DCFBD00D4A47A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Fernando Garcia Torcelly (M8HYXSG43T)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -615,7 +615,7 @@
 					"\"$(SRCROOT)/TouchChart/External Libraries\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
+				PROVISIONING_PROFILE = "BFDBA391-B6A1-413C-96A7-8878F75A7BA3";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -623,6 +623,7 @@
 		6691AA69150DCFBD00D4A47A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Fernando Garcia Torcelly (M8HYXSG43T)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sylion Development SL";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -638,6 +639,7 @@
 					"\"$(SRCROOT)/TouchChart/External Libraries\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "BFDBA391-B6A1-413C-96A7-8878F75A7BA3";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6B91E141-F7BF-4795-BCFA-F4EBD8A570CC";
 				WRAPPER_EXTENSION = app;
 			};
