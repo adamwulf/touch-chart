@@ -62,6 +62,6 @@ typedef enum {
 - (CGFloat) radius;
 - (CGFloat) startAngle;
 - (CGFloat) endAngle;
-- (CGFloat) clockwise;
+- (BOOL) clockwise;
 
 @end

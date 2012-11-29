@@ -8,10 +8,11 @@
 
 #import "SYBezierController.h"
 #import "SYSegment.h"
+#import "SYBezier.h"
 
 @implementation SYBezierController
 
-#pragma mark - Build Beziers
+#pragma mark - Build Curves
 
 - (NSArray *) addPointBasedQuadraticBezier:(NSArray *) listPoints
 {
@@ -71,7 +72,7 @@
 }// addPointBasedQuadraticBezier:
 
 
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
+- (NSArray *) buildCubicBezierPointsForListPoint:(NSArray *) listPoints
 {
     // If the list points has 1 point, return nil
     if ([listPoints count] == 1)
@@ -84,6 +85,15 @@
         NSValue *pointB = [listPoints objectAtIndex:1];
         
         // Save the points to the array to paint
+        SYBezier *bezier = [[SYBezier alloc]init];
+        bezier.t0Point = [pointA CGPointValue];
+        bezier.cPointA = [pointA CGPointValue];
+        bezier.cPointB = [pointB CGPointValue];
+        bezier.t3Point = [pointB CGPointValue];
+        bezier.t1Point = [pointA CGPointValue];
+        bezier.t2Point = [pointB CGPointValue];
+        bezier.errorRatio = .0;
+        
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                               pointA, @"t0Point",
                               pointA, @"cPointA",
@@ -93,7 +103,7 @@
                               pointB, @"t2Point",
                               [NSNumber numberWithFloat:.0], @"errorRatio", nil];
         
-        return [NSArray arrayWithObject:dict];
+        return [NSArray arrayWithObject:bezier];
     }
     // If the list points has 3 point, return quadratic bezier
     else if ([listPoints count] == 3)
@@ -232,7 +242,7 @@
         [segment release];
     }
     
-    // Error medio por cada punto
+    // Ratio
     ratio /= [listPoints count];
     
     // Save the points to the array to paint
@@ -247,14 +257,14 @@
     
     return [NSArray arrayWithObject:dict];
 
-}// getCubicBezierPointsForListPoint:
+}// buildCubicBezierPointsForListPoint:
 
 
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints
+- (NSArray *) buildCubicBezierPointsForListPoint:(NSArray *) listPoints
                                        splitIn:(NSUInteger) ntimes
 {    
     if (ntimes == 0)
-        return [self getCubicBezierPointsForListPoint:listPoints];
+        return [self buildCubicBezierPointsForListPoint:listPoints];
     
     NSMutableArray *curves = [NSMutableArray array];
     NSUInteger splitParts = [listPoints count] * 1/ntimes;
@@ -281,7 +291,7 @@
         else if ([splitList count] < 4)
             NSLog(@"Error");
 
-        NSArray *array = [self getCubicBezierPointsForListPoint:splitList];
+        NSArray *array = [self buildCubicBezierPointsForListPoint:splitList];
         
         // Store solutions
         CGPoint cPoint[4] = {[[[array objectAtIndex:0] valueForKey:@"t0Point"]CGPointValue],
@@ -365,16 +375,16 @@
     
     return curves;
     
-}// getCubicBezierPointsForListPoint:splitIn:
+}// buildCubicBezierPointsForListPoint:splitIn:
 
 
-- (NSArray *) getBestCurveForListPoint:(NSArray *)listPoints
+- (NSArray *) buildBestBezierForListPoint:(NSArray *)listPoints
                              tolerance:(CGFloat) ratioError
 {
     // If there isn't enough number of points
     // we just split one time
     if ([listPoints count] < 7)
-        return [self getCubicBezierPointsForListPoint:listPoints splitIn:1];
+        return [self buildCubicBezierPointsForListPoint:listPoints splitIn:1];
 
     // We get all info about the listPoints
     // We get C(t)
@@ -422,16 +432,16 @@
         }
     }
     
-    return [self getCubicBezierPointsForListPoint:listPoints splitIn:splitParts];
+    return [self buildCubicBezierPointsForListPoint:listPoints splitIn:splitParts];
     
-}// getBestCurveForListPoint:tolerance:
+}// buildBestBezierForListPoint:tolerance:
 
 
 #pragma mark - Getter Parameters
 
 - (CGFloat) getErrorRatioListPoint:(NSArray *)listPoints splitIn:(CGFloat)i
 {
-    NSArray *curves = [self getCubicBezierPointsForListPoint:listPoints splitIn:i];
+    NSArray *curves = [self buildCubicBezierPointsForListPoint:listPoints splitIn:i];
     
     CGFloat sumRatio = .0;
     for (NSDictionary *curve in curves)

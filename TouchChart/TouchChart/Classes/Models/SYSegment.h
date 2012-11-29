@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface SYSegment : NSObject {
-    // Puntos que definen el segmento
+    // These points define the segment
     CGPoint pointSt;
     CGPoint pointFn;
 }
@@ -27,8 +27,8 @@
 - (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment;
 
 // Distances
-- (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB;
-- (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB;
+- (CGFloat) moduleTwo:(CGPoint)pointA and:(CGPoint)pointB;
+- (CGFloat) distance:(CGPoint)pointA and:(CGPoint)pointB;
 - (CGFloat) longitude;
 - (CGFloat) distanceToPoint:(CGPoint) C;
 

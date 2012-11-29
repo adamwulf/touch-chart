@@ -189,7 +189,7 @@
         return;
     
     SYBezierController *bezierController = [[SYBezierController alloc]init];
-    NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
+    NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:0.01];
     [bezierController release];
     
     // Draw the resulting shape
@@ -301,7 +301,7 @@
         
         if (longitude < 80.0) {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getCubicBezierPointsForListPoint:curvePoints];
+            NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:curvePoints];
             [bezierController release];
             
             // Draw the resulting shape
@@ -321,7 +321,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:0.01];
             [bezierController release];
             
             // Draw the resulting shape
@@ -386,7 +386,7 @@
         
         if (longitude < 80.0) {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getCubicBezierPointsForListPoint:element];
+            NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:element];
             [bezierController release];
             
             // Draw the resulting shape
@@ -406,7 +406,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getBestCurveForListPoint:element tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:element tolerance:0.01];
             [bezierController release];
             
             // Draw the resulting shape

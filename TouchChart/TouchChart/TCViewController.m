@@ -17,8 +17,8 @@
 @interface TCViewController () {
     
     // Array Data
-    NSMutableArray *listPoints; // All points
-    NSMutableArray *pointKeyArray;
+    NSMutableArray *listPoints;     // All the points touched
+    NSMutableArray *pointKeyArray;  // All the key points calculated from listPoints
     
     // Cartesian values max, min
     CGPoint maxX, maxY;
@@ -275,11 +275,10 @@
 - (void) drawOpenShape
 {
     NSDictionary *dataDict = [self reducePointsKey];
-    
     NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
     NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
     
-    // We have the correct keypoints now and its index into a points list.
+    // We have the reduce number of keypoints right now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]init];
     shape.openCurve = YES;
@@ -290,9 +289,6 @@
         NSUInteger fromIndex = [[indexKeyPoints objectAtIndex:i-1]integerValue];
         NSUInteger toIndex = [[indexKeyPoints objectAtIndex:i]integerValue];
         
-        CGPoint firstPoint = [[pointsToFit objectAtIndex:fromIndex]CGPointValue];
-        CGPoint lastPoint = [[pointsToFit objectAtIndex:toIndex]CGPointValue];
-        
         // Get the points for that stretch
         NSRange theRange = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
         NSArray *stretch = [pointsToFit subarrayWithRange:theRange];
@@ -300,12 +296,12 @@
         // If there are only 4 points,
         // it's possible that the estimation won't be right
         if ([stretch count] < 4) {
-
             if ([previousCurves count] != 0) {
                 [shape addCurve:previousCurves];
                 previousCurves = [NSMutableArray array];
             }
-            SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
+            SYSegment *segment = [[SYSegment alloc]initWithPoint:[[stretch objectAtIndex:0]CGPointValue]
+                                                        andPoint:[[stretch lastObject]CGPointValue]];
             [shape addPolygonalFromSegment:segment];
             [segment release];
         }
@@ -314,17 +310,20 @@
             // Line. Errors if we use a line to fit
             // ---------------------------------------------------------
             // Line between the first and the last point in that stretch
-            SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
+            SYSegment *segment = [[SYSegment alloc]initWithPoint:[[stretch objectAtIndex:0]CGPointValue]
+                                                        andPoint:[[stretch lastObject]CGPointValue]];
             
-            // Deviation ratio and Max curvature
+            // Desviation ratio and Max curvature
             CGFloat sumDistance = .0; CGFloat maxCurvature = .0; CGFloat longitude = .0;
-            for (NSUInteger j = fromIndex+1; j < toIndex; j++) {
-                CGPoint aPoint = [[pointsToFit objectAtIndex:j]CGPointValue];
+            for (NSUInteger j = 1; j < [stretch count]; j++) {
+                CGPoint aPoint = [[stretch objectAtIndex:j]CGPointValue];
                 sumDistance += [segment distanceToPoint:aPoint];
                 
                 // Study curvature
-                SYSegment *fromStartToStudyPoint = [[SYSegment alloc]initWithPoint:firstPoint andPoint:aPoint];
-                SYSegment *fromStudyPointToEnd = [[SYSegment alloc]initWithPoint:aPoint andPoint:lastPoint];
+                SYSegment *fromStartToStudyPoint = [[SYSegment alloc]initWithPoint:[[stretch objectAtIndex:0]CGPointValue]
+                                                                          andPoint:aPoint];
+                SYSegment *fromStudyPointToEnd = [[SYSegment alloc]initWithPoint:aPoint
+                                                                        andPoint:[[stretch lastObject]CGPointValue]];
                 
                 CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
@@ -336,25 +335,25 @@
                     maxCurvature = [segment distanceToPoint:aPoint];
                 
                 
-                CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
+                CGPoint previousPoint = [[stretch objectAtIndex:j-1]CGPointValue];
                 SYSegment *segmentCalculateLongitude = [[SYSegment alloc]initWithPoint:previousPoint andPoint:aPoint];
                 longitude += [segmentCalculateLongitude longitude];
                 [segmentCalculateLongitude release];
             }
             
-            CGFloat ratioSumDistance = sumDistance / longitude;
+            CGFloat ratioTotalCurvature = sumDistance / longitude;
             
             
             // Bezier
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *result = [bezierController getBestCurveForListPoint:stretch tolerance:0.01];
+            NSArray *result = [bezierController buildBestBezierForListPoint:stretch tolerance:0.01];
             [bezierController release];
+            CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
             
             // Is line or curve? (Are aligned the control points?)
             CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
             CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
-            CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
             
             // Estimate curve or line reading the parameters calculated
@@ -386,7 +385,7 @@
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
-                else if (ratioSumDistance < 1.0) {
+                else if (ratioTotalCurvature < 1.0) {
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -400,7 +399,7 @@
                 }
                 
             }
-            else if (ratioSumDistance < 2.1) {
+            else if (ratioTotalCurvature < 2.1) {
                 if ([previousCurves count] != 0) {
                     [shape addCurve:previousCurves];
                     previousCurves = [NSMutableArray array];
@@ -421,9 +420,11 @@
     if ([previousCurves count] != 0)
         [shape addCurve:previousCurves];
     
+    // Snap angles
     [shape snapLinesAngles];
-    [vectorView addShape:shape];
     
+    // Add shape to the canvas
+    [vectorView addShape:shape];
     [shape release];
     
 }// drawOpenCurve
@@ -442,7 +443,7 @@
     SYShape *shape = [[SYShape alloc]init];
     shape.closeCurve = YES;
     NSMutableArray *previousCurves = [NSMutableArray array];
-    BOOL shouldCheckOval = YES;
+    BOOL needsCheckOval = YES;
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
         // Build stretch
@@ -500,13 +501,13 @@
                 [segmentCalculateLongitude release];
             }
             
-            CGFloat ratioSumDistance = sumDistance / longitude;
+            CGFloat ratioTotalCurvature = sumDistance / longitude;
             
             
             // Bezier
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *result = [bezierController getBestCurveForListPoint:stretch tolerance:0.01];
+            NSArray *result = [bezierController buildBestBezierForListPoint:stretch tolerance:0.01];
             [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
@@ -520,7 +521,7 @@
             if (longitude > 65.0) {
                 if (maxCurvature < 6.3) {
                     //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
-                    shouldCheckOval = NO;
+                    needsCheckOval = NO;
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -535,7 +536,7 @@
             }
             else if (bezierRatioError < 0.29) {
                 if (alignedCPRatio < 0.037) {
-                    shouldCheckOval = NO;
+                    needsCheckOval = NO;
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -547,7 +548,7 @@
                         [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
                     [previousCurves addObjectsFromArray:stretch];
                 }
-                else if (ratioSumDistance < 1.0) {
+                else if (ratioTotalCurvature < 1.0) {
                     if ([previousCurves count] != 0) {
                         [shape addCurve:previousCurves];
                         previousCurves = [NSMutableArray array];
@@ -561,8 +562,8 @@
                 }
                 
             }
-            else if (ratioSumDistance < 2.1) {
-                shouldCheckOval = NO;
+            else if (ratioTotalCurvature < 2.1) {
+                needsCheckOval = NO;
                 if ([previousCurves count] != 0) {
                     [shape addCurve:previousCurves];
                     previousCurves = [NSMutableArray array];
@@ -584,7 +585,7 @@
         [shape addCurve:previousCurves];
     
     // Try to fit with a oval
-    if (shouldCheckOval && [self drawOvalCirclePainted]) {
+    if (needsCheckOval && [self drawOvalCirclePainted]) {
         [shape release];
         return;
     }
@@ -625,7 +626,7 @@
         }
     }
     
-    // If horizontal or vertical oval, we don't need rotate it
+    // Is it an horizontal or vertical oval?
     CGPoint center = [bigAxisSegment midPoint];
     float deltaAngle = fabs([bigAxisSegment angleDeg]) - 90.0;
     
@@ -650,7 +651,7 @@
         }
         CGRect ovalRect = CGRectMake( minX.x, minY.y, (maxX.x - minX.x), (maxY.y - minY.y));
         
-        // Check error
+        // Build the Oval
         CGFloat smallAxisDistance = .0;
         CGFloat bigAxisDistance = .0;
         if (fabs(deltaAngle) < 10.0) {
@@ -662,9 +663,8 @@
             smallAxisDistance = maxY.y - minY.y;
         }
         
-        // PROBAR SI ES UN OVALO O NO
+        // And Check error
         CGFloat error = .0;
-        
         CGFloat a = bigAxisDistance * 0.5;
         CGFloat b = smallAxisDistance * 0.5;
         if (fabs([bigAxisSegment angleDeg]) > 45.0) {
@@ -684,7 +684,7 @@
                 error = finalError;
         }
         
-        // It isn't a oval
+        // If the error is higher than tolerance, It isn't a oval
         if (error > ovaltolerace)
             return NO;
                 
@@ -793,7 +793,7 @@
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(angleRad));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(pivotalPoint.x, pivotalPoint.y));
 
-    // PRUEBA SI ES UN OVALO O NO
+    // Test if it's an oval or not
     CGFloat error = .0;
     
     CGFloat a = [bigAxisSegment longitude] * 0.5;
@@ -803,14 +803,13 @@
         
         CGPoint pointOrig = [pointValue CGPointValue];
         
-        // Proyeccion del punto sobre el eje mayor y menor
+        // Project point over the axis
         SYSegment *lineToPoint = [[SYSegment alloc]initWithPoint:center andPoint:pointOrig];
         CGFloat projBigAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
         CGFloat projSmallAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[smallAxisSegment angleRad]);;
         [lineToPoint release];
         
         CGFloat errorTemp = (pow(projBigAxis, 2)/pow(a, 2)) + (pow(projSmallAxis, 2)/pow(b, 2));
-        //NSLog(@"%f = %f + %f", errorTemp, pow(projBigAxis, 2)/pow(a, 2) , pow(projSmallAxis, 2)/pow(b, 2));
         CGFloat finalError = fabs(1 - errorTemp);
         if (finalError > error)
             error = finalError;
@@ -1122,7 +1121,7 @@
     }
     
     
-    // Remove key points if the normal points between them are < 5
+    // Remove key points if the index into list points between them are < 5
     // --------------------------------------------------------------------------
     // For the first point
     if ([reducePointKeyArray count] > 2) {

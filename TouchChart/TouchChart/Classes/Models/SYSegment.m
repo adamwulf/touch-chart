@@ -86,17 +86,17 @@
 
 #pragma mark - Geometric Methods
 
-- (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB
+- (CGFloat) moduleTwo:(CGPoint)pointA and:(CGPoint)pointB
 {
-    return (puntoB.x-puntoA.x)*(puntoB.x-puntoA.x) + (puntoB.y-puntoA.y)*(puntoB.y-puntoA.y);
+    return (pointB.x-pointA.x)*(pointB.x-pointA.x) + (pointB.y-pointA.y)*(pointB.y-pointA.y);
     
 }// moduleTwo:and:
 
 
-- (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB
+- (CGFloat) distance:(CGPoint)pointA and:(CGPoint)pointB
 {
     // Distance between two points (2D)
-    return sqrt([self moduleTwo:puntoA and:puntoB]);
+    return sqrt([self moduleTwo:pointA and:pointB]);
 
 }// distance:and:
 
@@ -113,12 +113,9 @@
 {
     // Distance between point C to segment
     
-    // Punto en el segmento sobre el cual se calculará la distancia
-    // iniciamos en uno de los extremos
+    // Point of the segment used for calculate the distance
     CGPoint P = CGPointZero;
     
-    // Para prevenir una división por cero se calcula primero el denominador de
-    // la división. (Se puede dar si A y B son el mismo punto).
     CGFloat denominator = [self moduleTwo:pointSt and:pointFn];
 
     if(denominator !=0){

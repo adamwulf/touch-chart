@@ -115,7 +115,7 @@
 }// radius
 
 
-- (CGFloat) clockwise
+- (BOOL) clockwise
 {
     return arcClockwise;
     

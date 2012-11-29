@@ -18,8 +18,8 @@
 @interface TCViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SYUnitTestDelegate> {
     
     // Views
-    IBOutlet SYPaintView *paintView;
-    IBOutlet SYVectorView *vectorView;
+    IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
+    IBOutlet SYVectorView *vectorView;      // Will draw the final shape
 
     // Test
     IBOutlet SYTableBase *tableBase;
@@ -28,12 +28,10 @@
 
 }
 
-// Test IBActions
+// Test Methods
 - (IBAction) selectName:(id)sender;
 - (IBAction) saveCase:(id)sender;
 - (IBAction) cancelCase:(id)sender;
-
-// Test Methods
 - (void) importCase:(NSArray *) allPoints;
 
 // Management Data Operations
