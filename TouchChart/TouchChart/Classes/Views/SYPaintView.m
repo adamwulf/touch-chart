@@ -148,7 +148,7 @@
     [viewController resetData];
     
     // Init list points
-    self.allPoints = [[NSMutableArray alloc]init];
+    _allPoints = [[NSMutableArray alloc]init];
     
     // Unit Test: Add point
     UITouch *touch = [touches anyObject];

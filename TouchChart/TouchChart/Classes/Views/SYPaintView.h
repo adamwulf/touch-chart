@@ -13,13 +13,16 @@
 
 @interface SYPaintView : UIView {
     
+    // Data
+    NSMutableArray *_allPoints;
+    
     // Controller
     __weak IBOutlet TCViewController *viewController;
     __weak IBOutlet SYUnitTestController *unitTestController;
     
 }
 
-@property(nonatomic, strong) NSMutableArray *allPoints; // Unit test data
+@property(readonly, strong) NSMutableArray *allPoints; // Unit test data
 
 // Clears the finger drawing from the screen
 - (void) clearPaint;

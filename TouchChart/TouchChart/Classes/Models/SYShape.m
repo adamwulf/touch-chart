@@ -9,6 +9,7 @@
 #import "SYShape.h"
 #import "SYGeometry.h"
 #import "SYSegment.h"
+#import "SYBezier.h"
 #import "SYBezierController.h"
 
 @interface SYShape () {
@@ -183,13 +184,13 @@
 }// createPolygonalFromSegment
 
 
-- (void) addCurve:(NSArray *) curvePoints
+- (void) addCurvesForListPoints:(NSArray *) listPoints
 {
-    if (!curvePoints || [curvePoints count] == 0)
+    if (!listPoints || [listPoints count] == 0)
         return;
     
     SYBezierController *bezierController = [[SYBezierController alloc]init];
-    NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:0.01];
+    NSArray *curves = [bezierController buildBestBezierForListPoint:listPoints tolerance:0.01];
     [bezierController release];
     
     // Draw the resulting shape
@@ -287,6 +288,7 @@
     if (!element)
         return;
     
+    // The new element is a list Points
     if ([element isKindOfClass:[NSArray class]] ||
         [element isKindOfClass:[NSMutableArray class]]) {
         
@@ -340,6 +342,7 @@
                                        withObject:geometry];
         }
     }
+    // It's a segment
     else if ([element isKindOfClass:[SYSegment class]]) {
         
         if (!element)
@@ -363,6 +366,17 @@
     else if ([element isKindOfClass:[SYGeometry class]]) {
         [geometriesArray replaceObjectAtIndex:index
                                    withObject:element];
+    }
+    // It's a SYGeometry
+    else if ([element isKindOfClass:[SYGeometry class]]) {
+        
+        if (!element)
+            return;
+        
+        // Draw the resulting shape
+        SYGeometry *geometry = (SYGeometry *) element;        
+        [geometriesArray replaceObjectAtIndex:index
+                                   withObject:geometry];
     }
         
 }// replaceElementAtIndex:withElement:
@@ -662,17 +676,19 @@
     }
     else if ([firstShape geometryType] == BezierType &&
              [lastShape geometryType] == LinesType) {
-                
-        CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
+        
+        // Get the midPoint between the current bezier and the last point in the previous line
+        SYBezier *bezier = [[firstShape pointArray]objectAtIndex:0];        
+        CGPoint firstPointSt = bezier.t0Point;
         CGPoint lastPointFn = [[[lastShape pointArray]objectAtIndex:1]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
         
-        // Move the first point in the bezier curve
+        // Move the first point in the bezier curve to midpoint
         NSMutableArray *curves = [NSMutableArray arrayWithArray:firstShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:0]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t0Point"];
-        [curves replaceObjectAtIndex:0 withObject:dictMut];
+        SYBezier *bezierToChange = [curves objectAtIndex:0];
+        bezierToChange.t0Point = midPoint;
+        [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -696,7 +712,9 @@
              [lastShape geometryType] == BezierType) {
                 
         CGPoint firstPointSt = [[[firstShape pointArray]objectAtIndex:0]CGPointValue];
-        CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
+        
+        SYBezier *bezier = [[lastShape pointArray]lastObject];
+        CGPoint lastPointFn = bezier.t3Point;
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
 
@@ -707,9 +725,9 @@
         
         // Move the last point in the bezier
         NSMutableArray *curves = [NSMutableArray arrayWithArray:lastShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves lastObject]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t3Point"];
-        [curves replaceObjectAtIndex:[curves count]-1 withObject:dictMut];
+        SYBezier *newBezier = [curves lastObject];
+        newBezier.t3Point = midPoint;
+        [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -725,17 +743,18 @@
                 
     }
     else {
-
-        CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
-        CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
+        // Get the midPoint between the current bezier and the last point in the previous line
+        SYBezier *bezier = [[firstShape pointArray]objectAtIndex:0];
+        CGPoint firstPointSt = bezier.t0Point;
+        CGPoint lastPointFn = bezier.t3Point;
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
         
-        // Move the first point in the bezier curve
+        // Move the first point in the bezier curve to midpoint
         NSMutableArray *curves = [NSMutableArray arrayWithArray:firstShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:0]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t0Point"];
-        [curves replaceObjectAtIndex:0 withObject:dictMut];
+        SYBezier *bezierToChange = [curves objectAtIndex:0];
+        bezierToChange.t0Point = midPoint;
+        [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -751,9 +770,9 @@
         
         // Move the last point in the bezier
         curves = [NSMutableArray arrayWithArray:lastShape.pointArray];
-        dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves lastObject]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t3Point"];
-        [curves replaceObjectAtIndex:[curves count]-1 withObject:dictMut];
+        SYBezier *newBezier = [curves lastObject];
+        newBezier.t3Point = midPoint;
+        [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
         geometry = [[SYGeometry alloc]init];

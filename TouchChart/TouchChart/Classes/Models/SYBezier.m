@@ -10,6 +10,7 @@
 
 @implementation SYBezier
 
+@synthesize listPoints;
 @synthesize t0Point;
 @synthesize t1Point;
 @synthesize t2Point;

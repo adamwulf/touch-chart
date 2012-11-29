@@ -10,6 +10,7 @@
 
 @interface SYBezier : NSObject
 
+@property (nonatomic, retain) NSArray *listPoints;
 @property (nonatomic, assign) CGPoint t0Point;
 @property (nonatomic, assign) CGPoint t1Point;
 @property (nonatomic, assign) CGPoint t2Point;

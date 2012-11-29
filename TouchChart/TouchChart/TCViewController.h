@@ -43,6 +43,5 @@
 // Cloud Points Methods
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 - (void) addLastPoint:(CGPoint) lastPoint;
-- (NSDictionary *) reducePointsKey;
 
 @end

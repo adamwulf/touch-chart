@@ -86,6 +86,7 @@
         
         // Save the points to the array to paint
         SYBezier *bezier = [[SYBezier alloc]init];
+        bezier.listPoints = listPoints;
         bezier.t0Point = [pointA CGPointValue];
         bezier.cPointA = [pointA CGPointValue];
         bezier.cPointB = [pointB CGPointValue];
@@ -93,15 +94,6 @@
         bezier.t1Point = [pointA CGPointValue];
         bezier.t2Point = [pointB CGPointValue];
         bezier.errorRatio = .0;
-        
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                              pointA, @"t0Point",
-                              pointA, @"cPointA",
-                              pointB, @"cPointB",
-                              pointB, @"t3Point",
-                              pointA, @"t1Point",
-                              pointB, @"t2Point",
-                              [NSNumber numberWithFloat:.0], @"errorRatio", nil];
         
         return [NSArray arrayWithObject:bezier];
     }
@@ -245,17 +237,18 @@
     // Ratio
     ratio /= [listPoints count];
     
-    // Save the points to the array to paint
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          [NSValue valueWithCGPoint:cPoint[0]], @"t0Point",
-                          [NSValue valueWithCGPoint:P1], @"cPointA",
-                          [NSValue valueWithCGPoint:P2], @"cPointB",
-                          [NSValue valueWithCGPoint:cPoint[3]], @"t3Point",
-                          [NSValue valueWithCGPoint:cPoint[1]], @"t1Point",
-                          [NSValue valueWithCGPoint:cPoint[2]], @"t2Point",
-                          [NSNumber numberWithFloat:ratio], @"errorRatio", nil];
+    // Save the points into bezier and return array
+    SYBezier *bezier = [[SYBezier alloc]init];
+    bezier.listPoints = listPoints;
+    bezier.t0Point = cPoint[0];
+    bezier.cPointA = P1;
+    bezier.cPointB = P2;
+    bezier.t3Point = cPoint[3];
+    bezier.t1Point = cPoint[1];
+    bezier.t2Point = cPoint[2];
+    bezier.errorRatio = ratio;
     
-    return [NSArray arrayWithObject:dict];
+    return [NSArray arrayWithObject:bezier];
 
 }// buildCubicBezierPointsForListPoint:
 
@@ -294,23 +287,20 @@
         NSArray *array = [self buildCubicBezierPointsForListPoint:splitList];
         
         // Store solutions
-        CGPoint cPoint[4] = {[[[array objectAtIndex:0] valueForKey:@"t0Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t1Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t2Point"]CGPointValue],
-            [[[array objectAtIndex:0] valueForKey:@"t3Point"]CGPointValue]};
-        CGPoint P1 = [[[array objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
-        CGPoint P2 = [[[array objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
+        SYBezier *bezierSolution = [array objectAtIndex:0];
+        CGPoint cPoint[4] = {bezierSolution.t0Point, bezierSolution.t1Point, bezierSolution.t2Point, bezierSolution.t3Point};
+        CGPoint P1 = bezierSolution.cPointA;
+        CGPoint P2 = bezierSolution.cPointB;
 /*
         // Continuity
         if (i != 0) {
             
             // Compare with the previous curve
-            NSMutableDictionary *curve = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:i-1]];
-            
+            SYBezier *bezier = [curves objectAtIndex:i-1];
+                        
             // Get the last control point in the last curve stored.
             // I have to do the inverse conversion
-            CGPoint controlPointEndPrevious = CGPointMake([[curve valueForKey:@"cPointB"]CGPointValue].x,
-                                                          [[curve valueForKey:@"cPointB"]CGPointValue].y);
+            CGPoint controlPointEndPrevious = bezier.cPointB;
             
             // Get pivotal (the last point in this
             CGPoint controlPointStartCurrent = P1;
@@ -351,9 +341,8 @@
             
             // Modify the values in previous dict object
             controlPointEndPrevious = CGPointMake(controlPointEndPreviousX, controlPointEndPreviousY);
-            [curve setValue:[NSValue valueWithCGPoint:controlPointEndPrevious]
-                     forKey:@"cPointB"];
-            [curves replaceObjectAtIndex:i-1 withObject:curve];
+            bezier.cPointB = controlPointEndPrevious;
+            [curves replaceObjectAtIndex:i-1 withObject:bezier];
             
             // Store normally
             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
@@ -361,16 +350,17 @@
         }
 */
         // Save the points to the array to paint
-        NSDictionary *convertPoint = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSValue valueWithCGPoint:cPoint[0]], @"t0Point",
-                                      [NSValue valueWithCGPoint:P1], @"cPointA",
-                                      [NSValue valueWithCGPoint:P2], @"cPointB",
-                                      [NSValue valueWithCGPoint:cPoint[3]], @"t3Point",
-                                      [NSValue valueWithCGPoint:cPoint[1]], @"t1Point",
-                                      [NSValue valueWithCGPoint:cPoint[2]], @"t2Point",
-                                      [NSNumber numberWithFloat:[[[array objectAtIndex:0] valueForKey:@"errorRatio"]floatValue]], @"errorRatio", nil];
-        
-        [curves addObject:convertPoint];
+        SYBezier *bezier = [[SYBezier alloc]init];
+        bezier.listPoints = listPoints;
+        bezier.t0Point = cPoint[0];
+        bezier.cPointA = P1;
+        bezier.cPointB = P2;
+        bezier.t3Point = cPoint[3];
+        bezier.t1Point = cPoint[1];
+        bezier.t2Point = cPoint[2];
+        bezier.errorRatio = [[[array objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
+                
+        [curves addObject:bezier];
     }
     
     return curves;

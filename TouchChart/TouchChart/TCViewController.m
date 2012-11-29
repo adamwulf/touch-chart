@@ -9,6 +9,7 @@
 #import "TCViewController.h"
 #import "SYVectorView.h"
 #import "SYSegment.h"
+#import "SYBezier.h"
 #import "SYBezierController.h"
 #import "SYPaintView.h"
 #import "SYSaveMessageView.h"
@@ -40,6 +41,9 @@
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
 - (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
 - (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC;
+
+// Other Helper Methods
+- (NSDictionary *) reducePointsKey;
 
 @end
 
@@ -282,7 +286,7 @@
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]init];
     shape.openCurve = YES;
-    NSMutableArray *previousCurves = [NSMutableArray array];
+    NSMutableArray *previousListPoints = [NSMutableArray array];
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
         // Build stretch
@@ -296,9 +300,9 @@
         // If there are only 4 points,
         // it's possible that the estimation won't be right
         if ([stretch count] < 4) {
-            if ([previousCurves count] != 0) {
-                [shape addCurve:previousCurves];
-                previousCurves = [NSMutableArray array];
+            if ([previousListPoints count] != 0) {
+                [shape addCurvesForListPoints:previousListPoints];
+                previousListPoints = [NSMutableArray array];
             }
             SYSegment *segment = [[SYSegment alloc]initWithPoint:[[stretch objectAtIndex:0]CGPointValue]
                                                         andPoint:[[stretch lastObject]CGPointValue]];
@@ -349,67 +353,68 @@
             SYBezierController *bezierController = [[SYBezierController alloc]init];
             NSArray *result = [bezierController buildBestBezierForListPoint:stretch tolerance:0.01];
             [bezierController release];
-            CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
+            SYBezier *bezier = [result objectAtIndex:0];
+            CGFloat bezierRatioError = bezier.errorRatio;
             
             // Is line or curve? (Are aligned the control points?)
-            CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
-            CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
+            CGPoint controlPoint1 = bezier.cPointA;
+            CGPoint controlPoint2 = bezier.cPointB;
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
             
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
             if (longitude > 65.0) {
                 if (maxCurvature < 6.3) {
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
             }
             else if (bezierRatioError < 0.29) {
                 if (alignedCPRatio < 0.037) {
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18) {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
                 else if (ratioTotalCurvature < 1.0) {
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
                 
             }
             else if (ratioTotalCurvature < 2.1) {
-                if ([previousCurves count] != 0) {
-                    [shape addCurve:previousCurves];
-                    previousCurves = [NSMutableArray array];
+                if ([previousListPoints count] != 0) {
+                    [shape addCurvesForListPoints:previousListPoints];
+                    previousListPoints = [NSMutableArray array];
                 }
                 [shape addPolygonalFromSegment:segment];
             }
             else {
-                if ([previousCurves count] != 0)
-                    [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                [previousCurves addObjectsFromArray:stretch];
+                if ([previousListPoints count] != 0)
+                    [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                [previousListPoints addObjectsFromArray:stretch];
             }
             
             [segment release];
@@ -417,8 +422,8 @@
     }
     
     // If finish with curve, it should add this last stretch
-    if ([previousCurves count] != 0)
-        [shape addCurve:previousCurves];
+    if ([previousListPoints count] != 0)
+        [shape addCurvesForListPoints:previousListPoints];
     
     // Snap angles
     [shape snapLinesAngles];
@@ -442,7 +447,7 @@
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]init];
     shape.closeCurve = YES;
-    NSMutableArray *previousCurves = [NSMutableArray array];
+    NSMutableArray *previousListPoints = [NSMutableArray array];
     BOOL needsCheckOval = YES;
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
@@ -461,9 +466,9 @@
         // it's possible that the estimation won't be right
         if ([stretch count] < 4) {
             
-            if ([previousCurves count] != 0) {
-                [shape addCurve:previousCurves];
-                previousCurves = [NSMutableArray array];
+            if ([previousListPoints count] != 0) {
+                [shape addCurvesForListPoints:previousListPoints];
+                previousListPoints = [NSMutableArray array];
             }
             SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
             [shape addPolygonalFromSegment:segment];
@@ -511,9 +516,10 @@
             [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
-            CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
-            CGPoint controlPoint2 = [[[result objectAtIndex:0] valueForKey:@"cPointB"]CGPointValue];
-            CGFloat bezierRatioError = [[[result objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
+            SYBezier *bezier = [result objectAtIndex:0];
+            CGPoint controlPoint1 = bezier.cPointA;
+            CGPoint controlPoint2 = bezier.cPointB;
+            CGFloat bezierRatioError = bezier.errorRatio;
             CGFloat alignedCPRatio = (([segment distanceToPoint:controlPoint1]/[segment longitude]) + ([segment distanceToPoint:controlPoint2]/[segment longitude])) * 0.5;
             
             // Estimate curve or line reading the parameters calculated
@@ -522,58 +528,58 @@
                 if (maxCurvature < 6.3) {
                     //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     needsCheckOval = NO;
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
             }
             else if (bezierRatioError < 0.29) {
                 if (alignedCPRatio < 0.037) {
                     needsCheckOval = NO;
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18) {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
                 else if (ratioTotalCurvature < 1.0) {
-                    if ([previousCurves count] != 0) {
-                        [shape addCurve:previousCurves];
-                        previousCurves = [NSMutableArray array];
+                    if ([previousListPoints count] != 0) {
+                        [shape addCurvesForListPoints:previousListPoints];
+                        previousListPoints = [NSMutableArray array];
                     }
                     [shape addPolygonalFromSegment:segment];
                 }
                 else {
-                    if ([previousCurves count] != 0)
-                        [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                    [previousCurves addObjectsFromArray:stretch];
+                    if ([previousListPoints count] != 0)
+                        [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                    [previousListPoints addObjectsFromArray:stretch];
                 }
                 
             }
             else if (ratioTotalCurvature < 2.1) {
                 needsCheckOval = NO;
-                if ([previousCurves count] != 0) {
-                    [shape addCurve:previousCurves];
-                    previousCurves = [NSMutableArray array];
+                if ([previousListPoints count] != 0) {
+                    [shape addCurvesForListPoints:previousListPoints];
+                    previousListPoints = [NSMutableArray array];
                 }
                 [shape addPolygonalFromSegment:segment];
             }
             else {
-                if ([previousCurves count] != 0)
-                    [previousCurves removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
-                [previousCurves addObjectsFromArray:stretch];
+                if ([previousListPoints count] != 0)
+                    [previousListPoints removeLastObject];  // The first object from stretch is the same than the last in the previous stretch
+                [previousListPoints addObjectsFromArray:stretch];
             }
             
             [segment release];
@@ -581,8 +587,8 @@
     }
     
     // If finish with curve, it should add this last stretch
-    if ([previousCurves count] != 0)
-        [shape addCurve:previousCurves];
+    if ([previousListPoints count] != 0)
+        [shape addCurvesForListPoints:previousListPoints];
     
     // Try to fit with a oval
     if (needsCheckOval && [self drawOvalCirclePainted]) {

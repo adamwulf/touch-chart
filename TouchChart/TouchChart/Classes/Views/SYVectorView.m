@@ -9,6 +9,7 @@
 #import "SYVectorView.h"
 #import "SYGeometry.h"
 #import "SYShape.h"
+#import "SYBezier.h"
 
 @implementation SYVectorView
 
@@ -87,12 +88,12 @@
             }
             else if ([geometry geometryType] == BezierType) {
                 
-                NSDictionary *dictPoints = [geometry.pointArray objectAtIndex:0];
-                CGPoint startPoint = [[dictPoints valueForKey:@"t0Point"]CGPointValue];
-                CGPoint endPoint = [[dictPoints valueForKey:@"t3Point"]CGPointValue];
+                SYBezier *bezier = [geometry.pointArray objectAtIndex:0];
+                CGPoint startPoint = bezier.t0Point;
+                CGPoint endPoint = bezier.t3Point;
                 
-                CGPoint firstCP = [[dictPoints valueForKey:@"cPointA"]CGPointValue];
-                CGPoint secondCP = [[dictPoints valueForKey:@"cPointB"]CGPointValue];
+                CGPoint firstCP = bezier.cPointA;
+                CGPoint secondCP = bezier.cPointB;
                 
                 // Bezier lines
                 UIBezierPath * path = [UIBezierPath bezierPath];
@@ -183,13 +184,13 @@
                 
                 for (int i = 1 ; i < [geometry.pointArray count] ; i++) {
                     
-                    NSDictionary *dictPoints = [geometry.pointArray objectAtIndex:i];
+                    SYBezier *bezier = [geometry.pointArray objectAtIndex:i];
                     
-                    CGPoint startPoint = [[dictPoints valueForKey:@"t0Point"]CGPointValue];
-                    CGPoint endPoint = [[dictPoints valueForKey:@"t3Point"]CGPointValue];
+                    CGPoint startPoint = bezier.t0Point;
+                    CGPoint endPoint = bezier.t3Point;
                     
-                    CGPoint firstCP = [[dictPoints valueForKey:@"cPointA"]CGPointValue];
-                    CGPoint secondCP = [[dictPoints valueForKey:@"cPointB"]CGPointValue];
+                    CGPoint firstCP = bezier.cPointA;
+                    CGPoint secondCP = bezier.cPointB;
                     
                     // Bezier lines
                     UIBezierPath * path = [UIBezierPath bezierPath];

@@ -29,7 +29,7 @@
 - (void) addPoint:(CGPoint) keyPoint;
 - (void) addKeyPoint:(CGPoint) keyPoint;
 - (void) addPolygonalFromSegment:(SYSegment *) segment;
-- (void) addCurve:(NSArray *) curvePoints;
+- (void) addCurvesForListPoints:(NSArray *) listPoints;
 - (void) addCircle:(CGRect) circleRect;
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform;
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
