@@ -154,9 +154,8 @@
     float fS1ope2 = (equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x)) ? (inf) : ((anotherSegment.pointFn.y - anotherSegment.pointSt.y)/(anotherSegment.pointFn.x - anotherSegment.pointSt.x));
     
     // If the both slope are equal, never intersect, they're parallels lines
-    if (equal(fS1ope1, fS1ope2)) {
-        if (equal(self.pointSt.y - fS1ope1 * self.pointSt.x,
-                  anotherSegment.pointSt.y - fS1ope2 * anotherSegment.pointSt.x)) {
+    if (equal(fS1ope1, fS1ope2) || (equal(self.pointSt.x, self.pointFn.x) && equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x))) {
+        if (equal(self.pointSt.y - fS1ope1 * self.pointSt.x, anotherSegment.pointSt.y - fS1ope2 * anotherSegment.pointSt.x)) {
             NSLog(@"LINE\n");
         }
         else

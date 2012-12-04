@@ -637,12 +637,15 @@
                     // Intersection between the two snap lines
                     CGPoint intersectPoint = [firstSegment pointIntersectWithSegment:lastSegment];
                     
-                    // Update geometries
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
-                                                  [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
-                    
-                    geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
-                                               [NSValue valueWithCGPoint:intersectPoint], nil];
+                    // If exist intersectPoint
+                    if (intersectPoint.x != 10000.0 || intersectPoint.y != 10000.0) {
+                        // Update geometries
+                        geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
+                                                      [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
+                        
+                        geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
+                                                   [NSValue valueWithCGPoint:intersectPoint], nil];
+                    }
                 }
             }
         }

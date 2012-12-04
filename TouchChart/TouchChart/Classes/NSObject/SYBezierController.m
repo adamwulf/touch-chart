@@ -305,7 +305,7 @@
             // Get pivotal (the last point in this
             CGPoint controlPointStartCurrent = P1;
             CGPoint pivotalPoint = [[splitList objectAtIndex:0]CGPointValue];
-            
+            /*
             // Regula la X
             CGFloat deltaX1 = controlPointEndPrevious.x - pivotalPoint.x;
             CGFloat deltaX2 = controlPointStartCurrent.x - pivotalPoint.x;
@@ -346,9 +346,8 @@
             
             // Store normally
             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
-         
-        }
-*/
+        }*/
+
         // Save the points to the array to paint
         SYBezier *bezier = [[SYBezier alloc]init];
         bezier.listPoints = listPoints;

@@ -261,7 +261,7 @@
     CGFloat ratioDistanceY = deltaY / maxDeltaY;
         
     // It's open, do nothing, exit
-    if (fabs(ratioDistanceX) > 0.25 || fabs(ratioDistanceY) > 0.25)
+    if (fabs(ratioDistanceX) > 0.22 || fabs(ratioDistanceY) > 0.22)
         [self buildShapeClose:NO];
     else {
         // If the resulting points number is insufficient, exit
