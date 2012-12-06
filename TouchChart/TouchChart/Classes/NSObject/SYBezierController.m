@@ -23,7 +23,7 @@
     // We get C(t)
     CGFloat c[3];
     CGFloat currentLongitude = .0;
-    c[0] = .0; 
+    c[0] = .0;
     
     for (NSUInteger i = 1 ; i < 3 ; i++) {
         CGPoint previousPoint = [[listPoints objectAtIndex:i-1]CGPointValue];
@@ -49,15 +49,15 @@
     
     CGFloat p0X = [[listPoints objectAtIndex:0]CGPointValue].x;
     CGFloat p0Y = [[listPoints objectAtIndex:0]CGPointValue].y;
-
+    
     CGFloat p3X = [[listPoints objectAtIndex:2]CGPointValue].x;
     CGFloat p3Y = [[listPoints objectAtIndex:2]CGPointValue].y;
-
+    
     // Calculate control point for the quadratic bezier
     CGFloat mt = 1-t;
     CGFloat p1X = (ctX - (pow(mt, 2) * p0X) - (pow(t, 2) * p3X)) / (2*t*mt);
     CGFloat p1Y = (ctY - (pow(mt, 2) * p0Y) - (pow(t, 2) * p3Y)) / (2*t*mt);
-
+    
     // We get other point from the quadratic bezier
     t = c[1] + ((1-c[1]) * 0.5); mt = 1-t;
     CGFloat ctX2 = (pow(mt, 2) * p0X) + (2*t*mt*p1X) + (pow(t, 2)*p3X);
@@ -94,8 +94,11 @@
         bezier.t1Point = [pointA CGPointValue];
         bezier.t2Point = [pointB CGPointValue];
         bezier.errorRatio = .0;
+
+        NSArray *bezierArray = [NSArray arrayWithObject:bezier];
+        [bezier release];
         
-        return [NSArray arrayWithObject:bezier];
+        return bezierArray;
     }
     // If the list points has 3 point, return quadratic bezier
     else if ([listPoints count] == 3)
@@ -150,13 +153,13 @@
         for (NSUInteger j = 1; j < 3; j++) {
             float indexF = (float) round(step * (j));
             NSUInteger index = (NSUInteger) indexF;
-
+            
             cValue[j] = c[index];
             cPoint[j] = CGPointMake([[listPoints objectAtIndex:index]CGPointValue].x,
                                     [[listPoints objectAtIndex:index]CGPointValue].y);
         }
     }
-
+    
     
     // We need create the matrix for solve the lineal equation
     // -------------------------------------------------------
@@ -228,7 +231,7 @@
         CGFloat fastBezierPointX = powf(1-t, 3) * cPoint[0].x + 3 * powf(1-t, 2) * t * P1.x + 3 * (1-t) * powf(t, 2) * P2.x + powf(t, 3) * cPoint[3].x;
         CGFloat fastBezierPointY = powf(1-t, 3) * cPoint[0].y + 3 * powf(1-t, 2) * t * P1.y + 3 * (1-t) * powf(t, 2) * P2.y + powf(t, 3) * cPoint[3].y;
         CGPoint fastBezierPoint = CGPointMake(fastBezierPointX, fastBezierPointY);
-                
+        
         SYSegment *segment = [[SYSegment alloc]initWithPoint:originalPaintedPoint andPoint:fastBezierPoint];
         ratio += [segment longitude] / totalLongitude;
         [segment release];
@@ -248,20 +251,23 @@
     bezier.t2Point = cPoint[2];
     bezier.errorRatio = ratio;
     
-    return [NSArray arrayWithObject:bezier];
-
+    NSArray *bezierArray = [NSArray arrayWithObject:bezier];
+    [bezier release];
+    
+    return bezierArray;
+    
 }// buildCubicBezierPointsForListPoint:
 
 
 - (NSArray *) buildCubicBezierPointsForListPoint:(NSArray *) listPoints
-                                       splitIn:(NSUInteger) ntimes
-{    
+                                         splitIn:(NSUInteger) ntimes
+{
     if (ntimes == 0)
         return [self buildCubicBezierPointsForListPoint:listPoints];
     
     NSMutableArray *curves = [NSMutableArray array];
     NSUInteger splitParts = [listPoints count] * 1/ntimes;
-        
+    
     for (NSUInteger i = 0; i < ntimes; i++) {
         
         NSMutableArray *splitList = [NSMutableArray array];
@@ -283,7 +289,7 @@
             splitList = [NSMutableArray arrayWithArray:[self addPointBasedQuadraticBezier:splitList]];
         else if ([splitList count] < 4)
             NSLog(@"Error");
-
+        
         NSArray *array = [self buildCubicBezierPointsForListPoint:splitList];
         
         // Store solutions
@@ -291,13 +297,14 @@
         CGPoint cPoint[4] = {bezierSolution.t0Point, bezierSolution.t1Point, bezierSolution.t2Point, bezierSolution.t3Point};
         CGPoint P1 = bezierSolution.cPointA;
         CGPoint P2 = bezierSolution.cPointB;
-/*
+        
         // Continuity
+        /*
         if (i != 0) {
             
             // Compare with the previous curve
             SYBezier *bezier = [curves objectAtIndex:i-1];
-                        
+            
             // Get the last control point in the last curve stored.
             // I have to do the inverse conversion
             CGPoint controlPointEndPrevious = bezier.cPointB;
@@ -305,49 +312,59 @@
             // Get pivotal (the last point in this
             CGPoint controlPointStartCurrent = P1;
             CGPoint pivotalPoint = [[splitList objectAtIndex:0]CGPointValue];
+            
+            // Get alfa angle
+            SYSegment *segmentA = [[SYSegment alloc]initWithPoint:pivotalPoint andPoint:controlPointEndPrevious];
+            SYSegment *segmentB = [[SYSegment alloc]initWithPoint:pivotalPoint andPoint:controlPointStartCurrent];
+            CGFloat beta = [segmentA angleDeg] - [segmentB angleDeg];
+            CGFloat alfa = (180 - beta) * 0.5;
+            CGPoint inverse = CGPointMake(-controlPointEndPrevious.x, -controlPointEndPrevious.y);
+            
+            
             /*
-            // Regula la X
-            CGFloat deltaX1 = controlPointEndPrevious.x - pivotalPoint.x;
-            CGFloat deltaX2 = controlPointStartCurrent.x - pivotalPoint.x;
-            CGFloat deltaFinalX = (fabsf(deltaX1) + fabsf(deltaX2)) * 0.5;
-
-            // Regula la Y
-            CGFloat deltaY1 = controlPointEndPrevious.y - pivotalPoint.y;
-            CGFloat deltaY2 = controlPointStartCurrent.y - pivotalPoint.y;
-            CGFloat deltaFinalY = (fabsf(deltaY1) + fabsf(deltaY2)) * 0.5;
-            
-            // Control Points Resultantes
-            CGFloat controlPointEndPreviousX = pivotalPoint.x;
-            CGFloat controlPointStartCurrentX = pivotalPoint.x;
-            if (deltaX1 > .0) {
-                controlPointEndPreviousX += deltaFinalX;
-                controlPointStartCurrentX -= deltaFinalX;
-            }
-            else if (deltaX1 < .0) {
-                controlPointEndPreviousX -= deltaFinalX;
-                controlPointStartCurrentX += deltaFinalX;
-            }
-            
-            CGFloat controlPointEndPreviousY = pivotalPoint.y;
-            CGFloat controlPointStartCurrentY = pivotalPoint.y;
-            if (deltaY1 > .0) {
-                controlPointEndPreviousY += deltaFinalY;
-                controlPointStartCurrentY -= deltaFinalY;
-            }
-            else if (deltaY1 < .0) {
-                controlPointEndPreviousY -= deltaFinalY;
-                controlPointStartCurrentY += deltaFinalY;
-            }
-            
-            // Modify the values in previous dict object
-            controlPointEndPrevious = CGPointMake(controlPointEndPreviousX, controlPointEndPreviousY);
-            bezier.cPointB = controlPointEndPrevious;
-            [curves replaceObjectAtIndex:i-1 withObject:bezier];
-            
-            // Store normally
-            P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
-        }*/
-
+             // Regula la X
+             CGFloat deltaX1 = controlPointEndPrevious.x - pivotalPoint.x;
+             CGFloat deltaX2 = controlPointStartCurrent.x - pivotalPoint.x;
+             CGFloat deltaFinalX = (fabsf(deltaX1) + fabsf(deltaX2)) * 0.5;
+             
+             // Regula la Y
+             CGFloat deltaY1 = controlPointEndPrevious.y - pivotalPoint.y;
+             CGFloat deltaY2 = controlPointStartCurrent.y - pivotalPoint.y;
+             CGFloat deltaFinalY = (fabsf(deltaY1) + fabsf(deltaY2)) * 0.5;
+             
+             // Control Points Resultantes
+             CGFloat controlPointEndPreviousX = pivotalPoint.x;
+             CGFloat controlPointStartCurrentX = pivotalPoint.x;
+             if (deltaX1 > .0) {
+             controlPointEndPreviousX += deltaFinalX;
+             controlPointStartCurrentX -= deltaFinalX;
+             }
+             else if (deltaX1 < .0) {
+             controlPointEndPreviousX -= deltaFinalX;
+             controlPointStartCurrentX += deltaFinalX;
+             }
+             
+             CGFloat controlPointEndPreviousY = pivotalPoint.y;
+             CGFloat controlPointStartCurrentY = pivotalPoint.y;
+             if (deltaY1 > .0) {
+             controlPointEndPreviousY += deltaFinalY;
+             controlPointStartCurrentY -= deltaFinalY;
+             }
+             else if (deltaY1 < .0) {
+             controlPointEndPreviousY -= deltaFinalY;
+             controlPointStartCurrentY += deltaFinalY;
+             }
+             
+             // Modify the values in previous dict object
+             controlPointEndPrevious = CGPointMake(controlPointEndPreviousX, controlPointEndPreviousY);
+             bezier.cPointB = controlPointEndPrevious;
+             [curves replaceObjectAtIndex:i-1 withObject:bezier];
+             
+             // Store normally
+             P1 = CGPointMake(controlPointStartCurrentX, controlPointStartCurrentY);
+         
+        }
+        */
         // Save the points to the array to paint
         SYBezier *bezier = [[SYBezier alloc]init];
         bezier.listPoints = listPoints;
@@ -358,8 +375,9 @@
         bezier.t1Point = cPoint[1];
         bezier.t2Point = cPoint[2];
         bezier.errorRatio = [[[array objectAtIndex:0] valueForKey:@"errorRatio"]floatValue];
-                
+        
         [curves addObject:bezier];
+        [bezier release];
     }
     
     return curves;
@@ -368,13 +386,13 @@
 
 
 - (NSArray *) buildBestBezierForListPoint:(NSArray *)listPoints
-                             tolerance:(CGFloat) ratioError
+                                tolerance:(CGFloat) ratioError
 {
     // If there isn't enough number of points
     // we just split one time
     if ([listPoints count] < 7)
         return [self buildCubicBezierPointsForListPoint:listPoints splitIn:1];
-
+    
     // We get all info about the listPoints
     // We get C(t)
     CGFloat c[[listPoints count]];
@@ -397,7 +415,7 @@
         c[i] = currentLongitude/totalLongitude;
     
     // Limit
-    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);    
+    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);
     
     // We start loop looking for the minimize curves number
     NSUInteger splitParts = 1;
@@ -405,7 +423,7 @@
     for (NSUInteger i = 0; i <= limit; i++) {
         // Calculate error ratio
         CGFloat errorRatio = [self getErrorRatioListPoint:listPoints splitIn:i];
-
+        
         if (errorRatio < ratioError || i == 21) {
             splitParts = i;
             break;

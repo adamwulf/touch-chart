@@ -32,8 +32,7 @@
 }
 
 // Calculate Shapes
-- (void) drawOpenShape;
-- (void) drawCloseShape;
+- (void) buildShapeClose:(BOOL) isCloseShape;
 - (BOOL) drawOvalCirclePainted;
 
 // Geometric calculations

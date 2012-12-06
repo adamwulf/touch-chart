@@ -748,8 +748,9 @@
     else {
         // Get the midPoint between the current bezier and the last point in the previous line
         SYBezier *bezier = [[firstShape pointArray]objectAtIndex:0];
+        SYBezier *lastBezier = [[lastShape pointArray]lastObject];
         CGPoint firstPointSt = bezier.t0Point;
-        CGPoint lastPointFn = bezier.t3Point;
+        CGPoint lastPointFn = lastBezier.t3Point;
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
         

@@ -148,12 +148,12 @@
     [viewController resetData];
     
     // Init list points
-    _allPoints = [[NSMutableArray alloc]init];
+    self.allPoints = [NSMutableArray array];
     
     // Unit Test: Add point
     UITouch *touch = [touches anyObject];
 	CGPoint touchLocation = [touch locationInView:self];
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
         
 }// touchesBegan:withEvent:
 
@@ -171,7 +171,7 @@
     [self processPoint:touchLocation];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     	
 }// touchesMoved:withEvent:
 
@@ -191,7 +191,7 @@
     [viewController getFigurePainted];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesEnded:withEvent:
 
@@ -211,7 +211,7 @@
     [viewController getFigurePainted];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesCancelled:withEvent:
 
