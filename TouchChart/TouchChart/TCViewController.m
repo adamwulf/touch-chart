@@ -33,6 +33,9 @@
 
 // Calculate Shapes
 - (void) buildShapeClose:(BOOL) isCloseShape;
+
+// Analyze Shape
+- (BOOL) isRectangle;
 - (BOOL) drawOvalCirclePainted;
 
 // Geometric calculations
@@ -50,7 +53,9 @@
 @implementation TCViewController
 
 #define limitDistace 2.99
-#define ovaltolerace 1.8
+#define ovaltoleracetypeA 0.4
+#define ovaltoleracetypeB 0.73
+#define toleranceRect 0.16
 
 #pragma mark - Lifecycle Methods
 
@@ -225,8 +230,8 @@
     // Init all the data and set ready them
     maxX = CGPointZero;
     maxY = CGPointZero;
-    minX = CGPointZero;
-    minY = CGPointZero;
+    minX = CGPointMake(10000, 10000);
+    minY = CGPointMake(10000, 10000);
     
     // Create new point list
     [listPoints release];
@@ -286,7 +291,7 @@
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]init];
-    shape.closeCurve = YES;
+    [shape setCloseCurve:isCloseShape];
     BOOL needsCheckOval = YES;
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
@@ -360,15 +365,16 @@
             // If the bezier is fit to the shape well...
             if (longitude > 65.0) {
                 if (maxCurvature < 6.3) {
-                    needsCheckOval = NO;
                     [shape addPolygonalFromSegment:segment];
+                    if (longitude > 110.0)
+                        needsCheckOval = NO;    // it isn't an oval
                 }
                 else
                     [shape addCurvesForListPoints:stretch];
             }
             else if (bezierRatioError < 0.29) {
-                if (alignedCPRatio < 0.037) {
-                    needsCheckOval = NO;
+                if (alignedCPRatio < 0.035) {
+                    needsCheckOval = NO;    // it isn't an oval
                     [shape addPolygonalFromSegment:segment];
                 }
                 else if (alignedCPRatio > 0.18)
@@ -380,7 +386,7 @@
                 
             }
             else if (ratioTotalCurvature < 2.1) {
-                needsCheckOval = NO;
+                needsCheckOval = NO;    // it isn't an oval
                 [shape addPolygonalFromSegment:segment];
             }
             else
@@ -396,8 +402,21 @@
         return;
     }
     
-    // Snap angles
-    [shape snapLinesAngles];
+    // If it's a rectangle
+    if ([self isRectangle]) {
+        // Perfect rectangle
+        if ([indexKeyPoints count] == 5) {
+            [shape release];
+            shape = [[SYShape alloc]init];
+            [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
+            // Add shape to the canvas
+            [vectorView addShape:shape];
+            [shape release];
+            return;
+        }
+        // Just snap
+        [shape snapLinesAngles];
+    }
     
     // It's closed (almost closed), do closed perfectly
     if (isCloseShape)
@@ -408,6 +427,36 @@
     [shape release];
     
 }// buildShapeClose:
+
+
+#pragma mark - Analyze Shape
+
+- (BOOL) isRectangle
+{
+    // Reduce Points
+    // --------------------------------------------------------------------------
+    NSDictionary *dataDict = [self reducePointsKey];
+    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
+    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
+
+    for (NSUInteger i = 0; i < [indexKeyPoints count]; i++) {
+        // Build stretch
+        NSUInteger index = [[indexKeyPoints objectAtIndex:i]integerValue];
+        CGPoint keyPoint = [[pointsToFit objectAtIndex:index]CGPointValue];
+        
+        // Check Rectangle
+        float testXA = fabs((keyPoint.x - minX.x)/(maxX.x - minX.x));
+        float testYA = fabs((keyPoint.y - minY.y)/(maxY.y - minY.y));
+
+        if (!(testXA < toleranceRect || testXA > 1-toleranceRect))
+            return NO;
+        if (!(testYA < toleranceRect || testYA > 1-toleranceRect))
+            return NO;
+    }
+    
+    return YES;
+    
+}// isRectangle
 
 
 - (BOOL) drawOvalCirclePainted
@@ -491,8 +540,9 @@
                 error = finalError;
         }
         
+        NSLog(@"Error: %f", error);
         // If the error is higher than tolerance, It isn't a oval
-        if (error > ovaltolerace)
+        if (error > ovaltoleracetypeA)
             return NO;
                 
         // It's a oval and add to the shape list
@@ -622,7 +672,8 @@
             error = finalError;
     }
     
-    if (error > ovaltolerace) {
+    NSLog(@"ErrorB: %f", error);
+    if (error > ovaltoleracetypeB) {
         [bigAxisSegment release];
         [smallAxisSegment release];
         return NO;

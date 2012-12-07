@@ -281,6 +281,31 @@
 }// addArc:radius:startAngle:endAngle:clockwise:
 
 
+- (void) addRectangle:(CGRect)rect
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = SquareType;
+    [geometry setRectGeometry:rect];
+    geometry.pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                           nil];
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
+    [geometry release];
+    
+}// addRectangle:
+
+
 #pragma mark - Replace Elements
 
 - (void) replaceElementAtIndex:(NSUInteger) index withElement:(id) element

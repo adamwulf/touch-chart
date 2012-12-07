@@ -309,6 +309,32 @@
                 
                 [path applyTransform:[geometry transform]];
             }
+            else if ([geometry geometryType] == SquareType) {
+                
+                // Drawing code
+                UIBezierPath * path = [UIBezierPath bezierPathWithRect:[geometry rectGeometry]];
+                [path setLineWidth:[geometry lineWidth]];
+                [[geometry fillColor] set];
+                [path fill];
+                
+                [[geometry strokeColor] set];
+                [path stroke];
+                
+                for (int i = 0; i < [[geometry pointArray]count] ; i++) {
+                    CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
+                    
+                    // create a oval bezier path using the rect
+                    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointSize * 0.5), point.y - (pointSize * 0.5), pointSize, pointSize)];
+                    [path setLineWidth:1.5];
+                    
+                    // draw the path
+                    [colorFillPoints set];
+                    [path fill];
+                    
+                    [colorStrokePoints set];
+                    [path stroke];
+                }
+            }
         }
     }
     
