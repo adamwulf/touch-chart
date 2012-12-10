@@ -905,6 +905,9 @@
             // Get the new points
             bezierFirst.cPointB = [segmentA pointFn];
             bezierLast.cPointA = [segmentB pointFn];
+            
+            [segmentA release];
+            [segmentB release];
         }
     }
     
@@ -963,6 +966,9 @@
             // Get the new points
             bezierFirst.cPointA = [segmentA pointFn];
             bezierLast.cPointB = [segmentB pointFn];
+            
+            [segmentA release];
+            [segmentB release];
         }
     }
     

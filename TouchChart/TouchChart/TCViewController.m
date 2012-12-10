@@ -660,7 +660,7 @@
     [newSegment release];
     
     // Transform, rotate a around the midpoint
-    float angleRad = [bigAxisSegment angleRad] + M_PI_2;
+    float angleRad = M_PI_2 - [bigAxisSegment angleRad];
     CGPoint pivotalPoint = CGPointMake([bigAxisSegment midPoint].x, [bigAxisSegment midPoint].y);
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(.0, -(maxY.y - minY.y)));
