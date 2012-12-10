@@ -25,7 +25,12 @@
     IBOutlet SYTableBase *tableBase;
     IBOutlet SYSaveMessageView *selectCaseNameView;
     IBOutlet UITextField *nameTextField;
-
+    
+    IBOutlet UISlider *continuitySlider;
+    IBOutlet UISlider *toleranceSlider;
+    IBOutlet UILabel *continuityLabel;
+    IBOutlet UILabel *toleranceLabel;
+    
 }
 
 // Test Methods

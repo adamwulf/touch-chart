@@ -415,7 +415,8 @@
         c[i] = currentLongitude/totalLongitude;
     
     // Limit
-    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);
+    //NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);
+    NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.3);
     
     // We start loop looking for the minimize curves number
     NSUInteger splitParts = 1;

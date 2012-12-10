@@ -15,7 +15,8 @@
 @interface SYShape () {
     
     NSMutableArray *geometriesArray;
-    
+    float toleranceBezier;
+
 }
 
 // Other Methods
@@ -25,6 +26,8 @@
 
 
 @implementation SYShape
+
+#define bezierTolerance 0.01
 
 @synthesize closeCurve;
 @synthesize openCurve;
@@ -43,6 +46,22 @@
     return self;
     
 }// init
+
+
+- (id) initWithBezierTolerance:(float) toleranceSlider
+{
+    self = [super init];
+    
+    if (self) {
+        geometriesArray = [[NSMutableArray alloc]init];
+        openCurve = NO;
+        closeCurve = NO;
+        toleranceBezier = toleranceSlider;
+    }
+    
+    return self;
+    
+}// initWithBezierTolerance
 
 
 - (void) dealloc
@@ -94,6 +113,13 @@
 
 
 #pragma mark - Getter elements
+
+- (NSUInteger) geometriesCount
+{
+    return [geometriesArray count];
+    
+}// geometriesCount
+
 
 - (SYGeometry *) getElement:(NSUInteger) index
 {
@@ -190,7 +216,7 @@
         return;
     
     SYBezierController *bezierController = [[SYBezierController alloc]init];
-    NSArray *curves = [bezierController buildBestBezierForListPoint:listPoints tolerance:0.01];
+    NSArray *curves = [bezierController buildBestBezierForListPoint:listPoints tolerance:toleranceBezier/*bezierTolerance*/];
     [bezierController release];
     
     // Draw the resulting shape
@@ -348,7 +374,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:toleranceBezier/*bezierTolerance*/];
             [bezierController release];
             
             // Draw the resulting shape
@@ -445,7 +471,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController buildBestBezierForListPoint:element tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:element tolerance:toleranceBezier/*bezierTolerance*/];
             [bezierController release];
             
             // Draw the resulting shape
@@ -817,6 +843,130 @@
     }
     
 }// checkCloseShape
+
+
+- (void) forceContinuity:(float) sliderValue
+{
+    if (sliderValue == 0)
+        return;
+    
+    for (NSUInteger i = 1; i < [self geometriesCount]; i++) {
+        
+        // Get two contiguous shape and check if they're bezier
+        SYGeometry *firstShape = [self getElement:i-1];
+        SYGeometry *lastShape = [self getElement:i];
+        
+        if ([firstShape geometryType] == BezierType &&
+            [lastShape geometryType] == BezierType) {
+            
+            SYBezier *bezierFirst = [[firstShape pointArray]lastObject];
+            SYBezier *bezierLast = [[lastShape pointArray]objectAtIndex:0];
+            
+            // Get the three important points
+            CGPoint previousCP = bezierFirst.cPointB;
+            CGPoint pivotal = bezierLast.t0Point;
+            CGPoint currentCP = bezierLast.cPointA;
+            
+            // Study the angle between them
+            SYSegment *segmentA = [[SYSegment alloc]initWithPoint:pivotal andPoint:previousCP];
+            SYSegment *segmentB = [[SYSegment alloc]initWithPoint:pivotal andPoint:currentCP];
+            
+            CGFloat angleA = [segmentA angleDeg];
+            CGFloat angleB = [segmentB angleDeg];
+            CGFloat alfa = .0;
+            if (angleA > angleB)
+                alfa  = angleA - angleB;
+            else
+                alfa  = angleB - angleA;
+            
+            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            
+            if (alfa < 180.0) {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+            }
+            else {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+            }
+            
+            // Get the new points
+            bezierFirst.cPointB = [segmentA pointFn];
+            bezierLast.cPointA = [segmentB pointFn];
+        }
+    }
+    
+    // And if it's a close shape, the first bezier with the last one
+    if ([self closeCurve]) {
+        // Get two contiguous shape and check if they're bezier
+        SYGeometry *firstShape = [self getElement:0];
+        SYGeometry *lastShape = [self getElement:[self geometriesCount]-1];
+        
+        if ([firstShape geometryType] == BezierType &&
+            [lastShape geometryType] == BezierType) {
+            
+            SYBezier *bezierFirst = [[firstShape pointArray]objectAtIndex:0];
+            SYBezier *bezierLast = [[lastShape pointArray]lastObject];
+            
+            // Get the three important points
+            CGPoint previousCP = bezierFirst.cPointA;
+            CGPoint pivotal = bezierLast.t3Point;
+            CGPoint currentCP = bezierLast.cPointB;
+            
+            // Study the angle between them
+            SYSegment *segmentA = [[SYSegment alloc]initWithPoint:pivotal andPoint:previousCP];
+            SYSegment *segmentB = [[SYSegment alloc]initWithPoint:pivotal andPoint:currentCP];
+            
+            CGFloat angleA = [segmentA angleDeg];
+            CGFloat angleB = [segmentB angleDeg];
+            CGFloat alfa = .0;
+            if (angleA > angleB)
+                alfa  = angleA - angleB;
+            else
+                alfa  = angleB - angleA;
+            
+            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            
+            if (alfa < 180.0) {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+            }
+            else {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+            }
+            
+            // Get the new points
+            bezierFirst.cPointA = [segmentA pointFn];
+            bezierLast.cPointB = [segmentB pointFn];
+        }
+    }
+    
+}// forceContinuity
 
 
 #pragma mark - Other Methods

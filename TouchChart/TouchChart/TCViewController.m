@@ -56,6 +56,7 @@
 #define ovaltoleracetypeA 0.4
 #define ovaltoleracetypeB 0.73
 #define toleranceRect 0.16
+#define bezierTolerance 0.01
 
 #pragma mark - Lifecycle Methods
 
@@ -239,10 +240,24 @@
     listPoints = [[NSMutableArray alloc]init];
     pointKeyArray = [[NSMutableArray alloc]init];
     
+    isDeltaXPos = 0;
+    isDeltaYPos = 0;
+    
 }// resetData
 
 
 #pragma mark - Calculate Shapes
+
+- (IBAction) rebuildShape:(id)sender
+{
+    continuityLabel.text = [NSString stringWithFormat:@"%4.2f",[continuitySlider value]];
+    toleranceLabel.text = [NSString stringWithFormat:@"%4.6f",[toleranceSlider value]*0.0001];
+    
+    [vectorView.shapeList removeLastObject];
+    [self getFigurePainted];
+    
+}// rebuildShape
+
 
 - (void) getFigurePainted
 {
@@ -290,7 +305,7 @@
     
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
-    SYShape *shape = [[SYShape alloc]init];
+    SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     [shape setCloseCurve:isCloseShape];
     BOOL needsCheckOval = YES;
     
@@ -351,7 +366,7 @@
             // Bezier
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *result = [bezierController buildBestBezierForListPoint:stretch tolerance:0.01];
+            NSArray *result = [bezierController buildBestBezierForListPoint:stretch tolerance:[toleranceSlider value]*0.0001/*bezierTolerance*/];
             [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
@@ -407,7 +422,7 @@
         // Perfect rectangle
         if ([indexKeyPoints count] == 5) {
             [shape release];
-            shape = [[SYShape alloc]init];
+            shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
             [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
             // Add shape to the canvas
             [vectorView addShape:shape];
@@ -421,6 +436,9 @@
     // It's closed (almost closed), do closed perfectly
     if (isCloseShape)
         [shape checkCloseShape];
+    
+    // Force continuity modifying the control points
+    [shape forceContinuity:[continuitySlider value]];
     
     // Add shape to the canvas
     [vectorView addShape:shape];
@@ -546,7 +564,7 @@
             return NO;
                 
         // It's a oval and add to the shape list
-        SYShape *shape = [[SYShape alloc]init];
+        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
         shape.openCurve = NO;
         [shape addCircle:ovalRect];
         [vectorView addShape:shape];
@@ -616,7 +634,7 @@
         }
         
         // It's a circle and add to the shape list
-        SYShape *shape = [[SYShape alloc]init];
+        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
         shape.openCurve = NO;
         [shape addArc:CGPointMake(center.x, center.y)
                radius:bigAxisLongitude*0.5
@@ -680,7 +698,7 @@
     }
     
     // Create arc
-    SYShape *shape = [[SYShape alloc]init];
+    SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     shape.openCurve = NO;
     [shape addCircleWithRect:CGRectMake(minX.x, maxY.y, (maxX.x - minX.x), (maxY.y - minY.y))
                 andTransform:transform];
@@ -1032,14 +1050,14 @@
     // --------------------------------------------------------------------------
     
     // DEBUG DRAW
-    SYShape *keyPointShape = [[SYShape alloc]init];
+    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     for (NSValue *pointValue in listPoints)
         [keyPointShape addPoint:[pointValue CGPointValue]];
     [vectorView addShape:keyPointShape];
     [keyPointShape release];
     
     // DEBUG DRAW
-    SYShape *reducePointKeyArrayShape = [[SYShape alloc]init];
+    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     for (NSValue *pointValue in reducePointKeyArray)
         [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
     [vectorView addShape:reducePointKeyArrayShape];

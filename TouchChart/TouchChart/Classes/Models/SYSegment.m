@@ -209,19 +209,19 @@
     
     // -/+ (from 0º to 90º)
     if (deltaY < .0 && deltaX > .0)
-        return (2*M_PI) + atanf(deltaY/deltaX);
+        return /*(2*M_PI)*/- atanf(deltaY/deltaX);
     
     // -/- (from 90º to 180º)
     if (deltaY < .0 && deltaX < .0)
-        return M_PI + atanf(deltaY/deltaX);
+        return M_PI - atanf(deltaY/deltaX);
     
     // +/- (from 180º to 270º)
     if (deltaY > .0 && deltaX < .0)
-        return M_PI + atanf(deltaY/deltaX);
+        return M_PI - atanf(deltaY/deltaX);
     
     // +/+ (from 180º to 270º)
     if (deltaY > .0 && deltaX > .0)
-        return atanf(deltaY/deltaX);
+        return (2*M_PI) - atanf(deltaY/deltaX);
 
     return atanf(deltaY/deltaX);
     
@@ -240,20 +240,52 @@
 - (void) setStartPointToDegree:(CGFloat) angle
 {
     // Snap pivotal around the start point
-    
+    CGFloat longitude = [self longitude];
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
     // sen/cos = tan ----> sen = tan * cos
-    if (angleNormalize == .0 || angleNormalize == 360.0)
+    if (angleNormalize == .0 || angleNormalize == 360.0) {
         pointSt.y = pointFn.y;
-    else if (angleNormalize == 90.0 || angleNormalize == 270.0)
+        pointSt.x = pointFn.x - longitude;
+    }
+    else if (angleNormalize == 180.0) {
+        pointSt.y = pointFn.y;
+        pointSt.x = pointFn.x + longitude;
+    }
+    else if (angleNormalize == 90.0) {
         pointSt.x = pointFn.x;
+        pointSt.y = pointFn.y - longitude;
+    }
+    else if (angleNormalize == 270.0) {
+        pointSt.x = pointFn.x;
+        pointSt.y = pointFn.y + longitude;
+    }
     else {
-        // sen/cos = tan ----> sen = tan * cos
-        CGFloat deltaY = (pointSt.x - pointFn.x) * tanf(angleRad);
-        pointSt.y = deltaY + pointFn.y;
-    }   
+        float tang = tan(angleRad);
+        float numX = .0;
+        float onePlusTang = 1 + powf(tang,2);
+        if (angle > .0 && angle < 90.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2))/**/+ sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) /**/+ ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 90.0 && angle < 180.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 180.0 && angle < 270.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) + sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+    }
     
 }// setStartPointToDegree:
 
@@ -306,18 +338,47 @@
 - (void) setFinalPointToDegree:(CGFloat) angle
 {
     // Snap pivotal around the final point
-    
+    CGFloat longitude = [self longitude];
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
     // sin/cos = tan ----> sin = tan * cos
-    if (angleNormalize == .0 || angleNormalize == 360.0)
+    if (angleNormalize == .0 || angleNormalize == 360.0) {
         pointFn.y = pointSt.y;
-    else if (angleNormalize == 90.0 || angleNormalize == 270.0)
+        pointFn.x = pointSt.x + longitude;
+    }
+    else if (angleNormalize == 90.0) {
         pointFn.x = pointSt.x;
+        pointFn.y = pointSt.y + longitude;
+    }
+    else if (angleNormalize == 270.0) {
+        pointFn.x = pointSt.x;
+        pointFn.y = pointSt.y - longitude;
+    }
     else {
-        CGFloat deltaY = (pointFn.x - pointSt.x) * tan(angleRad);
-        pointFn.y = pointSt.y + deltaY;
+        float tang = tan(angleRad);
+        float numX = .0;
+        float onePlusTang = 1 + powf(tang,2);
+        if (angle > .0 && angle < 90.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2))/**/+ sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) /**/- ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 90.0 && angle < 180.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 180.0 && angle < 270.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else { // CREO QUE BIEN
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) + sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
     }
     
 }// setFinalPointToDegree:

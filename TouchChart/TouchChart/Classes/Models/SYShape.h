@@ -16,11 +16,15 @@
 @property (readonly, assign) BOOL closeCurve;
 @property (readonly, assign) BOOL openCurve;
 
+// Init
+- (id) initWithBezierTolerance:(float) toleranceSlider;
+
 // Setter Methods
 - (void) setCloseCurve: (BOOL) isCloseCurve;
 - (void) setOpenCurve:(BOOL)isOpenCurve;
 
 // Getter Methods
+- (NSUInteger) geometriesCount;
 - (SYGeometry *) getElement:(NSUInteger) index;
 - (SYGeometry *) getLastElement;
 - (NSArray *) geometries;
@@ -42,5 +46,6 @@
 // Modify shape
 - (void) snapLinesAngles;
 - (void) checkCloseShape;
+- (void) forceContinuity:(float) sliderValue;
 
 @end
