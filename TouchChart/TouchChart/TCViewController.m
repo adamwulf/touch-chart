@@ -36,6 +36,7 @@
 
 // Analyze Shape
 - (BOOL) isRectangle;
+- (BOOL) isRotateRectangle;
 - (BOOL) drawOvalCirclePainted;
 
 // Geometric calculations
@@ -57,6 +58,7 @@
 #define ovaltoleracetypeB 0.73
 #define toleranceRect 0.16
 #define bezierTolerance 0.01
+#define rotateRectangleAngleTolerance 10.0
 
 #pragma mark - Lifecycle Methods
 
@@ -303,6 +305,43 @@
     NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
     NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
     
+    // Is a rotate rectangle?
+    if ([self isRotateRectangle]) {
+        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+        
+        // Get the four segments
+        NSUInteger indexA = [[indexKeyPoints objectAtIndex:0]integerValue];
+        CGPoint keyPointA = [[pointsToFit objectAtIndex:indexA]CGPointValue];
+        NSUInteger indexB = [[indexKeyPoints objectAtIndex:1]integerValue];
+        CGPoint keyPointB = [[pointsToFit objectAtIndex:indexB]CGPointValue];
+        NSUInteger indexC = [[indexKeyPoints objectAtIndex:2]integerValue];
+        CGPoint keyPointC = [[pointsToFit objectAtIndex:indexC]CGPointValue];
+        NSUInteger indexD = [[indexKeyPoints objectAtIndex:3]integerValue];
+        CGPoint keyPointD = [[pointsToFit objectAtIndex:indexD]CGPointValue];
+        
+        [shape addRotateRectangle:[NSArray arrayWithObjects:[NSValue valueWithCGPoint:keyPointA],
+                                   [NSValue valueWithCGPoint:keyPointB],
+                                   [NSValue valueWithCGPoint:keyPointC],
+                                   [NSValue valueWithCGPoint:keyPointD],
+                                   nil]];
+        // Add shape to the canvas
+        [vectorView addShape:shape];
+        
+        [shape release];
+        return;
+    }
+    // If it's a rectangle 0 or 90º
+    else if ([self isRectangle] && [indexKeyPoints count] == 5) {
+        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+        [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
+        
+        // Add shape to the canvas
+        [vectorView addShape:shape];
+        
+        [shape release];
+        return;
+    }
+    
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
@@ -318,6 +357,7 @@
         CGPoint lastPoint = [[pointsToFit objectAtIndex:toIndex]CGPointValue];
         
         // Get the points for that stretch
+        if (fromIndex > toIndex) { return; }
         NSRange theRange = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
         NSArray *stretch = [pointsToFit subarrayWithRange:theRange];
         
@@ -417,21 +457,9 @@
         return;
     }
     
-    // If it's a rectangle
-    if ([self isRectangle]) {
-        // Perfect rectangle
-        if ([indexKeyPoints count] == 5) {
-            [shape release];
-            shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
-            [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
-            // Add shape to the canvas
-            [vectorView addShape:shape];
-            [shape release];
-            return;
-        }
-        // Just snap
+    // Just snap
+    if ([self isRectangle])
         [shape snapLinesAngles];
-    }
     
     // It's closed (almost closed), do closed perfectly
     if (isCloseShape)
@@ -462,7 +490,7 @@
         NSUInteger index = [[indexKeyPoints objectAtIndex:i]integerValue];
         CGPoint keyPoint = [[pointsToFit objectAtIndex:index]CGPointValue];
         
-        // Check Rectangle
+        // Check Rectangle 0 or 90 degree
         float testXA = fabs((keyPoint.x - minX.x)/(maxX.x - minX.x));
         float testYA = fabs((keyPoint.y - minY.y)/(maxY.y - minY.y));
 
@@ -475,6 +503,78 @@
     return YES;
     
 }// isRectangle
+
+
+- (BOOL) isRotateRectangle
+{
+    // Reduce Points
+    // --------------------------------------------------------------------------
+    NSDictionary *dataDict = [self reducePointsKey];
+    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
+    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
+    if ([indexKeyPoints count] != 5)
+        return NO;
+    
+    // Get the four segments
+    NSUInteger indexA = [[indexKeyPoints objectAtIndex:0]integerValue];
+    CGPoint keyPointA = [[pointsToFit objectAtIndex:indexA]CGPointValue];
+    NSUInteger indexB = [[indexKeyPoints objectAtIndex:1]integerValue];
+    CGPoint keyPointB = [[pointsToFit objectAtIndex:indexB]CGPointValue];
+    NSUInteger indexC = [[indexKeyPoints objectAtIndex:2]integerValue];
+    CGPoint keyPointC = [[pointsToFit objectAtIndex:indexC]CGPointValue];
+    NSUInteger indexD = [[indexKeyPoints objectAtIndex:3]integerValue];
+    CGPoint keyPointD = [[pointsToFit objectAtIndex:indexD]CGPointValue];
+    NSUInteger indexE = [[indexKeyPoints objectAtIndex:4]integerValue];
+    CGPoint keyPointE = [[pointsToFit objectAtIndex:indexE]CGPointValue];
+    
+    SYSegment *segmentAB = [[SYSegment alloc]initWithPoint:keyPointA andPoint:keyPointB];
+    SYSegment *segmentBC = [[SYSegment alloc]initWithPoint:keyPointB andPoint:keyPointC];
+    SYSegment *segmentCD = [[SYSegment alloc]initWithPoint:keyPointC andPoint:keyPointD];
+    SYSegment *segmentDE = [[SYSegment alloc]initWithPoint:keyPointD andPoint:keyPointE];
+    
+    CGFloat angleAB = [segmentAB angleDeg];
+    if (angleAB > 180.0)
+        angleAB -=180.0;
+    CGFloat angleBC = [segmentBC angleDeg];
+    if (angleBC > 180.0)
+        angleBC -=180.0;
+    CGFloat angleCD = [segmentCD angleDeg];
+    if (angleCD > 180.0)
+        angleCD -=180.0;
+    CGFloat angleDE = [segmentDE angleDeg];
+    if (angleDE > 180.0)
+        angleDE -=180.0;
+
+    [segmentAB release];
+    [segmentBC release];
+    [segmentCD release];
+    [segmentDE release];
+    
+    // Are the segments parallels?
+    if (fabs(angleAB - angleCD) > rotateRectangleAngleTolerance ||
+        fabs(angleBC - angleDE) > rotateRectangleAngleTolerance) {
+        return NO;
+    }
+    
+    // Are the angles in segment contiguous between 85/95 degrees?
+    if (angleAB > angleBC) {
+        if (fabs(angleAB - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+    }
+    else {
+        if (fabs(angleBC - angleAB) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+    }
+    
+    if (angleCD > angleDE) {
+        if (fabs(angleCD - angleDE) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+    }
+    else {
+        if (fabs(angleDE - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+    }
+    
+    // Angles correct, It's a rectangle
+    return YES;
+    
+}// isRotateRectangle
 
 
 - (BOOL) drawOvalCirclePainted

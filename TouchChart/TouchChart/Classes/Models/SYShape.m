@@ -332,6 +332,82 @@
 }// addRectangle:
 
 
+- (void) addRotateRectangle:(NSArray *) pointArray
+{
+    if ([pointArray count] > 5 ||
+        [pointArray count] < 4)
+        return;
+    
+    // Snap angles
+    // Get the four segments
+    CGPoint keyPointA = [[pointArray objectAtIndex:0]CGPointValue];
+    CGPoint keyPointB = [[pointArray objectAtIndex:1]CGPointValue];
+    CGPoint keyPointC = [[pointArray objectAtIndex:2]CGPointValue];
+    
+    SYSegment *segmentAB = [[SYSegment alloc]initWithPoint:keyPointA andPoint:keyPointB];
+    SYSegment *segmentBC = [[SYSegment alloc]initWithPoint:keyPointB andPoint:keyPointC];
+    
+    // Study the direction for next point
+    float cosAB = cosf([segmentBC angleRad]);
+    float possibleCosBC = cosf([segmentAB angleRad] + M_PI_2);
+    
+    if (cosAB * possibleCosBC < .0)
+        [segmentBC setFinalPointToDegree:[segmentAB angleDeg] - 90.0];
+    else
+        [segmentBC setFinalPointToDegree:[segmentAB angleDeg] + 90.0];
+    keyPointC = [segmentBC pointFn];
+
+    // Third Segment
+    CGPoint keyPointD = CGPointMake(keyPointC.x - (cosf([segmentAB angleRad]) * [segmentAB longitude]),
+                                    keyPointC.y + (sinf([segmentAB angleRad]) * [segmentAB longitude]));
+    
+    // Create geometry
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = LinesType;
+    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:keyPointA],
+                           [NSValue valueWithCGPoint:keyPointB],
+                           [NSValue valueWithCGPoint:keyPointC],
+                           [NSValue valueWithCGPoint:keyPointD], nil];
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
+    [geometry release];
+    
+}// addRotateRectangle:
+
+/*
+- (void) addRectangle:(CGRect) rect andTransform:(CGAffineTransform) transform
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = SquareRotateType;
+    [geometry setRectGeometry:rect];
+    geometry.pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                           nil];
+    geometry.transform = transform;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
+    [geometry release];
+    
+}// addRotateRectangle:andTransform:
+*/
+
 #pragma mark - Replace Elements
 
 - (void) replaceElementAtIndex:(NSUInteger) index withElement:(id) element

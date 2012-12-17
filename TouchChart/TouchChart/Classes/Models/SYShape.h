@@ -38,6 +38,8 @@
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform;
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
 - (void) addRectangle:(CGRect)rect;
+- (void) addRotateRectangle:(NSArray *) pointArray;
+- (void) addRectangle:(CGRect) rect andTransform:(CGAffineTransform) transform;
 
 // Replace Elements
 - (void) replaceElementAtIndex:(NSUInteger) index withElement:(id) element;
