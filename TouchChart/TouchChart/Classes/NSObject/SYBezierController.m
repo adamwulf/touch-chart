@@ -8,6 +8,7 @@
 
 #import "SYBezierController.h"
 #import "SYSegment.h"
+#import <Accelerate/Accelerate.h>
 
 @implementation SYBezierController
 
@@ -177,13 +178,13 @@
     A[3] = a[2] * pow(cValue[2], 2) * (1 - cValue[2]);
     
     // Resolvemos la ecuacion
-    int N = 2;
-    int nrhs = 1;
-    int lda = 2;
-    int ipiv[2];
-    int ldb = 2;
-    int info;
-    dgesv_(&N, &nrhs, A, &lda, &ipiv, B, &ldb, &info);
+    long N = 2;
+    long nrhs = 1;
+    long lda = 2;
+    long ipiv[2];
+    long ldb = 2;
+    long info;
+    dgesv_(&N, &nrhs, A, &lda, (long*)&ipiv, B, &ldb, &info);
     
     // Store solutions
     CGPoint P1 = CGPointMake(B[0], .0);
@@ -208,7 +209,7 @@
     nrhs = 1;
     lda = 2;
     ldb = 2;
-    dgesv_(&N, &nrhs, A, &lda, &ipiv, B, &ldb, &info);
+    dgesv_(&N, &nrhs, A, &lda, (long*)&ipiv, B, &ldb, &info);
     
     // Store solutions
     P1 = CGPointMake(P1.x, B[0]);

@@ -17,7 +17,7 @@
 @class SYTableBase;
 @class SYShape;
 
-@interface TCViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface TCViewController : UIViewController {
     
     // Views
     IBOutlet SYPaintView *paintView;
@@ -66,7 +66,6 @@
 // Analyze and Recognizer Geometry Methods
 - (void) getFigurePainted;
 - (BOOL) drawOvalCirclePainted;
-- (void) drawLineCurvesMixedPainted;
 
 // Draw Geometric Methods
 - (void) drawBezierCurveWithPoints:(NSDictionary *) data;
@@ -86,7 +85,7 @@
 - (SYGeometry *) createPolygonal:(NSArray *) pointKeyList;
 - (SYGeometry *) createPolygonalFromSegment:(SYSegment *) segment;
 - (SYGeometry *) createSquare:(CGRect) squareRect;
-- (SYGeometry *) createDiamond;
+- (SYGeometry *) createDiamond:(CGRect) diamondRect;
 - (SYGeometry *) createCircle:(CGRect) rect;
 - (SYGeometry *) createCircleWithTransform:(CGAffineTransform) transform;
 - (SYGeometry *) createArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
