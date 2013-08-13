@@ -1259,8 +1259,14 @@
     }
     
     // For the others points
-    for (int i = 0 ; i+2 < [reducePointKeyArray count]-1 ; i++) {
-        
+    // since [count] is an NSUIntenter, then the
+    // right hand side evaluates to max unsigned int,
+    // so the left handside is always less than the rhs,
+    // if the reducePointKeyArray count is zero
+    for (int i = 0 ; (i+2) < (int)([reducePointKeyArray count]-1) ; i++) {
+        if(i >= [reducePointKeyArray count]){
+            NSLog(@"what: %d %d %d", (i+2), (int)([reducePointKeyArray count]-1), (i+2) < (int)([reducePointKeyArray count]-1));
+        }
         NSValue *pointValueKeyA = [reducePointKeyArray objectAtIndex:i];
         NSValue *pointValueKeyB = [reducePointKeyArray objectAtIndex:i+1];
         
