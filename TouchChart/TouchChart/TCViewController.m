@@ -555,7 +555,13 @@
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
                 
                 CGFloat minumumLongitude = [segment longitude] * 0.25;
-                if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
+                //
+                // maxCurvature is the distance from the line to the actual point.
+                // we only store into maxCurvature assuming that the error
+                // from the straight line is greater than minumumLongitude.
+                if (maxCurvature < [segment distanceToPoint:aPoint] &&
+                    longitudeToStart > minumumLongitude &&
+                    longitudeToEnd > minumumLongitude)
                     maxCurvature = [segment distanceToPoint:aPoint];
                 
                 CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
@@ -563,6 +569,8 @@
                 longitude += [segmentCalculateLongitude longitude];
             }
             
+            // this helps us measure how straight a series of points
+            // is as a ratio of error / distance.
             CGFloat ratioSumDistance = sumDistance / longitude;
             
             
@@ -581,7 +589,7 @@
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
             if (longitude > 65.0) {
-                if (maxCurvature < 6.3) {
+                if (maxCurvature < MAX(longitude / 10, 6.3)) {
                     //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     shouldCheckOval = NO;
                     if ([previousCurves count] != 0) {
@@ -658,7 +666,7 @@
     }
 
     // Snap angles
-    [shape snapLinesAngles];
+//    [shape snapLinesAngles];
 
     // It's closed (almost closed), do closed perfectly
     [shape checkCloseShape];

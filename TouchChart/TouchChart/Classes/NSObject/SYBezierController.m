@@ -403,26 +403,6 @@
     // we just split one time
     if ([listPoints count] < 7)
         return [self getCubicBezierPointsForListPoint:listPoints splitIn:1];
-
-    // We get all info about the listPoints
-    // We get C(t)
-    CGFloat c[[listPoints count]];
-    CGFloat currentLongitude = .0;
-    c[0] = .0;
-    
-    for (NSUInteger i = 1 ; i < [listPoints count] ; i++) {
-        CGPoint previousPoint = [[listPoints objectAtIndex:i-1]CGPointValue];
-        CGPoint currentPoint = [[listPoints objectAtIndex:i]CGPointValue];
-        
-        SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
-        currentLongitude += [segment longitude];
-        c[i] = currentLongitude;
-    }
-    
-    // Just divide c[n]/totalLongitude
-    CGFloat totalLongitude = currentLongitude;
-    for (NSUInteger i = 0 ; i < [listPoints count] ; i++)
-        c[i] = currentLongitude/totalLongitude;
     
     // Limit
     NSUInteger limit = (NSUInteger) floor([listPoints count] * 0.25);    
