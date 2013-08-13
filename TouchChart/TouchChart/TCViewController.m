@@ -14,6 +14,7 @@
 #import "SYBezierController.h"
 #import "SYPaintView.h"
 #import "SYSaveMessageView.h"
+#import "SYTableBase.h"
 
 #import "SYShape.h"
 
@@ -63,16 +64,12 @@
 {
     [super viewDidUnload];
     
-    [paintView release];
     paintView = nil;
     
-    [vectorView release];
     vectorView = nil;
     
-    [openShapeButton release];
     openShapeButton = nil;
     
-    [closeShapeButton release];
     closeShapeButton = nil;
     
 }// viewDidUnload
@@ -114,17 +111,7 @@
 }// didRotateFromInterfaceOrientation:
 
 
-- (void) dealloc
-{
-    [super dealloc];
-    
-    [paintView release];
-    [vectorView release];
-    
-    [openShapeButton release];
-    [closeShapeButton release];
-    
-}// dealloc
+// dealloc
 
 
 
@@ -159,7 +146,6 @@
                                               cancelButtonTitle:@"Accept"
                                               otherButtonTitles:nil];
         [alert show];
-        [alert release];
         return;
     }
     
@@ -276,8 +262,6 @@
     minY = CGPointZero;
     
     // Create new point list
-    [listPoints release];
-    [pointKeyArray release];
     listPoints = [[NSMutableArray alloc]init];
     pointKeyArray = [[NSMutableArray alloc]init];
     
@@ -363,7 +347,6 @@
             }
             SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
             [shape addPolygonalFromSegment:segment];
-            [segment release];
         }
         else {
             
@@ -384,8 +367,6 @@
                 
                 CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
-                [fromStartToStudyPoint release];
-                [fromStudyPointToEnd release];
                 
                 CGFloat minumumLongitude = [segment longitude] * 0.25;
                 if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
@@ -395,7 +376,6 @@
                 CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
                 SYSegment *segmentCalculateLongitude = [[SYSegment alloc]initWithPoint:previousPoint andPoint:aPoint];
                 longitude += [segmentCalculateLongitude longitude];
-                [segmentCalculateLongitude release];
             }
             
             CGFloat ratioSumDistance = sumDistance / longitude;
@@ -405,7 +385,6 @@
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
             NSArray *result = [bezierController getBestCurveForListPoint:stretch tolerance:0.01];
-            [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
             CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
@@ -478,7 +457,6 @@
                 [previousCurves addObjectsFromArray:stretch];
             }
             
-            [segment release];
         }
     }
     
@@ -489,7 +467,6 @@
     [shape snapLinesAngles];
     [vectorView addShape:shape];
     
-    [shape release];
     
 }// drawOpenCurve
 
@@ -556,7 +533,6 @@
             }
             SYSegment *segment = [[SYSegment alloc]initWithPoint:firstPoint andPoint:lastPoint];
             [shape addPolygonalFromSegment:segment];
-            [segment release];
         }
         else {
             
@@ -577,8 +553,6 @@
                 
                 CGFloat longitudeToStart = [fromStartToStudyPoint longitude];
                 CGFloat longitudeToEnd = [fromStudyPointToEnd longitude];
-                [fromStartToStudyPoint release];
-                [fromStudyPointToEnd release];
                 
                 CGFloat minumumLongitude = [segment longitude] * 0.25;
                 if (maxCurvature < [segment distanceToPoint:aPoint] && longitudeToStart > minumumLongitude && longitudeToEnd > minumumLongitude)
@@ -587,7 +561,6 @@
                 CGPoint previousPoint = [[pointsToFit objectAtIndex:j-1]CGPointValue];
                 SYSegment *segmentCalculateLongitude = [[SYSegment alloc]initWithPoint:previousPoint andPoint:aPoint];
                 longitude += [segmentCalculateLongitude longitude];
-                [segmentCalculateLongitude release];
             }
             
             CGFloat ratioSumDistance = sumDistance / longitude;
@@ -597,7 +570,6 @@
             // ---------------------------------------------------------
             SYBezierController *bezierController = [[SYBezierController alloc]init];
             NSArray *result = [bezierController getBestCurveForListPoint:stretch tolerance:0.01];
-            [bezierController release];
             
             // Is line or curve? (Are aligned the control points?)
             CGPoint controlPoint1 = [[[result objectAtIndex:0] valueForKey:@"cPointA"]CGPointValue];
@@ -673,7 +645,6 @@
                 [previousCurves addObjectsFromArray:stretch];
             }
             
-            [segment release];
         }
     }
     
@@ -683,7 +654,6 @@
     
     // Try to fit with a oval
     if (shouldCheckOval && [self drawOvalCirclePainted]) {
-        [shape release];
         return;
     }
 
@@ -695,7 +665,6 @@
     
     // Add shape to the canvas
     [vectorView addShape:shape];
-    [shape release];
     
 }// drawCloseShape
 
@@ -714,12 +683,10 @@
             SYSegment *possibleAxis = [[SYSegment alloc]initWithPoint:pointA andPoint:pointB];
             
             if (axisDistance < [possibleAxis longitude]) {
-                [bigAxisSegment release];
-                bigAxisSegment = [possibleAxis retain];
+                bigAxisSegment = possibleAxis;
                 axisDistance = [possibleAxis longitude];
             }
             
-            [possibleAxis release];
         }
     }
     
@@ -792,7 +759,6 @@
         shape.openCurve = NO;
         [shape addCircle:ovalRect];
         [vectorView addShape:shape];
-        [shape release];
         
         return YES;
     }
@@ -810,11 +776,9 @@
         float angle = fabs(deltaAngle - 90.0);
         
         if (angle < angleMax) {
-            [smallAxisSegment release];
-            smallAxisSegment = [possibleAxis retain];
+            smallAxisSegment = possibleAxis;
             angleMax = angle;
         }
-        [possibleAxis release];
     }
     
     
@@ -853,8 +817,6 @@
         // It isn't a circle
         NSLog(@"2. Error Oval B: %f", error);
         if (error > 30.0) {
-            [bigAxisSegment release];
-            [smallAxisSegment release];
             return NO;
         }
         
@@ -867,10 +829,7 @@
              endAngle:360.0
             clockwise:YES];
         [vectorView addShape:shape];
-        [shape release];
         
-        [bigAxisSegment release];
-        [smallAxisSegment release];
         
         return YES;
     }
@@ -882,7 +841,6 @@
     maxY = [newSegment pointFn];
     minX = CGPointMake([newSegment midPoint].x - smallAxisLongitude * 0.5, [newSegment midPoint].y);
     maxX = CGPointMake([newSegment midPoint].x + smallAxisLongitude * 0.5, [newSegment midPoint].y);
-    [newSegment release];
     
     // Transform, rotate a around the midpoint
     float angleRad = [bigAxisSegment angleRad] + M_PI_2;
@@ -919,7 +877,6 @@
         SYSegment *lineToPoint = [[SYSegment alloc]initWithPoint:center andPoint:pointOrig];
         CGFloat projBigAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
         CGFloat projSmallAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[smallAxisSegment angleRad]);;
-        [lineToPoint release];
         
         CGFloat errorTemp = (pow(projBigAxis, 2)/pow(a, 2)) + (pow(projSmallAxis, 2)/pow(b, 2));
         //NSLog(@"%f = %f + %f", errorTemp, pow(projBigAxis, 2)/pow(a, 2) , pow(projSmallAxis, 2)/pow(b, 2));
@@ -930,8 +887,6 @@
     
     NSLog(@"3. Error Oval A: %f", error);
     if (error > ovaltolerace) {
-        [bigAxisSegment release];
-        [smallAxisSegment release];
         return NO;
     }
     
@@ -941,10 +896,7 @@
     [shape addCircleWithRect:CGRectMake(minX.x, maxY.y, (maxX.x - minX.x), (maxY.y - minY.y))
                 andTransform:transform];
     [vectorView addShape:shape];
-    [shape release];
             
-    [bigAxisSegment release];
-    [smallAxisSegment release];
      
     return YES;
     
@@ -962,7 +914,6 @@
         
         SYSegment *segment = [[SYSegment alloc]initWithPoint:pointStart andPoint:pointEnd];
         totalLongitude += [segment longitude];
-        [segment release];
     }
     
     return totalLongitude;
@@ -1263,7 +1214,6 @@
                 i = i+1;
             }
             
-            [segment release];
         }
     }
     
@@ -1334,14 +1284,12 @@
     for (NSValue *pointValue in listPoints)
         [keyPointShape addPoint:[pointValue CGPointValue]];
     [vectorView addShape:keyPointShape];
-    [keyPointShape release];
     
     // DEBUG DRAW
     SYShape *reducePointKeyArrayShape = [[SYShape alloc]init];
     for (NSValue *pointValue in reducePointKeyArray)
         [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
     [vectorView addShape:reducePointKeyArrayShape];
-    [reducePointKeyArrayShape release];
     
     return [NSDictionary dictionaryWithObjectsAndKeys:pointsToFit, @"pointsToFit", indexKeyPoints, @"indexKeyPoints", nil];    
     
@@ -1361,7 +1309,7 @@
                 CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                 CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
                 geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
@@ -1378,7 +1326,7 @@
                 CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                 CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 if ([segment isSnapAngle])
                     [segment snapAngleChangingStartPoint];
                 
@@ -1398,7 +1346,7 @@
                     CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                     CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                     
-                    SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                    SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                     [segment snapAngleChangingFinalPoint];
                     
                     // Snap. Get the new points final point in the current line
@@ -1406,7 +1354,7 @@
                     CGPoint pointStNext = [[geometryNext.pointArray objectAtIndex:0]CGPointValue];
                     CGPoint pointFnNext = [[geometryNext.pointArray objectAtIndex:1]CGPointValue];
                     
-                    SYSegment *segmentNext = [[[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext]autorelease];
+                    SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
                     geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
@@ -1424,7 +1372,7 @@
                 CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                 CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
                 geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
@@ -1443,7 +1391,7 @@
                 CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                 CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
                 geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
@@ -1465,7 +1413,7 @@
                     CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                     CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                     
-                    SYSegment *segment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                    SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                     [segment snapAngleChangingFinalPoint];
                     
                     // Snap. Get the new points final point in the current line
@@ -1473,7 +1421,7 @@
                     CGPoint pointStNext = [[geometryNext.pointArray objectAtIndex:0]CGPointValue];
                     CGPoint pointFnNext = [[geometryNext.pointArray objectAtIndex:1]CGPointValue];
                     
-                    SYSegment *segmentNext = [[[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext]autorelease];
+                    SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
                     geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
@@ -1494,7 +1442,7 @@
                 CGPoint pointSt = [[geometryCurrent.pointArray objectAtIndex:0]CGPointValue];
                 CGPoint pointFn = [[geometryCurrent.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *firstSegment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *firstSegment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 if ([firstSegment isSnapAngle])
                     [firstSegment snapAngleChangingStartPoint];
                 
@@ -1502,7 +1450,7 @@
                 pointSt = [[geometryLast.pointArray objectAtIndex:0]CGPointValue];
                 pointFn = [[geometryLast.pointArray objectAtIndex:1]CGPointValue];
                 
-                SYSegment *lastSegment = [[[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn]autorelease];
+                SYSegment *lastSegment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [lastSegment snapAngleChangingFinalPoint];
                 
                 // Intersection between the two snap lines
@@ -1537,7 +1485,6 @@
         
         SYSegment *segment = [[SYSegment alloc]initWithPoint:startSegment andPoint:endSegment];
         longitude += [segment longitude];
-        [segment release];
         
     }
     
@@ -1763,7 +1710,7 @@
 - (SYGeometry *) createBezierCurveWithPoints:(NSDictionary *) data
 {
     // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = BezierType;
@@ -1782,7 +1729,7 @@
 - (SYGeometry *) createBezierCurvesWithPoints:(NSArray *) arrayData
 {
     // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = BezierType;
@@ -1801,7 +1748,7 @@
 - (SYGeometry *) createPolygonal:(NSArray *) pointKeyList
 {
     // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = LinesType;
@@ -1830,7 +1777,7 @@
 - (SYGeometry *) createPolygonalFromSegment:(SYSegment *) segment
 {
     // Draw the resulting shape
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = LinesType;
@@ -1849,7 +1796,7 @@
 
 - (SYGeometry *) createSquare:(CGRect) squareRect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = SquareType;
@@ -1867,7 +1814,7 @@
 
 - (SYGeometry *) createDiamond:(CGRect) diamondRect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = DiamondType;
@@ -1885,7 +1832,7 @@
 
 - (SYGeometry *) createCircle:(CGRect) rect
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1903,7 +1850,7 @@
 
 - (SYGeometry *) createPoint:(CGPoint) point
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1921,7 +1868,7 @@
 
 - (SYGeometry *) createCircleWithTransform:(CGAffineTransform) transform
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = CircleType;
@@ -1941,7 +1888,7 @@
 
 - (SYGeometry *) createArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
 {
-    SYGeometry *geometry = [[[SYGeometry alloc]init]autorelease];
+    SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
     geometry.geometryType = ArcType;

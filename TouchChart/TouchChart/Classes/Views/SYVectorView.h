@@ -12,7 +12,7 @@
 
 @interface SYVectorView : UIView
 
-@property (nonatomic, retain) NSMutableArray *shapeList;
+@property (nonatomic, strong) NSMutableArray *shapeList;
 
 - (void) addShape:(SYShape *)shape;
 - (IBAction)clear:(id)sender;

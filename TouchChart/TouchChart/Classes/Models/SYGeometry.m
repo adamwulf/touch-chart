@@ -20,14 +20,7 @@
 
 @synthesize transform;
 
--(void) dealloc
-{
-    [fillColor release];
-    [strokeColor release];
-    
-    [super dealloc];
-    
-}// dealloc
+// dealloc
 
 
 - (NSString *) description

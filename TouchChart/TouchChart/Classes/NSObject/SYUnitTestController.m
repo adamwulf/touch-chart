@@ -27,7 +27,6 @@
 
 - (void) dealloc
 {
-    [pfObjects release];
     pfObjects = nil;
     
     myTableView = nil;
@@ -35,7 +34,6 @@
 
     viewController = nil;
         
-    [super dealloc];
     
 }// dealloc
 
@@ -82,7 +80,6 @@
                                                   cancelButtonTitle:@"Accept"
                                                   otherButtonTitles:nil];
             [alert show];
-            [alert release];
 
         }
     }];
@@ -98,13 +95,11 @@
         if (!error) {
             // The find succeeded.
             NSLog(@"Successfully retrieved %d scores.", objects.count);
-            [pfObjects release];
             pfObjects = [[NSMutableArray alloc]initWithArray:objects];
             [myTableView reloadData];
         } else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
-            [pfObjects release];
             pfObjects = nil;
         }
     }];
@@ -234,7 +229,6 @@
     UILabel *month = (UILabel *)[cell viewWithTag:2];
     [dateFormatter setDateFormat:@"MMM"];
     month.text = [[dateFormatter stringFromDate:[pfObject createdAt]]uppercaseString];
-    [dateFormatter release];
 
     // Preview
     SYUnitPreview *preview = (SYUnitPreview *)[cell viewWithTag:3];

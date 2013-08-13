@@ -10,6 +10,6 @@
 
 @interface SYUnitPreview : UIView
 
-@property (assign) NSArray *points;
+@property (weak) NSArray *points;
 
 @end

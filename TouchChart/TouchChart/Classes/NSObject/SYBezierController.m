@@ -32,7 +32,6 @@
         SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
         currentLongitude += [segment longitude];
         c[i] = currentLongitude;
-        [segment release];
     }
     
     // Just divide c[n]/totalLongitude
@@ -113,7 +112,6 @@
         SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
         currentLongitude += [segment longitude];
         c[i] = currentLongitude;
-        [segment release];
     }
     
     // Just divide c[n]/totalLongitude
@@ -230,7 +228,6 @@
                 
         SYSegment *segment = [[SYSegment alloc]initWithPoint:originalPaintedPoint andPoint:fastBezierPoint];
         ratio += [segment longitude] / totalLongitude;
-        [segment release];
     }
     
     // Error medio por cada punto
@@ -420,7 +417,6 @@
         SYSegment *segment = [[SYSegment alloc]initWithPoint:previousPoint andPoint:currentPoint];
         currentLongitude += [segment longitude];
         c[i] = currentLongitude;
-        [segment release];
     }
     
     // Just divide c[n]/totalLongitude

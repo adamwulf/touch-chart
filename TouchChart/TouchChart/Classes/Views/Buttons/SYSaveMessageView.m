@@ -35,28 +35,28 @@
                                    (id)gradientColor.CGColor,
                                    (id)gradientColor2.CGColor, nil];
     CGFloat baseGradientLocations[] = {0, 1};
-    CGGradientRef baseGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)baseGradientColors, baseGradientLocations);
+    CGGradientRef baseGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)baseGradientColors, baseGradientLocations);
     NSArray* strokeGradientColors = [NSArray arrayWithObjects:
                                      (id)gradientColor4.CGColor,
                                      (id)[UIColor colorWithRed: 0.14 green: 0.14 blue: 0.14 alpha: 0.5].CGColor,
                                      (id)gradientColor3.CGColor, nil];
     CGFloat strokeGradientLocations[] = {0, 0.14, 1};
-    CGGradientRef strokeGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)strokeGradientColors, strokeGradientLocations);
+    CGGradientRef strokeGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)strokeGradientColors, strokeGradientLocations);
     NSArray* buttonGradientColors = [NSArray arrayWithObjects:
                                      (id)gradientColor6.CGColor,
                                      (id)gradientColor5.CGColor, nil];
     CGFloat buttonGradientLocations[] = {0, 1};
-    CGGradientRef buttonGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)buttonGradientColors, buttonGradientLocations);
+    CGGradientRef buttonGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)buttonGradientColors, buttonGradientLocations);
     NSArray* highlightGradientColors = [NSArray arrayWithObjects:
                                         (id)highlightGradientColor.CGColor,
                                         (id)highlightGradientColor2.CGColor, nil];
     CGFloat highlightGradientLocations[] = {0, 1};
-    CGGradientRef highlightGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)highlightGradientColors, highlightGradientLocations);
+    CGGradientRef highlightGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)highlightGradientColors, highlightGradientLocations);
     NSArray* textfieldGradientColors = [NSArray arrayWithObjects:
                                         (id)textfieldGradientColor.CGColor,
                                         (id)textfieldGradientColor2.CGColor, nil];
     CGFloat textfieldGradientLocations[] = {0, 1};
-    CGGradientRef textfieldGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)textfieldGradientColors, textfieldGradientLocations);
+    CGGradientRef textfieldGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)textfieldGradientColors, textfieldGradientLocations);
     
     //// Shadow Declarations
     UIColor* buttonLabelShadow = [UIColor blackColor];

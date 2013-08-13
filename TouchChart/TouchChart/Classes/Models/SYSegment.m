@@ -49,11 +49,7 @@
 }// initWithPoint:andPoint:
 
 
-- (void) dealloc
-{
-    [super dealloc];
-
-}// dealloc
+// dealloc
 
 
 #pragma mark - Get Special Points Methods

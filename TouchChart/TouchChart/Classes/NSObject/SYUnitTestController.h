@@ -19,7 +19,7 @@
     IBOutlet TCViewController *viewController;
 }
 
-@property (nonatomic, assign) IBOutlet UITableViewCell *unitTestCell;
+@property (nonatomic, weak) IBOutlet UITableViewCell *unitTestCell;
 
 // Save/Load Operations
 - (void) importPointsStored:(PFObject *) listPointStored;

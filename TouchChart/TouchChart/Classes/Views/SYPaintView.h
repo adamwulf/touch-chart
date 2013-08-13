@@ -15,7 +15,7 @@
     
     // Controller
     __weak IBOutlet TCViewController *viewController;
-    __weak IBOutlet SYUnitTestController *unitTestController;
+    IBOutlet SYUnitTestController *unitTestController;
     
 }
 

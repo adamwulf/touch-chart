@@ -372,11 +372,6 @@
 }// drawRect:
 
 
-- (void) dealloc
-{
-    [shapeList release];
-    [super dealloc];
-    
-}// dealloc
+// dealloc
 
 @end

@@ -15,13 +15,7 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 
-- (void) dealloc
-{
-    [_window release];
-    [_viewController release];
-    [super dealloc];
-    
-}// dealloc
+// dealloc
 
 
 - (BOOL) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -33,9 +27,9 @@
     
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-        self.viewController = [[[TCViewController alloc] initWithNibName:@"TCViewController_iPhone" bundle:nil] autorelease];
+        self.viewController = [[TCViewController alloc] initWithNibName:@"TCViewController_iPhone" bundle:nil];
     else
-        self.viewController = [[[TCViewController alloc] initWithNibName:@"TCViewController_iPad" bundle:nil] autorelease];
+        self.viewController = [[TCViewController alloc] initWithNibName:@"TCViewController_iPad" bundle:nil];
 
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

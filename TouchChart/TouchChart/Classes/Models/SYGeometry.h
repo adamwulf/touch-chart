@@ -45,10 +45,10 @@ typedef enum {
 
 @property (nonatomic) GeometryType geometryType;
 @property (nonatomic) CGRect rectGeometry;
-@property (nonatomic, retain) NSArray *pointArray;
+@property (nonatomic, strong) NSArray *pointArray;
 @property (nonatomic) CGFloat lineWidth;
-@property (nonatomic, retain) UIColor *fillColor;
-@property (nonatomic, retain) UIColor *strokeColor;
+@property (nonatomic, strong) UIColor *fillColor;
+@property (nonatomic, strong) UIColor *strokeColor;
 @property (nonatomic) CGAffineTransform transform;
 
 // Setter
