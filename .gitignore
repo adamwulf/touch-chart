@@ -1,3 +1,5 @@
+*.DS_Store
+TouchChart/TouchChart.xcodeproj/project.xcworkspace/xcuserdata
 TouchChart/TouchChart.xcodeproj/project.xcworkspace/xcshareddata
 TouchChart/TouchChart.xcodeproj/xcuserdata/adam.xcuserdatad/xcdebugger/
 TouchChart/TouchChart.xcodeproj/project.xcworkspace/xcuserdata/adam.xcuserdatad/WorkspaceSettings.xcsettings

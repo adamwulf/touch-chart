@@ -311,7 +311,7 @@
         [self drawOpenShape];
     else {
         // If the resulting points number is insufficient, exit
-        if ([pointKeyArray count] < 2)
+        if ([pointKeyArray count] <= 2)
             return;
         
         [self drawCloseShape];
@@ -528,6 +528,11 @@
     shape.closeCurve = YES;
     NSMutableArray *previousCurves = [NSMutableArray array];
     BOOL shouldCheckOval = YES;
+    
+    if([indexKeyPoints count] < 2){
+        // not enough keypoints for a shape
+        return;
+    }
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
         // Build stretch
