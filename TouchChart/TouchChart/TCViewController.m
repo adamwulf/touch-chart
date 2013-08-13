@@ -265,6 +265,9 @@
     listPoints = [[NSMutableArray alloc]init];
     pointKeyArray = [[NSMutableArray alloc]init];
     
+    isDeltaXPos = 0;
+    isDeltaYPos = 0;
+    
 }// resetData
 
 
