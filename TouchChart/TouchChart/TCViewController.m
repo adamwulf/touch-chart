@@ -592,6 +592,11 @@
             // Estimate curve or line reading the parameters calculated
             // If the bezier is fit to the shape well...
             if (longitude > 65.0) {
+                //
+                // this will affect when a corner is sharpened,
+                // and when it is rounded. originally this was
+                // hard coded to 6.3, but now is a function of
+                // the segment length
                 if (maxCurvature < MAX(longitude / 10, 6.3)) {
                     //NSLog(@"%u - %u   :   LINEA", fromIndex, toIndex);
                     shouldCheckOval = NO;
