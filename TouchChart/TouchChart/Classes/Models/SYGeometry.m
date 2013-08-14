@@ -145,16 +145,21 @@
         
         [path setLineWidth:[self lineWidth]];
         
-        
+        CGPoint lastEndingPoint = bezier.t3Point;
         for (int i = 1 ; i < [self.pointArray count] ; i++) {
             
             SYBezier *bezier = [self.pointArray objectAtIndex:i];
             
             // Bezier lines
-            [path moveToPoint: bezier.t0Point];
+            if(!CGPointEqualToPoint(bezier.t0Point, lastEndingPoint)){
+                // we only need to move to if our start isn't where
+                // we left off on the previous bezier
+                [path moveToPoint: bezier.t0Point];
+            }
             [path addCurveToPoint: bezier.t3Point
                     controlPoint1: bezier.cPointA
                     controlPoint2: bezier.cPointB];
+            lastEndingPoint = bezier.t3Point;
         }
         return path;
     }
