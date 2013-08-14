@@ -43,12 +43,10 @@ typedef enum {
     
 }
 
-// get bezier path output
+// properties of this geometry
 @property (readonly) UIBezierPath* bezierPath;
-
-// helpers for init
-@property (nonatomic) GeometryType geometryType;
-@property (nonatomic, readonly) NSArray *pointArray;
+@property (readonly) GeometryType geometryType;
+@property (readonly) NSArray *pointArray;
 
 // drawing and colors
 @property (nonatomic) CGFloat lineWidth;
@@ -64,19 +62,7 @@ typedef enum {
 - (id) initWithSegmentFrom:(CGPoint)point1 to:(CGPoint)point2;
 - (id) initWithRotatedRectangleFrom:(CGPoint)point1 to:(CGPoint)point2 to:(CGPoint)point3 to:(CGPoint)point4;
 - (id) initWithSegment:(SYSegment*) segment;
+- (id) initArcWithMidPoint:(CGPoint) midPoint radius:(CGFloat) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle andClockWise:(BOOL) clockwise;
 
-// Setter
-- (void) setArcParametersWithMidPoint:(CGPoint) midPoint
-                               radius:(CGFloat) radius
-                           startAngle:(CGFloat) startAngle
-                             endAngle:(CGFloat) endAngle
-                         andClockWise:(BOOL) clockwise;
-
-// Getter
-- (CGPoint) midPoint;
-- (CGFloat) radius;
-- (CGFloat) startAngle;
-- (CGFloat) endAngle;
-- (BOOL) clockwise;
 
 @end

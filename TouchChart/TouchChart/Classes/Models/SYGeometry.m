@@ -139,54 +139,25 @@
     
 }// init
 
-#pragma mark - Setter
 
-- (void) setArcParametersWithMidPoint:(CGPoint) midPoint radius:(CGFloat) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle andClockWise:(BOOL) clockwise
+- (id) initArcWithMidPoint:(CGPoint) midPoint radius:(CGFloat) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle andClockWise:(BOOL) clockwise
 {
-    arcMidPoint = midPoint;
-    arcRadius = radius;
-    arcStartAngle = startAngle;
-    arcEndAngle = endAngle;
-    arcClockwise = clockwise;
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = ArcType;
+        
+        arcMidPoint = midPoint;
+        arcRadius = radius;
+        arcStartAngle = startAngle;
+        arcEndAngle = endAngle;
+        arcClockwise = clockwise;
+    }
     
-}// setArcParametersWithRadius:startAngle:endAngle:andClockWise:
-
-
-#pragma mark - Getter
-
-- (CGPoint) midPoint
-{
-    return arcMidPoint;
+    return self;
     
-}// radius
+}// init
 
 
-- (CGFloat) radius
-{
-    return arcRadius;
-    
-}// radius
-
-
-- (CGFloat) startAngle
-{
-    return arcStartAngle;
-    
-}// radius
-
-
-- (CGFloat) endAngle
-{
-    return arcEndAngle;
-    
-}// radius
-
-
-- (BOOL) clockwise
-{
-    return arcClockwise;
-    
-}// radius
 
 #pragma mark - Bezier Path
 
@@ -247,11 +218,11 @@
     else if ([self geometryType] == ArcType) {
         
         // Drawing code
-        UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter:[self midPoint]
-                                                             radius:[self radius]
-                                                         startAngle:[self startAngle]
-                                                           endAngle:[self endAngle]
-                                                          clockwise:[self clockwise]];
+        UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter:arcMidPoint
+                                                             radius:arcRadius
+                                                         startAngle:arcStartAngle
+                                                           endAngle:arcEndAngle
+                                                          clockwise:arcClockwise];
         
         [path setLineWidth:[self lineWidth]];
         

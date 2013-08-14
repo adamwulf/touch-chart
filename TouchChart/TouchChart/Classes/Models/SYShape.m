@@ -245,15 +245,7 @@
         startAngle - endAngle == .0)
         return;
     
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
-    // Geometry parameters
-    geometry.geometryType = ArcType;
-    [geometry setArcParametersWithMidPoint:midPoint
-                                    radius:radius
-                                startAngle:startAngle
-                                  endAngle:endAngle
-                              andClockWise:clockwise];
+    SYGeometry *geometry = [[SYGeometry alloc] initArcWithMidPoint:midPoint radius:radius startAngle:startAngle endAngle:endAngle andClockWise:clockwise];
     
     // Draw properties
     geometry.lineWidth = 4.0;
