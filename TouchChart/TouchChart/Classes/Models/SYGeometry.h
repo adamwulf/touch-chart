@@ -11,7 +11,6 @@
 typedef enum {
 	SquareType,
 	CircleType,
-	DiamondType,
     TriangleType,
     LinesType,
     BezierType,
@@ -63,6 +62,6 @@ typedef enum {
 - (CGFloat) radius;
 - (CGFloat) startAngle;
 - (CGFloat) endAngle;
-- (CGFloat) clockwise;
+- (BOOL) clockwise;
 
 @end

@@ -30,10 +30,6 @@
          [desc appendString:@"\nGeometryType: Square"];
     if (self.geometryType == CircleType)
         [desc appendString:@"\nGeometryType: Circle"];
-    if (self.geometryType == DiamondType)
-        [desc appendString:@"\nGeometryType: DiamondType"];
-    if (self.geometryType == TriangleType)
-        [desc appendString:@"\nGeometryType: TriangleType"];
     if (self.geometryType == LinesType)
         [desc appendString:@"\nGeometryType: LinesType"];
     if (self.geometryType == BezierType)
@@ -112,7 +108,7 @@
 }// radius
 
 
-- (CGFloat) clockwise
+- (BOOL) clockwise
 {
     return arcClockwise;
     

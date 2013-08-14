@@ -13,33 +13,41 @@
 
 @interface SYShape : NSObject
 
-@property (nonatomic, assign) BOOL closeCurve;
-@property (nonatomic, assign) BOOL openCurve;
+@property (readonly, assign) BOOL closeCurve;
+@property (readonly, assign) BOOL openCurve;
+
+// Init
+- (id) initWithBezierTolerance:(float) toleranceSlider;
+
+// Setter Methods
+- (void) setCloseCurve: (BOOL) isCloseCurve;
+- (void) setOpenCurve:(BOOL)isOpenCurve;
+
+// Getter Methods
+- (NSUInteger) geometriesCount;
+- (SYGeometry *) getElement:(NSUInteger) index;
+- (SYGeometry *) getLastElement;
+- (NSArray *) geometries;
 
 // Adding Elements
 - (void) addPoint:(CGPoint) keyPoint;
 - (void) addKeyPoint:(CGPoint) keyPoint;
 - (void) addPolygonalFromSegment:(SYSegment *) segment;
-- (void) addCurve:(NSArray *) curvePoints;
+- (void) addCurvesForListPoints:(NSArray *) listPoints;
 - (void) addCircle:(CGRect) circleRect;
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform;
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise;
-
-// Modify shape
-- (void) snapLinesAngles;
-- (void) checkCloseShape;
+- (void) addRectangle:(CGRect)rect;
+- (void) addRotateRectangle:(NSArray *) pointArray;
+//- (void) addRectangle:(CGRect) rect andTransform:(CGAffineTransform) transform;
 
 // Replace Elements
 - (void) replaceElementAtIndex:(NSUInteger) index withElement:(id) element;
 - (void) replaceLastElementWithElement:(id) element;
 
-- (SYGeometry *) getElement:(NSUInteger) index;
-- (SYGeometry *) getLastElement;
-
-// Get elements
-- (NSArray *) geometries;
-
-// Other Methods
-- (CGPoint) midPointBetweenPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+// Modify shape
+- (void) snapLinesAngles;
+- (void) checkCloseShape;
+- (void) forceContinuity:(float) sliderValue;
 
 @end

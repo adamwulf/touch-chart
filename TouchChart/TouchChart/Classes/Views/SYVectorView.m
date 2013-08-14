@@ -9,6 +9,7 @@
 #import "SYVectorView.h"
 #import "SYGeometry.h"
 #import "SYShape.h"
+#import "SYBezier.h"
 
 @implementation SYVectorView
 
@@ -24,11 +25,14 @@
 }// awakeFromNib
 
 
+#pragma mark - Shapes List Management
+
 - (void) addShape:(SYShape *)shape
 {
     [shapeList addObject:shape];
     
 }// addShape
+
 
 - (IBAction) clear:(id)sender
 {
@@ -36,6 +40,7 @@
     [self setNeedsDisplay];
     
 }// clear
+
 
 - (void) drawRect: (CGRect)rect
 {
@@ -66,9 +71,6 @@
                 [[geometry strokeColor] set];
                 [path stroke];
                 
-                //if ([geometry transform])
-                //    [path applyTransform:[geometry transform]];
-                
                 for (int i = 0; i < [[geometry pointArray]count] ; i++) {
                     CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
                     
@@ -86,12 +88,12 @@
             }
             else if ([geometry geometryType] == BezierType) {
                 
-                NSDictionary *dictPoints = [geometry.pointArray objectAtIndex:0];
-                CGPoint startPoint = [[dictPoints valueForKey:@"t0Point"]CGPointValue];
-                CGPoint endPoint = [[dictPoints valueForKey:@"t3Point"]CGPointValue];
+                SYBezier *bezier = [geometry.pointArray objectAtIndex:0];
+                CGPoint startPoint = bezier.t0Point;
+                CGPoint endPoint = bezier.t3Point;
                 
-                CGPoint firstCP = [[dictPoints valueForKey:@"cPointA"]CGPointValue];
-                CGPoint secondCP = [[dictPoints valueForKey:@"cPointB"]CGPointValue];
+                CGPoint firstCP = bezier.cPointA;
+                CGPoint secondCP = bezier.cPointB;
                 
                 // Bezier lines
                 UIBezierPath * path = [UIBezierPath bezierPath];
@@ -182,13 +184,13 @@
                 
                 for (int i = 1 ; i < [geometry.pointArray count] ; i++) {
                     
-                    NSDictionary *dictPoints = [geometry.pointArray objectAtIndex:i];
+                    SYBezier *bezier = [geometry.pointArray objectAtIndex:i];
                     
-                    CGPoint startPoint = [[dictPoints valueForKey:@"t0Point"]CGPointValue];
-                    CGPoint endPoint = [[dictPoints valueForKey:@"t3Point"]CGPointValue];
+                    CGPoint startPoint = bezier.t0Point;
+                    CGPoint endPoint = bezier.t3Point;
                     
-                    CGPoint firstCP = [[dictPoints valueForKey:@"cPointA"]CGPointValue];
-                    CGPoint secondCP = [[dictPoints valueForKey:@"cPointB"]CGPointValue];
+                    CGPoint firstCP = bezier.cPointA;
+                    CGPoint secondCP = bezier.cPointB;
                     
                     // Bezier lines
                     UIBezierPath * path = [UIBezierPath bezierPath];
@@ -289,65 +291,6 @@
                 [[geometry strokeColor] set];
                 [path stroke];
             }
-            
-            /*
-            if ([geometry geometryType] == DiamondType) {
-                
-                CGRect rectGeometry = [geometry rectGeometry];
-                
-                UIBezierPath * path = [UIBezierPath bezierPath];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [path  moveToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width , rectGeometry.origin.y + rectGeometry.size.height * 0.5)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y + rectGeometry.size.height)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x, rectGeometry.origin.y + rectGeometry.size.height * 0.5)];
-                [path  addLineToPoint:CGPointMake(rectGeometry.origin.x + rectGeometry.size.width * 0.5 , rectGeometry.origin.y)];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else if ([geometry geometryType] == SquareType) {
-                // Drawing code
-                UIBezierPath * path = [UIBezierPath bezierPathWithRect:[geometry rectGeometry]];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else if ([geometry geometryType] == TriangleType) {
-                
-                CGPoint pointA = [[[geometry pointArray]objectAtIndex:0]CGPointValue];
-                CGPoint pointB = [[[geometry pointArray]objectAtIndex:1]CGPointValue];
-                CGPoint pointC = [[[geometry pointArray]objectAtIndex:2]CGPointValue];
-                
-                // Drawing code
-                UIBezierPath * path = [UIBezierPath bezierPath];
-                [path moveToPoint:pointA];
-                [path addLineToPoint:pointB];
-                [path addLineToPoint:pointC];
-                [path setLineWidth:[geometry lineWidth]];
-                
-                [[geometry fillColor] set];
-                [path fill];
-                
-                [[geometry strokeColor] set];
-                [path stroke];
-                
-                [path applyTransform:[geometry transform]];
-            }
-            else*/
-            
             else if ([geometry geometryType] == ArcType) {
                 
                 // Drawing code            
@@ -366,6 +309,61 @@
                 
                 [path applyTransform:[geometry transform]];
             }
+            else if ([geometry geometryType] == SquareType) {
+                
+                // Drawing code
+                UIBezierPath * path = [UIBezierPath bezierPathWithRect:[geometry rectGeometry]];
+                [path setLineWidth:[geometry lineWidth]];
+                [[geometry fillColor] set];
+                [path fill];
+                
+                [[geometry strokeColor] set];
+                [path stroke];
+                
+                for (int i = 0; i < [[geometry pointArray]count] ; i++) {
+                    CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
+                    
+                    // create a oval bezier path using the rect
+                    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointSize * 0.5), point.y - (pointSize * 0.5), pointSize, pointSize)];
+                    [path setLineWidth:1.5];
+                    
+                    // draw the path
+                    [colorFillPoints set];
+                    [path fill];
+                    
+                    [colorStrokePoints set];
+                    [path stroke];
+                }
+            }
+            /*
+            else if ([geometry geometryType] == SquareRotateType) {
+                // Drawing code
+                UIBezierPath * path = [UIBezierPath bezierPathWithRect:[geometry rectGeometry]];
+                [path applyTransform:[geometry transform]];
+                [path setLineWidth:[geometry lineWidth]];
+                [[geometry fillColor] set];
+                [path fill];
+                
+                [[geometry strokeColor] set];
+                [path stroke];
+                
+                
+                for (int i = 0; i < [[geometry pointArray]count] ; i++) {
+                    CGPoint point = [[[geometry pointArray]objectAtIndex:i]CGPointValue];
+                    
+                    // create a oval bezier path using the rect
+                    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - (pointSize * 0.5), point.y - (pointSize * 0.5), pointSize, pointSize)];
+                    [path setLineWidth:1.5];
+                    
+                    // draw the path
+                    [colorFillPoints set];
+                    [path fill];
+                    
+                    [colorStrokePoints set];
+                    [path stroke];
+                }                
+            }
+            */
         }
     }
     

@@ -12,19 +12,19 @@
 
 - (void) drawRect:(CGRect)rect
 {
-    //// General Declarations
+    // General Declarations
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //// Color Declarations
+    // Color Declarations
     UIColor* greyColor = [UIColor colorWithRed: 0.94 green: 0.94 blue: 0.94 alpha: 1];
     
-    //// Shadow Declarations
+    // Shadow Declarations
     UIColor* shadow = [UIColor blackColor];
     CGSize shadowOffset = CGSizeMake(0, -0);
     CGFloat shadowBlurRadius = 3;
     
     
-    //// Bezier 2 Drawing
+    // Bezier 2 Drawing
     UIBezierPath* bezier2Path = [UIBezierPath bezierPath];
     [bezier2Path moveToPoint: CGPointMake(85.5, 59.5)];
     [bezier2Path addLineToPoint: CGPointMake(475.5, 59.5)];

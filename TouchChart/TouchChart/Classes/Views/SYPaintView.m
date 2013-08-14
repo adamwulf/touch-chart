@@ -8,7 +8,6 @@
 
 #import "SYPaintView.h"
 #import "TCViewController.h"
-#import "SYUnitTestController.h"
 
 #pragma mark - Private Interface
 
@@ -93,7 +92,7 @@
 	CGContextSetLineCap(context, kCGLineCapButt);
 	CGContextSetLineJoin(context, kCGLineJoinRound);
 	CGContextBeginPath(context);
-	
+    
 	// This flag tells us to move to the point
 	// rather than draw a line to the point
 	BOOL isFirstPoint = YES;
@@ -145,19 +144,16 @@
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    // TEMP
-    //[self clearPaint];
-    
     // CGPoint to NSValue and add it to list
     [viewController resetData];
     
     // Init list points
-    self.allPoints = [[NSMutableArray alloc]init];
+    self.allPoints = [NSMutableArray array];
     
     // Unit Test: Add point
     UITouch *touch = [touches anyObject];
 	CGPoint touchLocation = [touch locationInView:self];
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
         
 }// touchesBegan:withEvent:
 
@@ -175,7 +171,7 @@
     [self processPoint:touchLocation];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     	
 }// touchesMoved:withEvent:
 
@@ -195,7 +191,7 @@
     [viewController getFigurePainted];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesEnded:withEvent:
 
@@ -215,18 +211,9 @@
     [viewController getFigurePainted];
     
     // Unit Test: Add point
-    [allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
+    [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
     
 }// touchesCancelled:withEvent:
-
-
-#pragma mark - Unit Test Methods
-
-- (void) saveCase:(NSString *) caseName
-{
-    [unitTestController saveListPoints:allPoints withName:caseName];
-    
-}// saveCase:
 
 
 #pragma mark - Private Methods

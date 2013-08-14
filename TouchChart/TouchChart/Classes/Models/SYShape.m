@@ -9,18 +9,25 @@
 #import "SYShape.h"
 #import "SYGeometry.h"
 #import "SYSegment.h"
+#import "SYBezier.h"
 #import "SYBezierController.h"
 
 @interface SYShape () {
     
     NSMutableArray *geometriesArray;
-    
+    float toleranceBezier;
+
 }
+
+// Other Methods
+- (CGPoint) midPointBetweenPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 
 @end
 
 
 @implementation SYShape
+
+#define bezierTolerance 0.01
 
 @synthesize closeCurve;
 @synthesize openCurve;
@@ -41,7 +48,20 @@
 }// init
 
 
-// dealloc
+- (id) initWithBezierTolerance:(float) toleranceSlider
+{
+    self = [super init];
+    
+    if (self) {
+        geometriesArray = [[NSMutableArray alloc]init];
+        openCurve = NO;
+        closeCurve = NO;
+        toleranceBezier = toleranceSlider;
+    }
+    
+    return self;
+    
+}// initWithBezierTolerance
 
 
 - (NSString *) description
@@ -49,27 +69,16 @@
     NSMutableString *string = [NSMutableString string];
     
     for (SYGeometry *geometry in geometriesArray) {
-        if (geometry.geometryType == SquareType) {
+        if (geometry.geometryType == SquareType)
             [string appendString:@"type: Square\n"];
-        }
-        else if (geometry.geometryType == CircleType) {
+        else if (geometry.geometryType == CircleType)
             [string appendFormat:@"type: CircleType: (%f, %f)\n", geometry.rectGeometry.origin.x, geometry.rectGeometry.origin.y];
-        }
-        else if (geometry.geometryType == DiamondType) {
-            [string appendString:@"type: DiamondType\n"];
-        }
-        else if (geometry.geometryType == TriangleType) {
-            [string appendString:@"type: TriangleType\n"];
-        }
-        else if (geometry.geometryType == LinesType) {
+        else if (geometry.geometryType == LinesType)
             [string appendString:@"type: LinesType\n"];
-        }
-        else if (geometry.geometryType == BezierType) {
+        else if (geometry.geometryType == BezierType)
             [string appendString:@"type: BezierType\n"];
-        }
-        else if (geometry.geometryType == ArcType) {
+        else if (geometry.geometryType == ArcType)
             [string appendString:@"type: ArcType\n"];
-        }
     }
     
     return [NSString stringWithString:string];
@@ -95,14 +104,43 @@
 }// setOpenCurve
 
 
-#pragma mark - Adding Elements
+#pragma mark - Getter elements
 
-- (void) addGeometry:(SYGeometry *) geometry
+- (NSUInteger) geometriesCount
 {
-    [geometriesArray addObject:geometry];
+    return [geometriesArray count];
     
-}// addGeometry:
+}// geometriesCount
 
+
+- (SYGeometry *) getElement:(NSUInteger) index
+{
+    if ([geometriesArray count] <= index || !geometriesArray)
+        return nil;
+    
+    return [geometriesArray objectAtIndex:index];
+    
+}// getShape:
+
+
+- (SYGeometry *) getLastElement
+{
+    if ([geometriesArray count] == 0 || !geometriesArray)
+        return nil;
+    
+    return [geometriesArray objectAtIndex:[geometriesArray count]-1];
+    
+}// getLastShape
+
+
+- (NSArray *) geometries
+{
+    return [NSArray arrayWithArray:geometriesArray];
+    
+}// geometries
+
+
+#pragma mark - Adding Elements
 
 - (void) addPoint:(CGPoint) keyPoint
 {
@@ -162,51 +200,27 @@
 }// createPolygonalFromSegment
 
 
-- (void) addCurve:(NSArray *) curvePoints
+- (void) addCurvesForListPoints:(NSArray *) listPoints
 {
-    if (!curvePoints || [curvePoints count] == 0)
+    if (!listPoints || [listPoints count] == 0)
         return;
     
-    SYSegment *segment = [[SYSegment alloc]initWithPoint:[[curvePoints objectAtIndex:0]CGPointValue]
-                                                andPoint:[[curvePoints lastObject]CGPointValue]];
-    CGFloat longitude = [segment longitude];
+    SYBezierController *bezierController = [[SYBezierController alloc]init];
+    NSArray *curves = [bezierController buildBestBezierForListPoint:listPoints tolerance:toleranceBezier/*bezierTolerance*/];
     
-    if (longitude < 80.0) {
-        SYBezierController *bezierController = [[SYBezierController alloc]init];
-        NSArray *curves = [bezierController getCubicBezierPointsForListPoint:curvePoints];
-        
-        // Draw the resulting shape
-        SYGeometry *geometry = [[SYGeometry alloc]init];
-        
-        // Geometry parameters
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
-        
-        // Draw properties
-        geometry.lineWidth = 4.0;
-        geometry.fillColor = [UIColor clearColor];
-        geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-        
-        [geometriesArray addObject:geometry];
-    }
-    else {
-        SYBezierController *bezierController = [[SYBezierController alloc]init];
-        NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
-        
-        // Draw the resulting shape
-        SYGeometry *geometry = [[SYGeometry alloc]init];
-        
-        // Geometry parameters
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
-        
-        // Draw properties
-        geometry.lineWidth = 4.0;
-        geometry.fillColor = [UIColor clearColor];
-        geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-        
-        [geometriesArray addObject:geometry];
-    }
+    // Draw the resulting shape
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = BezierType;
+    geometry.pointArray = curves;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
     
 }// addCurve:
 
@@ -231,6 +245,26 @@
     [geometriesArray addObject:geometry];
     
 }// addCircle:
+
+
+- (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = CircleType;
+    geometry.rectGeometry = rect;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    geometry.transform = transform;
+    
+    [geometriesArray addObject:geometry];
+    
+}// addCircleWithRect:andTransform:
 
 
 - (void) addArc:(CGPoint) midPoint radius:(NSUInteger) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle clockwise:(BOOL) clockwise
@@ -259,25 +293,104 @@
 }// addArc:radius:startAngle:endAngle:clockwise:
 
 
-- (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
+- (void) addRectangle:(CGRect)rect
 {
     SYGeometry *geometry = [[SYGeometry alloc]init];
     
     // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = rect;
+    geometry.geometryType = SquareType;
+    [geometry setRectGeometry:rect];
+    geometry.pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                           nil];
     
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
     geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
-    geometry.transform = transform;
+    [geometriesArray addObject:geometry];
+    
+}// addRectangle:
+
+
+- (void) addRotateRectangle:(NSArray *) pointArray
+{
+    if ([pointArray count] > 5 ||
+        [pointArray count] < 4)
+        return;
+    
+    // Snap angles
+    // Get the four segments
+    CGPoint keyPointA = [[pointArray objectAtIndex:0]CGPointValue];
+    CGPoint keyPointB = [[pointArray objectAtIndex:1]CGPointValue];
+    CGPoint keyPointC = [[pointArray objectAtIndex:2]CGPointValue];
+    
+    SYSegment *segmentAB = [[SYSegment alloc]initWithPoint:keyPointA andPoint:keyPointB];
+    SYSegment *segmentBC = [[SYSegment alloc]initWithPoint:keyPointB andPoint:keyPointC];
+    
+    // Study the direction for next point
+    float cosAB = cosf([segmentBC angleRad]);
+    float possibleCosBC = cosf([segmentAB angleRad] + M_PI_2);
+    
+    if (cosAB * possibleCosBC < .0)
+        [segmentBC setFinalPointToDegree:[segmentAB angleDeg] - 90.0];
+    else
+        [segmentBC setFinalPointToDegree:[segmentAB angleDeg] + 90.0];
+    keyPointC = [segmentBC pointFn];
+
+    // Third Segment
+    CGPoint keyPointD = CGPointMake(keyPointC.x - (cosf([segmentAB angleRad]) * [segmentAB longitude]),
+                                    keyPointC.y + (sinf([segmentAB angleRad]) * [segmentAB longitude]));
+    
+    // Create geometry
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = LinesType;
+    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:keyPointA],
+                           [NSValue valueWithCGPoint:keyPointB],
+                           [NSValue valueWithCGPoint:keyPointC],
+                           [NSValue valueWithCGPoint:keyPointD], nil];
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
     
     [geometriesArray addObject:geometry];
     
-}// createCircleWithTransform
+}// addRotateRectangle:
 
+/*
+- (void) addRectangle:(CGRect) rect andTransform:(CGAffineTransform) transform
+{
+    SYGeometry *geometry = [[SYGeometry alloc]init];
+    
+    // Geometry parameters
+    geometry.geometryType = SquareRotateType;
+    [geometry setRectGeometry:rect];
+    geometry.pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
+                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                           nil];
+    geometry.transform = transform;
+    
+    // Draw properties
+    geometry.lineWidth = 4.0;
+    geometry.fillColor = [UIColor clearColor];
+    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
+    
+    [geometriesArray addObject:geometry];
+    [geometry release];
+    
+}// addRotateRectangle:andTransform:
+*/
 
 #pragma mark - Replace Elements
 
@@ -286,6 +399,7 @@
     if (!element)
         return;
     
+    // The new element is a list Points
     if ([element isKindOfClass:[NSArray class]] ||
         [element isKindOfClass:[NSMutableArray class]]) {
         
@@ -299,7 +413,7 @@
         
         if (longitude < 80.0) {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getCubicBezierPointsForListPoint:curvePoints];
+            NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:curvePoints];
             
             // Draw the resulting shape
             SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -318,7 +432,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getBestCurveForListPoint:curvePoints tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:toleranceBezier/*bezierTolerance*/];
             
             // Draw the resulting shape
             SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -336,6 +450,7 @@
                                        withObject:geometry];
         }
     }
+    // It's a segment
     else if ([element isKindOfClass:[SYSegment class]]) {
         
         if (!element)
@@ -360,6 +475,17 @@
         [geometriesArray replaceObjectAtIndex:index
                                    withObject:element];
     }
+    // It's a SYGeometry
+    else if ([element isKindOfClass:[SYGeometry class]]) {
+        
+        if (!element)
+            return;
+        
+        // Draw the resulting shape
+        SYGeometry *geometry = (SYGeometry *) element;        
+        [geometriesArray replaceObjectAtIndex:index
+                                   withObject:geometry];
+    }
         
 }// replaceElementAtIndex:withElement:
 
@@ -381,7 +507,7 @@
         
         if (longitude < 80.0) {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getCubicBezierPointsForListPoint:element];
+            NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:element];
             
             // Draw the resulting shape
             SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -400,7 +526,7 @@
         }
         else {
             SYBezierController *bezierController = [[SYBezierController alloc]init];
-            NSArray *curves = [bezierController getBestCurveForListPoint:element tolerance:0.01];
+            NSArray *curves = [bezierController buildBestBezierForListPoint:element tolerance:toleranceBezier/*bezierTolerance*/];
             
             // Draw the resulting shape
             SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -616,12 +742,15 @@
                     // Intersection between the two snap lines
                     CGPoint intersectPoint = [firstSegment pointIntersectWithSegment:lastSegment];
                     
-                    // Update geometries
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
-                                                  [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
-                    
-                    geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
-                                               [NSValue valueWithCGPoint:intersectPoint], nil];
+                    // If exist intersectPoint
+                    if (intersectPoint.x != 10000.0 || intersectPoint.y != 10000.0) {
+                        // Update geometries
+                        geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
+                                                      [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
+                        
+                        geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
+                                                   [NSValue valueWithCGPoint:intersectPoint], nil];
+                    }
                 }
             }
         }
@@ -638,9 +767,7 @@
     
     if ([firstShape geometryType] == LinesType &&
         [lastShape geometryType] == LinesType) {
-        
-        NSLog(@"lines - lines");
-        
+                
         CGPoint firstPointSt = [[[firstShape pointArray]objectAtIndex:0]CGPointValue];
         CGPoint lastPointFn = [[[lastShape pointArray]objectAtIndex:1]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
@@ -656,18 +783,18 @@
     else if ([firstShape geometryType] == BezierType &&
              [lastShape geometryType] == LinesType) {
         
-        NSLog(@"bezier - lines");
-        
-        CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
+        // Get the midPoint between the current bezier and the last point in the previous line
+        SYBezier *bezier = [[firstShape pointArray]objectAtIndex:0];        
+        CGPoint firstPointSt = bezier.t0Point;
         CGPoint lastPointFn = [[[lastShape pointArray]objectAtIndex:1]CGPointValue];
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
         
-        // Move the first point in the bezier curve
+        // Move the first point in the bezier curve to midpoint
         NSMutableArray *curves = [NSMutableArray arrayWithArray:firstShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:0]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t0Point"];
-        [curves replaceObjectAtIndex:0 withObject:dictMut];
+        SYBezier *bezierToChange = [curves objectAtIndex:0];
+        bezierToChange.t0Point = midPoint;
+        [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -687,11 +814,11 @@
     }
     else if ([firstShape geometryType] == LinesType &&
              [lastShape geometryType] == BezierType) {
-        
-        NSLog(@"lines - bezier");
-        
+                
         CGPoint firstPointSt = [[[firstShape pointArray]objectAtIndex:0]CGPointValue];
-        CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
+        
+        SYBezier *bezier = [[lastShape pointArray]lastObject];
+        CGPoint lastPointFn = bezier.t3Point;
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
 
@@ -701,9 +828,9 @@
         
         // Move the last point in the bezier
         NSMutableArray *curves = [NSMutableArray arrayWithArray:lastShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves lastObject]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t3Point"];
-        [curves replaceObjectAtIndex:[curves count]-1 withObject:dictMut];
+        SYBezier *newBezier = [curves lastObject];
+        newBezier.t3Point = midPoint;
+        [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -718,17 +845,19 @@
                 
     }
     else {
-        NSLog(@"bezier - bezier");
-        CGPoint firstPointSt = [[[[firstShape pointArray]objectAtIndex:0]valueForKey:@"t0Point"]CGPointValue];
-        CGPoint lastPointFn = [[[[lastShape pointArray]lastObject]valueForKey:@"t3Point"]CGPointValue];
+        // Get the midPoint between the current bezier and the last point in the previous line
+        SYBezier *bezier = [[firstShape pointArray]objectAtIndex:0];
+        SYBezier *lastBezier = [[lastShape pointArray]lastObject];
+        CGPoint firstPointSt = bezier.t0Point;
+        CGPoint lastPointFn = lastBezier.t3Point;
         CGPoint midPoint = [self midPointBetweenPoint:firstPointSt
                                              andPoint:lastPointFn];
         
-        // Move the first point in the bezier curve
+        // Move the first point in the bezier curve to midpoint
         NSMutableArray *curves = [NSMutableArray arrayWithArray:firstShape.pointArray];
-        NSMutableDictionary *dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves objectAtIndex:0]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t0Point"];
-        [curves replaceObjectAtIndex:0 withObject:dictMut];
+        SYBezier *bezierToChange = [curves objectAtIndex:0];
+        bezierToChange.t0Point = midPoint;
+        [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
         SYGeometry *geometry = [[SYGeometry alloc]init];
@@ -743,9 +872,9 @@
         
         // Move the last point in the bezier
         curves = [NSMutableArray arrayWithArray:lastShape.pointArray];
-        dictMut = [NSMutableDictionary dictionaryWithDictionary:[curves lastObject]];
-        [dictMut setValue:[NSValue valueWithCGPoint:midPoint] forKey:@"t3Point"];
-        [curves replaceObjectAtIndex:[curves count]-1 withObject:dictMut];
+        SYBezier *newBezier = [curves lastObject];
+        newBezier.t3Point = midPoint;
+        [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
         geometry = [[SYGeometry alloc]init];
@@ -762,33 +891,128 @@
 }// checkCloseShape
 
 
-#pragma mark - Get elements
-
-- (SYGeometry *) getElement:(NSUInteger) index
+- (void) forceContinuity:(float) sliderValue
 {
-    if ([geometriesArray count] <= index || !geometriesArray)
-        return nil;
-
-    return [geometriesArray objectAtIndex:index];
+    if (sliderValue == 0)
+        return;
     
-}// getShape:
-
-
-- (SYGeometry *) getLastElement
-{
-    if ([geometriesArray count] == 0 || !geometriesArray)
-        return nil;
-
-    return [geometriesArray objectAtIndex:[geometriesArray count]-1];
+    for (NSUInteger i = 1; i < [self geometriesCount]; i++) {
+        
+        // Get two contiguous shape and check if they're bezier
+        SYGeometry *firstShape = [self getElement:i-1];
+        SYGeometry *lastShape = [self getElement:i];
+        
+        if ([firstShape geometryType] == BezierType &&
+            [lastShape geometryType] == BezierType) {
+            
+            SYBezier *bezierFirst = [[firstShape pointArray]lastObject];
+            SYBezier *bezierLast = [[lastShape pointArray]objectAtIndex:0];
+            
+            // Get the three important points
+            CGPoint previousCP = bezierFirst.cPointB;
+            CGPoint pivotal = bezierLast.t0Point;
+            CGPoint currentCP = bezierLast.cPointA;
+            
+            // Study the angle between them
+            SYSegment *segmentA = [[SYSegment alloc]initWithPoint:pivotal andPoint:previousCP];
+            SYSegment *segmentB = [[SYSegment alloc]initWithPoint:pivotal andPoint:currentCP];
+            
+            CGFloat angleA = [segmentA angleDeg];
+            CGFloat angleB = [segmentB angleDeg];
+            CGFloat alfa = .0;
+            if (angleA > angleB)
+                alfa  = angleA - angleB;
+            else
+                alfa  = angleB - angleA;
+            
+            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            
+            if (alfa < 180.0) {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+            }
+            else {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+            }
+            
+            // Get the new points
+            bezierFirst.cPointB = [segmentA pointFn];
+            bezierLast.cPointA = [segmentB pointFn];
+        }
+    }
     
-}// getLastShape
-
-
-- (NSArray *) geometries
-{
-    return [NSArray arrayWithArray:geometriesArray];
+    // And if it's a close shape, the first bezier with the last one
+    if ([self closeCurve]) {
+        // Get two contiguous shape and check if they're bezier
+        SYGeometry *firstShape = [self getElement:0];
+        SYGeometry *lastShape = [self getElement:[self geometriesCount]-1];
+        
+        if ([firstShape geometryType] == BezierType &&
+            [lastShape geometryType] == BezierType) {
+            
+            SYBezier *bezierFirst = [[firstShape pointArray]objectAtIndex:0];
+            SYBezier *bezierLast = [[lastShape pointArray]lastObject];
+            
+            // Get the three important points
+            CGPoint previousCP = bezierFirst.cPointA;
+            CGPoint pivotal = bezierLast.t3Point;
+            CGPoint currentCP = bezierLast.cPointB;
+            
+            // Study the angle between them
+            SYSegment *segmentA = [[SYSegment alloc]initWithPoint:pivotal andPoint:previousCP];
+            SYSegment *segmentB = [[SYSegment alloc]initWithPoint:pivotal andPoint:currentCP];
+            
+            CGFloat angleA = [segmentA angleDeg];
+            CGFloat angleB = [segmentB angleDeg];
+            CGFloat alfa = .0;
+            if (angleA > angleB)
+                alfa  = angleA - angleB;
+            else
+                alfa  = angleB - angleA;
+            
+            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            
+            if (alfa < 180.0) {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+            }
+            else {
+                if (angleA > angleB) {
+                    [segmentA setFinalPointToDegree:angleA-beta];
+                    [segmentB setFinalPointToDegree:angleB+beta];
+                }
+                else {
+                    [segmentA setFinalPointToDegree:angleA+beta];
+                    [segmentB setFinalPointToDegree:angleB-beta];
+                }
+            }
+            
+            // Get the new points
+            bezierFirst.cPointA = [segmentA pointFn];
+            bezierLast.cPointB = [segmentB pointFn];
+        }
+    }
     
-}// geometries
+}// forceContinuity
 
 
 #pragma mark - Other Methods

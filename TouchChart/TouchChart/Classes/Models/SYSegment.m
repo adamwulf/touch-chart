@@ -22,6 +22,7 @@
 #define zero 1e-8
 #define inf 1e100
 #define equal(a,b)  (fabs((a)-(b))<zero)
+#define MODE_SNAP_0_90 1 // Snap just 0 and 90 degrees
 
 @synthesize pointSt;
 @synthesize pointFn;
@@ -82,38 +83,36 @@
 
 #pragma mark - Geometric Methods
 
-- (CGFloat) moduleTwo:(CGPoint)puntoA and:(CGPoint)puntoB
+- (CGFloat) moduleTwo:(CGPoint)pointA and:(CGPoint)pointB
 {
-    return (puntoB.x-puntoA.x)*(puntoB.x-puntoA.x) + (puntoB.y-puntoA.y)*(puntoB.y-puntoA.y);
+    return (pointB.x-pointA.x)*(pointB.x-pointA.x) + (pointB.y-pointA.y)*(pointB.y-pointA.y);
     
 }// moduleTwo:and:
 
 
-// Distance between two points (2D)
-- (CGFloat) distance:(CGPoint)puntoA and:(CGPoint)puntoB
+- (CGFloat) distance:(CGPoint)pointA and:(CGPoint)pointB
 {
-    return sqrt([self moduleTwo:puntoA and:puntoB]);
+    // Distance between two points (2D)
+    return sqrt([self moduleTwo:pointA and:pointB]);
 
 }// distance:and:
 
 
-// Vector longitude
 - (CGFloat) longitude
 {
+    // Vector longitude
     return sqrt([self moduleTwo:pointSt and:pointFn]);
     
 }// longitude
 
 
-// Distance between point C to segment
 - (CGFloat) distanceToPoint:(CGPoint) C
 {
-    // Punto en el segmento sobre el cual se calculará la distancia
-    // iniciamos en uno de los extremos
+    // Distance between point C to segment
+    
+    // Point of the segment used for calculate the distance
     CGPoint P = CGPointZero;
     
-    // Para prevenir una división por cero se calcula primero el denominador de
-    // la división. (Se puede dar si A y B son el mismo punto).
     CGFloat denominator = [self moduleTwo:pointSt and:pointFn];
 
     if(denominator !=0){
@@ -143,17 +142,17 @@
 }// distanceToPoint:
 
 
-// Intersect point between the current segment and other
 - (CGPoint) pointIntersectWithSegment:(SYSegment *) anotherSegment
 {
+    // Intersect point between the current segment and other
+    
     // Check if they have equal slope
     float fS1ope1 = (equal(self.pointSt.x, self.pointFn.x)) ? (inf) : ((self.pointFn.y - self.pointSt.y)/(self.pointFn.x - self.pointSt.x));
     float fS1ope2 = (equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x)) ? (inf) : ((anotherSegment.pointFn.y - anotherSegment.pointSt.y)/(anotherSegment.pointFn.x - anotherSegment.pointSt.x));
     
     // If the both slope are equal, never intersect, they're parallels lines
-    if (equal(fS1ope1, fS1ope2)) {
-        if (equal(self.pointSt.y - fS1ope1 * self.pointSt.x,
-                  anotherSegment.pointSt.y - fS1ope2 * anotherSegment.pointSt.x)) {
+    if (equal(fS1ope1, fS1ope2) || (equal(self.pointSt.x, self.pointFn.x) && equal(anotherSegment.pointSt.x, anotherSegment.pointFn.x))) {
+        if (equal(self.pointSt.y - fS1ope1 * self.pointSt.x, anotherSegment.pointSt.y - fS1ope2 * anotherSegment.pointSt.x)) {
             NSLog(@"LINE\n");
         }
         else
@@ -182,9 +181,11 @@
 
 #pragma mark - Angles Methods
 
-// Segment angle radian
+
 - (CGFloat) angleRad
 {
+    // Segment angle radian
+    
     CGFloat deltaX = pointFn.x - pointSt.x;
     CGFloat deltaY = pointFn.y - pointSt.y;
     
@@ -204,57 +205,91 @@
     
     // -/+ (from 0º to 90º)
     if (deltaY < .0 && deltaX > .0)
-        return (2*M_PI) + atanf(deltaY/deltaX);
+        return /*(2*M_PI)*/- atanf(deltaY/deltaX);
     
     // -/- (from 90º to 180º)
     if (deltaY < .0 && deltaX < .0)
-        return M_PI + atanf(deltaY/deltaX);
+        return M_PI - atanf(deltaY/deltaX);
     
     // +/- (from 180º to 270º)
     if (deltaY > .0 && deltaX < .0)
-        return M_PI + atanf(deltaY/deltaX);
+        return M_PI - atanf(deltaY/deltaX);
     
     // +/+ (from 180º to 270º)
     if (deltaY > .0 && deltaX > .0)
-        return atanf(deltaY/deltaX);
+        return (2*M_PI) - atanf(deltaY/deltaX);
 
     return atanf(deltaY/deltaX);
     
 }// angleRad
 
 
-// Segment angle degrees
 - (CGFloat) angleDeg
 {
+    // Segment angle degrees
     CGFloat angle = [self angleRad];
     return (angle/M_PI) * 180.0;
     
 }// angleDeg
 
 
-// Snap pivotal around the start point
 - (void) setStartPointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the start point
+    CGFloat longitude = [self longitude];
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
     // sen/cos = tan ----> sen = tan * cos
-    if (angleNormalize == .0 || angleNormalize == 360.0)
+    if (angleNormalize == .0 || angleNormalize == 360.0) {
         pointSt.y = pointFn.y;
-    else if (angleNormalize == 90.0 || angleNormalize == 270.0)
+        pointSt.x = pointFn.x - longitude;
+    }
+    else if (angleNormalize == 180.0) {
+        pointSt.y = pointFn.y;
+        pointSt.x = pointFn.x + longitude;
+    }
+    else if (angleNormalize == 90.0) {
         pointSt.x = pointFn.x;
+        pointSt.y = pointFn.y - longitude;
+    }
+    else if (angleNormalize == 270.0) {
+        pointSt.x = pointFn.x;
+        pointSt.y = pointFn.y + longitude;
+    }
     else {
-        // sen/cos = tan ----> sen = tan * cos
-        CGFloat deltaY = (pointSt.x - pointFn.x) * tanf(angleRad);
-        pointSt.y = deltaY + pointFn.y;
-    }   
+        float tang = tan(angleRad);
+        float numX = .0;
+        float onePlusTang = 1 + powf(tang,2);
+        if (angle > .0 && angle < 90.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2))/**/+ sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) /**/+ ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 90.0 && angle < 180.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 180.0 && angle < 270.0) {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else {
+            numX = pointFn.x + (pointFn.x * powf(tang, 2)) + sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointSt.x = numX/onePlusTang;
+            pointSt.y = pointFn.y - (pointFn.x * tang) + ((pointFn.x*tang)/onePlusTang) + ((pointFn.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+    }
     
 }// setStartPointToDegree:
 
 
-// Snap pivotal around the middle point
 - (void) setMiddlePointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the middle point
+    
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
 
@@ -296,31 +331,89 @@
 }// setMiddlePointToDegree
 
 
-// Snap pivotal around the final point
 - (void) setFinalPointToDegree:(CGFloat) angle
 {
+    // Snap pivotal around the final point
+    CGFloat longitude = [self longitude];
     CGFloat angleNormalize = [self normalizeAngleDeg:angle];
     CGFloat angleRad = (angleNormalize/90.0) * M_PI_2;
     
     // sin/cos = tan ----> sin = tan * cos
-    if (angleNormalize == .0 || angleNormalize == 360.0)
+    if (angleNormalize == .0 || angleNormalize == 360.0) {
         pointFn.y = pointSt.y;
-    else if (angleNormalize == 90.0 || angleNormalize == 270.0)
+        pointFn.x = pointSt.x + longitude;
+    }
+    else if (angleNormalize == 90.0) {
         pointFn.x = pointSt.x;
+        pointFn.y = pointSt.y + longitude;
+    }
+    else if (angleNormalize == 270.0) {
+        pointFn.x = pointSt.x;
+        pointFn.y = pointSt.y - longitude;
+    }
     else {
-        CGFloat deltaY = (pointFn.x - pointSt.x) * tan(angleRad);
-        pointFn.y = pointSt.y + deltaY;
+        float tang = tan(angleRad);
+        float numX = .0;
+        float onePlusTang = 1 + powf(tang,2);
+        if (angle > .0 && angle < 90.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2))/**/+ sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) /**/- ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 90.0 && angle < 180.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else if (angle > 180.0 && angle < 270.0) {
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) - sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) + ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
+        else { // CREO QUE BIEN
+            numX = pointSt.x + (pointSt.x * powf(tang, 2)) + sqrtf(powf(longitude, 2)+powf(longitude * tang, 2));
+            pointFn.x = numX/onePlusTang;
+            pointFn.y = pointSt.y - (pointSt.x * tang) + ((pointSt.x*tang)/onePlusTang) + ((pointSt.x*powf(tang,3))/onePlusTang) - ((tang * sqrtf(powf(longitude, 2) * onePlusTang))/onePlusTang);
+        }
     }
     
 }// setFinalPointToDegree:
 
 
-// Check angle to snap
 - (void) snapAngleChangingStartPoint
 {
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
     
+#if MODE_SNAP_0_90
+    if ([self isSnapAngle]) {
+        if (angleDeg > .0) {
+            if (angleDeg < 15.0)
+                [self setStartPointToDegree:.0];
+            else if (angleDeg > 75.0 && angleDeg < 90.0 + 15.0)
+                [self setStartPointToDegree:90.0];
+            else if (angleDeg > 90.0 + 75.0 && angleDeg < 180.0 + 15.0)
+                [self setStartPointToDegree:180.0];
+            else if (angleDeg > 180.0 + 75.0 && angleDeg < 270.0 + 15.0)
+                [self setStartPointToDegree:270.0];
+            else if (angleDeg > 270.0 + 75.0)
+                [self setStartPointToDegree:360.0];
+        }
+        else {
+            if (angleDeg > -15.0)
+                [self setStartPointToDegree:.0];
+            else if (angleDeg < -75.0 && angleDeg > -90.0 - 15.0)
+                [self setStartPointToDegree:-90.0];
+            else if (angleDeg < -90.0 - 75.0 && angleDeg > -180.0 - 15.0)
+                [self setStartPointToDegree:-180.0];
+            else if (angleDeg < -180.0 - 75.0 && angleDeg > -270.0 - 15.0)
+                [self setStartPointToDegree:-270.0];
+            else if (angleDeg < -270.0 - 75.0)
+                [self setStartPointToDegree:-360.0];
+        }
+    }
+    
+#else
     if ([self isSnapAngle]) {
         if (angleDeg > .0) {
             if (angleDeg < 15.0)
@@ -331,30 +424,30 @@
                 [self setStartPointToDegree:45.0];
             else if (angleDeg < 75.0)
                 [self setStartPointToDegree:60.0];
-            else if (angleDeg < 90.0 + 15.0)
+            else if (angleDeg < 105.0)
                 [self setStartPointToDegree:90.0];
-            else if (angleDeg < 90.0 + 37.5)
-                [self setStartPointToDegree:90.0 + 30.0];
-            else if (angleDeg < 90.0 + 52.5)
-                [self setStartPointToDegree:90.0 + 45.0];
-            else if (angleDeg < 90.0 + 75.0)
-                [self setStartPointToDegree:90.0 + 60.0];
-            else if (angleDeg < 180.0 + 15.0)
+            else if (angleDeg < 127.5)
+                [self setStartPointToDegree:120.0];
+            else if (angleDeg < 142.5)
+                [self setStartPointToDegree:135.0];
+            else if (angleDeg < 165.0)
+                [self setStartPointToDegree:150.0];
+            else if (angleDeg < 195.0)
                 [self setStartPointToDegree:180.0];
-            else if (angleDeg < 180.0 + 37.5)
-                [self setStartPointToDegree:180.0 + 30.0];
-            else if (angleDeg < 180.0 + 52.5)
-                [self setStartPointToDegree:180.0 + 45.0];
-            else if (angleDeg < 180.0 + 75.0)
-                [self setStartPointToDegree:180.0 + 60.0];
-            else if (angleDeg < 270.0 + 15.0)
+            else if (angleDeg < 217.5)
+                [self setStartPointToDegree:210.0];
+            else if (angleDeg < 232.5)
+                [self setStartPointToDegree:225.0];
+            else if (angleDeg < 255.0)
+                [self setStartPointToDegree:240.0];
+            else if (angleDeg < 285.0)
                 [self setStartPointToDegree:270.0];
-            else if (angleDeg < 270.0 + 37.5)
-                [self setStartPointToDegree:270.0 + 30.0];
-            else if (angleDeg < 270.0 + 52.5)
-                [self setStartPointToDegree:270.0 + 45.0];
-            else if (angleDeg < 270.0 + 75.0)
-                [self setStartPointToDegree:270.0 + 60.0];
+            else if (angleDeg < 307.5)
+                [self setStartPointToDegree:300.0];
+            else if (angleDeg < 322.5)
+                [self setStartPointToDegree:315.0];
+            else if (angleDeg < 345.0)
+                [self setStartPointToDegree:330.0];
             else
                 [self setStartPointToDegree:360.0];
         }
@@ -367,43 +460,73 @@
                 [self setStartPointToDegree:-45.0];
             else if (angleDeg > -75.0)
                 [self setStartPointToDegree:-60.0];
-            else if (angleDeg > -90.0 - 15.0)
+            else if (angleDeg > -105.0)
                 [self setStartPointToDegree:-90.0];
-            else if (angleDeg > -90.0 - 37.5)
-                [self setStartPointToDegree:-90.0 - 30.0];
-            else if (angleDeg > -90.0 - 52.5)
-                [self setStartPointToDegree:-90.0 - 45.0];
-            else if (angleDeg > -90.0 - 75.0)
-                [self setStartPointToDegree:-90.0 - 60.0];
-            else if (angleDeg > -180.0 - 15.0)
+            else if (angleDeg > -127.5)
+                [self setStartPointToDegree:-120.0];
+            else if (angleDeg > -142.5)
+                [self setStartPointToDegree:-135.0];
+            else if (angleDeg > -165.0)
+                [self setStartPointToDegree:-150.0];
+            else if (angleDeg > -195.0)
                 [self setStartPointToDegree:-180.0];
-            else if (angleDeg > -180.0 - 37.5)
-                [self setStartPointToDegree:-180.0 - 30.0];
-            else if (angleDeg > -180.0 - 52.5)
-                [self setStartPointToDegree:-180.0 - 45.0];
-            else if (angleDeg > -180.0 - 75.0)
-                [self setStartPointToDegree:-180.0 - 60.0];
-            else if (angleDeg > -270.0 - 15.0)
+            else if (angleDeg > -217.5)
+                [self setStartPointToDegree:-210.0];
+            else if (angleDeg > -232.5)
+                [self setStartPointToDegree:-225.0];
+            else if (angleDeg > -255.0)
+                [self setStartPointToDegree:-240.0];
+            else if (angleDeg > -285.0)
                 [self setStartPointToDegree:-270.0];
-            else if (angleDeg > -270.0 - 37.5)
-                [self setStartPointToDegree:-270.0 - 30.0];
-            else if (angleDeg > -270.0 - 52.5)
-                [self setStartPointToDegree:-270.0 - 45.0];
-            else if (angleDeg > -270.0 - 75.0)
-                [self setStartPointToDegree:-270.0 - 60.0];
+            else if (angleDeg > -307.5)
+                [self setStartPointToDegree:-300.0];
+            else if (angleDeg > -322.5)
+                [self setStartPointToDegree:-315.0];
+            else if (angleDeg > -345.0)
+                [self setStartPointToDegree:-330.0];
             else
                 [self setStartPointToDegree:-360.0];
         }
     }
-    
+#endif
+
 }// snapAngleChangingStartPoint
 
 
-// Check angle to snap
 - (void) snapAngleChangingFromMiddlePoint
 {
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
+    
+#if MODE_SNAP_0_90
+    if ([self isSnapAngle]) {
+        if (angleDeg > .0) {
+            if (angleDeg < 15.0)
+                [self setMiddlePointToDegree:.0];
+            else if (angleDeg > 75.0 && angleDeg < 90.0 + 15.0)
+                [self setMiddlePointToDegree:90.0];
+            else if (angleDeg > 90.0 + 75.0 && angleDeg < 180.0 + 15.0)
+                [self setMiddlePointToDegree:180.0];
+            else if (angleDeg > 180.0 + 75.0 && angleDeg < 270.0 + 15.0)
+                [self setMiddlePointToDegree:270.0];
+            else if (angleDeg > 270.0 + 75.0)
+                [self setMiddlePointToDegree:360.0];
+        }
+        else {
+            if (angleDeg > -15.0)
+                [self setMiddlePointToDegree:.0];
+            else if (angleDeg < -75.0 && angleDeg > -90.0 - 15.0)
+                [self setMiddlePointToDegree:-90.0];
+            else if (angleDeg < -90.0 - 75.0 && angleDeg > -180.0 - 15.0)
+                [self setMiddlePointToDegree:-180.0];
+            else if (angleDeg < -180.0 - 75.0 && angleDeg > -270.0 - 15.0)
+                [self setMiddlePointToDegree:-270.0];
+            else if (angleDeg < -270.0 - 75.0)
+                [self setMiddlePointToDegree:-360.0];
+        }
+    }
+    
+#else
     if ([self isSnapAngle]) {
         if (angleDeg > .0) {
             if (angleDeg < 15.0)
@@ -414,30 +537,30 @@
                 [self setMiddlePointToDegree:45.0];
             else if (angleDeg < 75.0)
                 [self setMiddlePointToDegree:60.0];
-            else if (angleDeg < 90.0 + 15.0)
+            else if (angleDeg < 105.0)
                 [self setMiddlePointToDegree:90.0];
-            else if (angleDeg < 90.0 + 37.5)
-                [self setMiddlePointToDegree:90.0 + 30.0];
-            else if (angleDeg < 90.0 + 52.5)
-                [self setMiddlePointToDegree:90.0 + 45.0];
-            else if (angleDeg < 90.0 + 75.0)
-                [self setMiddlePointToDegree:90.0 + 60.0];
-            else if (angleDeg < 180.0 + 15.0)
+            else if (angleDeg < 127.5)
+                [self setMiddlePointToDegree:120.0];
+            else if (angleDeg < 142.5)
+                [self setMiddlePointToDegree:135.0];
+            else if (angleDeg < 165.0)
+                [self setMiddlePointToDegree:150.0];
+            else if (angleDeg < 195.0)
                 [self setMiddlePointToDegree:180.0];
-            else if (angleDeg < 180.0 + 37.5)
-                [self setMiddlePointToDegree:180.0 + 30.0];
-            else if (angleDeg < 180.0 + 52.5)
-                [self setMiddlePointToDegree:180.0 + 45.0];
-            else if (angleDeg < 180.0 + 75.0)
-                [self setMiddlePointToDegree:180.0 + 60.0];
-            else if (angleDeg < 270.0 + 15.0)
+            else if (angleDeg < 217.5)
+                [self setMiddlePointToDegree:210.0];
+            else if (angleDeg < 232.5)
+                [self setMiddlePointToDegree:225.0];
+            else if (angleDeg < 255.0)
+                [self setMiddlePointToDegree:240.0];
+            else if (angleDeg < 285.0)
                 [self setMiddlePointToDegree:270.0];
-            else if (angleDeg < 270.0 + 37.5)
-                [self setMiddlePointToDegree:270.0 + 30.0];
-            else if (angleDeg < 270.0 + 52.5)
-                [self setMiddlePointToDegree:270.0 + 45.0];
-            else if (angleDeg < 270.0 + 75.0)
-                [self setMiddlePointToDegree:270.0 + 60.0];
+            else if (angleDeg < 307.5)
+                [self setMiddlePointToDegree:300.0];
+            else if (angleDeg < 322.5)
+                [self setMiddlePointToDegree:315.0];
+            else if (angleDeg < 345.0)
+                [self setMiddlePointToDegree:330.0];
             else
                 [self setMiddlePointToDegree:360.0];
         }
@@ -450,44 +573,73 @@
                 [self setMiddlePointToDegree:-45.0];
             else if (angleDeg > -75.0)
                 [self setMiddlePointToDegree:-60.0];
-            else if (angleDeg > -90.0 - 15.0)
+            else if (angleDeg > -105.0)
                 [self setMiddlePointToDegree:-90.0];
-            else if (angleDeg > -90.0 - 37.5)
-                [self setMiddlePointToDegree:-90.0 - 30.0];
-            else if (angleDeg > -90.0 - 52.5)
-                [self setMiddlePointToDegree:-90.0 - 45.0];
-            else if (angleDeg > -90.0 - 75.0)
-                [self setMiddlePointToDegree:-90.0 - 60.0];
-            else if (angleDeg > -180.0 - 15.0)
+            else if (angleDeg > -127.5)
+                [self setMiddlePointToDegree:-120.0];
+            else if (angleDeg > -142.5)
+                [self setMiddlePointToDegree:-135.0];
+            else if (angleDeg > -165.0)
+                [self setMiddlePointToDegree:-150.0];
+            else if (angleDeg > -195.0)
                 [self setMiddlePointToDegree:-180.0];
-            else if (angleDeg > -180.0 - 37.5)
-                [self setMiddlePointToDegree:-180.0 - 30.0];
-            else if (angleDeg > -180.0 - 52.5)
-                [self setMiddlePointToDegree:-180.0 - 45.0];
-            else if (angleDeg > -180.0 - 75.0)
-                [self setMiddlePointToDegree:-180.0 - 60.0];
-            else if (angleDeg > -270.0 - 15.0)
+            else if (angleDeg > -217.5)
+                [self setMiddlePointToDegree:-210.0];
+            else if (angleDeg > -232.5)
+                [self setMiddlePointToDegree:-225.0];
+            else if (angleDeg > -255.0)
+                [self setMiddlePointToDegree:-240.0];
+            else if (angleDeg > -285.0)
                 [self setMiddlePointToDegree:-270.0];
-            else if (angleDeg > -270.0 - 37.5)
-                [self setMiddlePointToDegree:-270.0 - 30.0];
-            else if (angleDeg > -270.0 - 52.5)
-                [self setMiddlePointToDegree:-270.0 - 45.0];
-            else if (angleDeg > -270.0 - 75.0)
-                [self setMiddlePointToDegree:-270.0 - 60.0];
+            else if (angleDeg > -307.5)
+                [self setMiddlePointToDegree:-300.0];
+            else if (angleDeg > -322.5)
+                [self setMiddlePointToDegree:-315.0];
+            else if (angleDeg > -345.0)
+                [self setMiddlePointToDegree:-330.0];
             else
                 [self setMiddlePointToDegree:-360.0];
         }
     }
-    
+#endif
+        
 }// snapAngleChangingFromMiddlePoint
 
 
-// Check angle to snap
 - (void) snapAngleChangingFinalPoint
-{    
-    // Si es distinto de .0 o 90.0, y ajusta al punto B
+{
+    // Check angle to snap
     CGFloat angleDeg = [self angleDeg];
     
+#if MODE_SNAP_0_90
+    if ([self isSnapAngle]) {
+        if (angleDeg > .0) {
+            if (angleDeg < 15.0)
+                [self setFinalPointToDegree:.0];
+            else if (angleDeg > 75.0 && angleDeg < 90.0 + 15.0)
+                [self setFinalPointToDegree:90.0];
+            else if (angleDeg > 90.0 + 75.0 && angleDeg < 180.0 + 15.0)
+                [self setFinalPointToDegree:180.0];
+            else if (angleDeg > 180.0 + 75.0 && angleDeg < 270.0 + 15.0)
+                [self setFinalPointToDegree:270.0];
+            else if (angleDeg > 270.0 + 75.0)
+                [self setFinalPointToDegree:360.0];
+        }
+        else {
+            if (angleDeg > -15.0)
+                [self setFinalPointToDegree:.0];
+            else if (angleDeg < -75.0 && angleDeg > -90.0 - 15.0)
+                [self setFinalPointToDegree:-90.0];
+            else if (angleDeg < -90.0 - 75.0 && angleDeg > -180.0 - 15.0)
+                [self setFinalPointToDegree:-180.0];
+            else if (angleDeg < -180.0 - 75.0 && angleDeg > -270.0 - 15.0)
+                [self setFinalPointToDegree:-270.0];
+            else if (angleDeg < -270.0 - 75.0)
+                [self setFinalPointToDegree:-360.0];
+        }
+    }
+    
+#else
     if ([self isSnapAngle]) {
         if (angleDeg > .0) {
             if (angleDeg < 15.0)
@@ -498,30 +650,30 @@
                 [self setFinalPointToDegree:45.0];
             else if (angleDeg < 75.0)
                 [self setFinalPointToDegree:60.0];
-            else if (angleDeg < 90.0 + 15.0)
+            else if (angleDeg < 105.0)
                 [self setFinalPointToDegree:90.0];
-            else if (angleDeg < 90.0 + 37.5)
-                [self setFinalPointToDegree:90.0 + 30.0];
-            else if (angleDeg < 90.0 + 52.5)
-                [self setFinalPointToDegree:90.0 + 45.0];
-            else if (angleDeg < 90.0 + 75.0)
-                [self setFinalPointToDegree:90.0 + 60.0];
-            else if (angleDeg < 180.0 + 15.0)
+            else if (angleDeg < 127.5)
+                [self setFinalPointToDegree:120.0];
+            else if (angleDeg < 142.5)
+                [self setFinalPointToDegree:135.0];
+            else if (angleDeg < 165.0)
+                [self setFinalPointToDegree:150.0];
+            else if (angleDeg < 195.0)
                 [self setFinalPointToDegree:180.0];
-            else if (angleDeg < 180.0 + 37.5)
-                [self setFinalPointToDegree:180.0 + 30.0];
-            else if (angleDeg < 180.0 + 52.5)
-                [self setFinalPointToDegree:180.0 + 45.0];
-            else if (angleDeg < 180.0 + 75.0)
-                [self setFinalPointToDegree:180.0 + 60.0];
-            else if (angleDeg < 270.0 + 15.0)
+            else if (angleDeg < 217.5)
+                [self setFinalPointToDegree:210.0];
+            else if (angleDeg < 232.5)
+                [self setFinalPointToDegree:225.0];
+            else if (angleDeg < 255.0)
+                [self setFinalPointToDegree:240.0];
+            else if (angleDeg < 285.0)
                 [self setFinalPointToDegree:270.0];
-            else if (angleDeg < 270.0 + 37.5)
-                [self setFinalPointToDegree:270.0 + 30.0];
-            else if (angleDeg < 270.0 + 52.5)
-                [self setFinalPointToDegree:270.0 + 45.0];
-            else if (angleDeg < 270.0 + 75.0)
-                [self setFinalPointToDegree:270.0 + 60.0];
+            else if (angleDeg < 307.5)
+                [self setFinalPointToDegree:300.0];
+            else if (angleDeg < 322.5)
+                [self setFinalPointToDegree:315.0];
+            else if (angleDeg < 345.0)
+                [self setFinalPointToDegree:330.0];
             else
                 [self setFinalPointToDegree:360.0];
         }
@@ -534,41 +686,42 @@
                 [self setFinalPointToDegree:-45.0];
             else if (angleDeg > -75.0)
                 [self setFinalPointToDegree:-60.0];
-            else if (angleDeg > -90.0 - 15.0)
+            else if (angleDeg > -105.0)
                 [self setFinalPointToDegree:-90.0];
-            else if (angleDeg > -90.0 - 37.5)
-                [self setFinalPointToDegree:-90.0 - 30.0];
-            else if (angleDeg > -90.0 - 52.5)
-                [self setFinalPointToDegree:-90.0 - 45.0];
-            else if (angleDeg > -90.0 - 75.0)
-                [self setFinalPointToDegree:-90.0 - 60.0];
-            else if (angleDeg > -180.0 - 15.0)
+            else if (angleDeg > -127.5)
+                [self setFinalPointToDegree:-120.0];
+            else if (angleDeg > -142.5)
+                [self setFinalPointToDegree:-135.0];
+            else if (angleDeg > -165.0)
+                [self setFinalPointToDegree:-150.0];
+            else if (angleDeg > -195.0)
                 [self setFinalPointToDegree:-180.0];
-            else if (angleDeg > -180.0 - 37.5)
-                [self setFinalPointToDegree:-180.0 - 30.0];
-            else if (angleDeg > -180.0 - 52.5)
-                [self setFinalPointToDegree:-180.0 - 45.0];
-            else if (angleDeg > -180.0 - 75.0)
-                [self setFinalPointToDegree:-180.0 - 60.0];
-            else if (angleDeg > -270.0 - 15.0)
+            else if (angleDeg > -217.5)
+                [self setFinalPointToDegree:-210.0];
+            else if (angleDeg > -232.5)
+                [self setFinalPointToDegree:-225.0];
+            else if (angleDeg > -255.0)
+                [self setFinalPointToDegree:-240.0];
+            else if (angleDeg > -285.0)
                 [self setFinalPointToDegree:-270.0];
-            else if (angleDeg > -270.0 - 37.5)
-                [self setFinalPointToDegree:-270.0 - 30.0];
-            else if (angleDeg > -270.0 - 52.5)
-                [self setFinalPointToDegree:-270.0 - 45.0];
-            else if (angleDeg > -270.0 - 75.0)
-                [self setFinalPointToDegree:-270.0 - 60.0];
+            else if (angleDeg > -307.5)
+                [self setFinalPointToDegree:-300.0];
+            else if (angleDeg > -322.5)
+                [self setFinalPointToDegree:-315.0];
+            else if (angleDeg > -345.0)
+                [self setFinalPointToDegree:-330.0];
             else
                 [self setFinalPointToDegree:-360.0];
         }
     }
-        
+#endif
+    
 }// snapAngleChangingFinalPoint
 
 
-// do the segment need to snap?
 - (BOOL) isSnapAngle
 {
+    // do the segment need to snap?
     CGFloat angleDeg = [self angleDeg];
 
     // Si no esta ajustado responde que no

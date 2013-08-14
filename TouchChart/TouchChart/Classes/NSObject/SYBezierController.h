@@ -10,13 +10,13 @@
 
 @interface SYBezierController : NSObject
 
-// Getter Curves
+// Build Curves
 - (NSArray *) addPointBasedQuadraticBezier:(NSArray *) listPoints;
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints;
-- (NSArray *) getCubicBezierPointsForListPoint:(NSArray *) listPoints splitIn:(NSUInteger) ntimes;
-- (NSArray *) getBestCurveForListPoint:(NSArray *) listPoints tolerance:(CGFloat) ratioError;
+- (NSArray *) buildCubicBezierPointsForListPoint:(NSArray *) listPoints;
+- (NSArray *) buildCubicBezierPointsForListPoint:(NSArray *) listPoints splitIn:(NSUInteger) ntimes;
+- (NSArray *) buildBestBezierForListPoint:(NSArray *) listPoints tolerance:(CGFloat) ratioError;
 
-// Getter Parameters
+// Error
 - (CGFloat) getErrorRatioListPoint:(NSArray *)listPoints splitIn:(CGFloat)i;
 
 @end

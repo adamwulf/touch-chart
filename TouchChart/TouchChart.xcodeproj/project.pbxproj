@@ -21,6 +21,8 @@
 		6691AA59150DCFBD00D4A47A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
 		6691AA61150DCFBD00D4A47A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */; };
 		6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA63150DCFBD00D4A47A /* TouchChartTests.m */; };
+		66A53A04163F1A1C003EAEC0 /* shape.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A03163F1A1C003EAEC0 /* shape.png */; };
+		66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A06163F1A20003EAEC0 /* shape@2x.png */; };
 		ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */; };
 		ED0BE5C315F0C7AE00EBE866 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */; };
 		ED0BE5C515F0C7C300EBE866 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C415F0C7C300EBE866 /* CFNetwork.framework */; };
@@ -48,6 +50,7 @@
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
 		ED92334615618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
 		ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
+		EDA4E76E166789E3000802C1 /* SYBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = EDA4E76D166789E2000802C1 /* SYBezier.m */; };
 		EDE9DE1F1573EF5D009CC5EA /* SYPaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */; };
 		EDF3BD3115796AC70026B9C2 /* SYSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3BD3015796AC70026B9C2 /* SYSegment.m */; };
 /* End PBXBuildFile section */
@@ -84,6 +87,8 @@
 		6691AA62150DCFBD00D4A47A /* TouchChartTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchChartTests.h; sourceTree = "<group>"; };
 		6691AA63150DCFBD00D4A47A /* TouchChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchChartTests.m; sourceTree = "<group>"; };
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shape.png; sourceTree = "<group>"; };
+		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shape@2x.png"; sourceTree = "<group>"; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
 		ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitTestController.m; path = Classes/NSObject/SYUnitTestController.m; sourceTree = "<group>"; };
 		ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -118,6 +123,8 @@
 		ED92333C156180F600B0F505 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ED92334415618F9E00B0F505 /* SYVectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYVectorView.h; path = Classes/Views/SYVectorView.h; sourceTree = "<group>"; };
 		ED92334515618F9F00B0F505 /* SYVectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYVectorView.m; path = Classes/Views/SYVectorView.m; sourceTree = "<group>"; };
+		EDA4E76C166789E2000802C1 /* SYBezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYBezier.h; path = Classes/Models/SYBezier.h; sourceTree = "<group>"; };
+		EDA4E76D166789E2000802C1 /* SYBezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYBezier.m; path = Classes/Models/SYBezier.m; sourceTree = "<group>"; };
 		EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYPaintView.h; path = Classes/Views/SYPaintView.h; sourceTree = "<group>"; };
 		EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYPaintView.m; path = Classes/Views/SYPaintView.m; sourceTree = "<group>"; };
 		EDF3BD2F15796AC70026B9C2 /* SYSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYSegment.h; path = Classes/Models/SYSegment.h; sourceTree = "<group>"; };
@@ -163,6 +170,8 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
+				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
+				66A53A03163F1A1C003EAEC0 /* shape.png */,
 				6691AA3B150DCFBC00D4A47A /* TouchChart */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -196,6 +205,7 @@
 		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
 			isa = PBXGroup;
 			children = (
+				ED66A49316513D59002F427B /* Test Classes */,
 				ED92333E1561825D00B0F505 /* View Controllers */,
 				ED9233351561774000B0F505 /* Views */,
 				ED10585815640D9C00B10043 /* Model */,
@@ -273,6 +283,8 @@
 				ED10586E15641F8500B10043 /* SYGeometry.m */,
 				EDF3BD2F15796AC70026B9C2 /* SYSegment.h */,
 				EDF3BD3015796AC70026B9C2 /* SYSegment.m */,
+				EDA4E76C166789E2000802C1 /* SYBezier.h */,
+				EDA4E76D166789E2000802C1 /* SYBezier.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -288,16 +300,25 @@
 			name = "Paint Code";
 			sourceTree = "<group>";
 		};
+		ED66A49316513D59002F427B /* Test Classes */ = {
+			isa = PBXGroup;
+			children = (
+				ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */,
+				ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */,
+				ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */,
+				ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */,
+				ED12DD3815F537BA00FBDF00 /* Paint Code */,
+			);
+			name = "Test Classes";
+			sourceTree = "<group>";
+		};
 		ED9233351561774000B0F505 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				ED12DD3815F537BA00FBDF00 /* Paint Code */,
 				EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */,
 				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
-				ED2592E615BECB4000DC1DF0 /* SYBezierController.h */,
-				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -307,10 +328,8 @@
 			children = (
 				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
 				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
-				ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */,
-				ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */,
-				ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */,
-				ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */,
+				ED2592E615BECB4000DC1DF0 /* SYBezierController.h */,
+				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -417,6 +436,8 @@
 				ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */,
 				ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */,
 				ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */,
+				66A53A04163F1A1C003EAEC0 /* shape.png in Resources */,
+				66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +485,7 @@
 				ED10653C15FF5E71005C233F /* SYShape.m in Sources */,
 				ED669884160A30B900115E68 /* SYSaveMessageView.m in Sources */,
 				ED256D26160B44980009C871 /* SYTableBase.m in Sources */,
+				EDA4E76E166789E3000802C1 /* SYBezier.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
