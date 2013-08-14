@@ -52,13 +52,13 @@ typedef enum {
 @property (nonatomic) CGFloat lineWidth;
 @property (nonatomic, strong) UIColor *fillColor;
 @property (nonatomic, strong) UIColor *strokeColor;
-@property (nonatomic) CGAffineTransform transform;
 
 
 // init
 - (id) initWithBezierCurves:(NSArray*)curves;
 - (id) initSquareInRect:(CGRect)rect;
 - (id) initCircleInRect:(CGRect)rect;
+- (id) initCircleInRect:(CGRect)rect andTransform:(CGAffineTransform)transform;
 - (id) initWithSegmentFrom:(CGPoint)point1 to:(CGPoint)point2;
 - (id) initWithRotatedRectangleFrom:(CGPoint)point1 to:(CGPoint)point2 to:(CGPoint)point3 to:(CGPoint)point4;
 - (id) initWithSegment:(SYSegment*) segment;

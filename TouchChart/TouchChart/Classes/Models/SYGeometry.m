@@ -19,8 +19,6 @@
 @synthesize fillColor;
 @synthesize strokeColor;
 
-@synthesize transform;
-
 
 - (NSString *) description
 {
@@ -59,16 +57,21 @@
     
 }// init
 
-- (id) initCircleInRect:(CGRect)rect
-{
+- (id) initCircleInRect:(CGRect)rect andTransform:(CGAffineTransform)_transform{
     if (self = [self init]) {
         // Draw properties
         geometryType = CircleType;
         rectGeometry = rect;
+        transform = _transform;
     }
     
     return self;
-    
+}
+
+
+- (id) initCircleInRect:(CGRect)rect
+{
+    return [self initCircleInRect:rect andTransform:CGAffineTransformIdentity];
 }// init
 
 - (id) initSquareInRect:(CGRect)rect
@@ -211,7 +214,7 @@
         // create a oval bezier path using the rect
         UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:rectGeometry];
         [path setLineWidth:[self lineWidth]];
-        [path applyTransform:[self transform]];
+        [path applyTransform:transform];
         
         return path;
     }

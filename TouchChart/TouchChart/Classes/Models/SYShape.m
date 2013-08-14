@@ -225,14 +225,12 @@
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
 {
     // Geometry parameters
-    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:rect];
+    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:rect andTransform:transform];
     
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
     geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    geometry.transform = transform;
     
     [geometriesArray addObject:geometry];
     
