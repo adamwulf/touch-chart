@@ -21,26 +21,12 @@ typedef enum {
 @interface SYGeometry : NSObject {
     
     GeometryType geometryType;
-    
-    // Geometry parameters
-    CGRect rectGeometry;
     NSArray *pointArray;
-    
-    // Arc parameters
-    CGPoint arcMidPoint;
-    CGFloat arcRadius;
-    CGFloat arcStartAngle;
-    CGFloat arcEndAngle;
-    BOOL arcClockwise;
     
     // Draw properties
     CGFloat lineWidth;
     UIColor *fillColor;
     UIColor *strokeColor;
-    
-    // Transforms
-    CGAffineTransform transform;
-    
 }
 
 // properties of this geometry

@@ -10,7 +10,20 @@
 #import "SYBezier.h"
 #import "SYSegment.h"
 
-@implementation SYGeometry
+@implementation SYGeometry{
+    // circle and rect parameters
+    CGRect rectGeometry;
+
+    // Arc parameters
+    CGPoint arcMidPoint;
+    CGFloat arcRadius;
+    CGFloat arcStartAngle;
+    CGFloat arcEndAngle;
+    BOOL arcClockwise;
+
+    // Transforms
+    CGAffineTransform transform;
+}
 
 @synthesize geometryType;
 @synthesize pointArray;
