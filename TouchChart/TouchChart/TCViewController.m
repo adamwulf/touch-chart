@@ -1127,13 +1127,13 @@
     SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     for (NSValue *pointValue in listPoints)
         [keyPointShape addPoint:[pointValue CGPointValue]];
-    [vectorView addShape:keyPointShape];
+    [vectorView addDebugShape:keyPointShape];
     
     // DEBUG DRAW
     SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
     for (NSValue *pointValue in reducePointKeyArray)
         [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
-    [vectorView addShape:reducePointKeyArrayShape];
+    [vectorView addDebugShape:reducePointKeyArrayShape];
     
     return [NSDictionary dictionaryWithObjectsAndKeys:pointsToFit, @"pointsToFit", indexKeyPoints, @"indexKeyPoints", nil];    
     

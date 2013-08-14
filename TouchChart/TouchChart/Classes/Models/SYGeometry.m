@@ -7,6 +7,7 @@
 //
 
 #import "SYGeometry.h"
+#import "SYBezier.h"
 
 @implementation SYGeometry
 
@@ -113,5 +114,82 @@
     return arcClockwise;
     
 }// radius
+
+#pragma mark - Bezier Path
+
+-(UIBezierPath*) bezierPath{
+    if ([self geometryType] == LinesType) {
+        CGPoint pointA = [[[self pointArray]objectAtIndex:0]CGPointValue];
+        
+        // Drawing code
+        UIBezierPath * path = [UIBezierPath bezierPath];
+        [path moveToPoint:pointA];
+        
+        for (int i = 0; i < [[self pointArray]count] ; i++) {
+            CGPoint pointB = [[[self pointArray]objectAtIndex:i]CGPointValue];
+            [path addLineToPoint:pointB];
+        }
+        
+        [path setLineWidth:[self lineWidth]];
+        return path;
+    }else if ([self geometryType] == BezierType) {
+        
+        SYBezier *bezier = [self.pointArray objectAtIndex:0];
+        // Bezier lines
+        UIBezierPath * path = [UIBezierPath bezierPath];
+        [path moveToPoint: bezier.t0Point];
+        
+        [path addCurveToPoint: bezier.t3Point
+                controlPoint1: bezier.cPointA
+                controlPoint2: bezier.cPointB];
+        
+        [path setLineWidth:[self lineWidth]];
+        
+        
+        for (int i = 1 ; i < [self.pointArray count] ; i++) {
+            
+            SYBezier *bezier = [self.pointArray objectAtIndex:i];
+            
+            // Bezier lines
+            [path moveToPoint: bezier.t0Point];
+            [path addCurveToPoint: bezier.t3Point
+                    controlPoint1: bezier.cPointA
+                    controlPoint2: bezier.cPointB];
+        }
+        return path;
+    }
+    else if ([self geometryType] == CircleType) {
+        // create a oval bezier path using the rect
+        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:[self rectGeometry]];
+        [path setLineWidth:[self lineWidth]];
+        [path applyTransform:[self transform]];
+        
+        return path;
+    }
+    else if ([self geometryType] == ArcType) {
+        
+        // Drawing code
+        UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter:[self midPoint]
+                                                             radius:[self radius]
+                                                         startAngle:[self startAngle]
+                                                           endAngle:[self endAngle]
+                                                          clockwise:[self clockwise]];
+        
+        [path setLineWidth:[self lineWidth]];
+        
+//        [path applyTransform:[self transform]];
+        
+        return path;
+    }
+    else if ([self geometryType] == SquareType) {
+        
+        // Drawing code
+        UIBezierPath * path = [UIBezierPath bezierPathWithRect:[self rectGeometry]];
+        [path setLineWidth:[self lineWidth]];
+        
+        return path;
+    }
+    return nil;
+}
 
 @end

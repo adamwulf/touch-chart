@@ -16,6 +16,7 @@
 
 // Shapes List Management
 - (void) addShape:(SYShape *)shape;
+- (void) addDebugShape:(SYShape *)shape;
 - (IBAction)clear:(id)sender;
 
 @end

@@ -42,10 +42,16 @@ typedef enum {
     
 }
 
+// get bezier path output
+@property (readonly) UIBezierPath* bezierPath;
+
+// helpers for init
 @property (nonatomic) GeometryType geometryType;
 @property (nonatomic) CGRect rectGeometry;
 @property (nonatomic, strong) NSArray *pointArray;
 @property (nonatomic) CGFloat lineWidth;
+
+// drawing and colors
 @property (nonatomic, strong) UIColor *fillColor;
 @property (nonatomic, strong) UIColor *strokeColor;
 @property (nonatomic) CGAffineTransform transform;
