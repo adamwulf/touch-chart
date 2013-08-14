@@ -484,10 +484,11 @@
                 SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
-                [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
-                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
-                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
-                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
+                // create a replacement geometry
+                SYGeometry* replacementGeometry = [[SYGeometry alloc] initWithSegment:segment];
+                [replacementGeometry matchDrawingPropertiesOf:geometryCurrent];
+                // now swap it into place
+                [geometriesArray replaceObjectAtIndex:0 withObject:replacementGeometry];
             }
         }
         // Two o more lines
@@ -509,10 +510,11 @@
                 if ([segment isSnapAngle])
                     [segment snapAngleChangingStartPoint];
                 
-                [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
-                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
-                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
-                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
+                // prep a replacement geometry
+                SYGeometry* replacementGeometry = [[SYGeometry alloc] initWithSegment:segment];
+                [replacementGeometry matchDrawingPropertiesOf:geometryCurrent];
+                // now swap it into place
+                [geometriesArray replaceObjectAtIndex:0 withObject:replacementGeometry];
             }
             
             for (int i = 1 ; i < [geometriesArray count]-1 ; i++) {
@@ -538,17 +540,13 @@
                     SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
+                    // prep the replacement geometry
                     SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectionPoint];
                     SYGeometry* replacementNext = [[SYGeometry alloc] initWithSegmentFrom:intersectionPoint to:pointFnNext];
+                    [replacementCurrent matchDrawingPropertiesOf:geometryCurrent];
+                    [replacementNext matchDrawingPropertiesOf:geometryNext];
 
-                    replacementCurrent.lineWidth = geometryCurrent.lineWidth;
-                    replacementCurrent.fillColor = geometryCurrent.fillColor;
-                    replacementCurrent.strokeColor = geometryCurrent.strokeColor;
-
-                    replacementNext.lineWidth = geometryNext.lineWidth;
-                    replacementNext.fillColor = geometryNext.fillColor;
-                    replacementNext.strokeColor = geometryNext.strokeColor;
-
+                    // now swap them into the array
                     [geometriesArray replaceObjectAtIndex:i withObject:replacementCurrent];
                     [geometriesArray replaceObjectAtIndex:i+1 withObject:replacementNext];
                 }
@@ -564,7 +562,7 @@
                 
                 SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
-                
+                // replace the geometry with the snapped version
                 [geometriesArray removeLastObject];
                 [geometriesArray addObject:[[SYGeometry alloc] initWithSegment:segment]];
             }
@@ -585,9 +583,7 @@
                 [segment snapAngleChangingFinalPoint];
                 
                 [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
-                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
-                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
-                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
+                [[geometriesArray objectAtIndex:0] matchDrawingPropertiesOf:geometryCurrent];
             }
         }
         // Two o more lines
@@ -620,17 +616,13 @@
                     SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
+                    // prep replacement geometry
                     SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectionPoint];
                     SYGeometry* replacementNext = [[SYGeometry alloc] initWithSegmentFrom:intersectionPoint to:pointFnNext];
-                    
-                    replacementCurrent.lineWidth = geometryCurrent.lineWidth;
-                    replacementCurrent.fillColor = geometryCurrent.fillColor;
-                    replacementCurrent.strokeColor = geometryCurrent.strokeColor;
-                    
-                    replacementNext.lineWidth = geometryNext.lineWidth;
-                    replacementNext.fillColor = geometryNext.fillColor;
-                    replacementNext.strokeColor = geometryNext.strokeColor;
-                    
+                    [replacementCurrent matchDrawingPropertiesOf:geometryCurrent];
+                    [replacementNext matchDrawingPropertiesOf:geometryNext];
+
+                    // now swap them into the array
                     [geometriesArray replaceObjectAtIndex:i withObject:replacementCurrent];
                     [geometriesArray replaceObjectAtIndex:i+1 withObject:replacementNext];
                 }
@@ -666,18 +658,14 @@
                     if (intersectPoint.x != 10000.0 || intersectPoint.y != 10000.0) {
                         // Update geometries
                         
-                        
+                        // prep replacement geometry
                         SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectPoint];
                         SYGeometry* replacementLast = [[SYGeometry alloc] initWithSegmentFrom:intersectPoint to:pointFn];
                         
-                        replacementCurrent.lineWidth = geometryCurrent.lineWidth;
-                        replacementCurrent.fillColor = geometryCurrent.fillColor;
-                        replacementCurrent.strokeColor = geometryCurrent.strokeColor;
-                        
-                        replacementLast.lineWidth = geometryLast.lineWidth;
-                        replacementLast.fillColor = geometryLast.fillColor;
-                        replacementLast.strokeColor = geometryLast.strokeColor;
-                        
+                        [replacementCurrent matchDrawingPropertiesOf:geometryCurrent];
+                        [replacementLast matchDrawingPropertiesOf:geometryLast];
+
+                        // now swap them into the array
                         [geometriesArray replaceObjectAtIndex:0 withObject:replacementCurrent];
                         [geometriesArray removeLastObject];
                         [geometriesArray addObject:replacementLast];

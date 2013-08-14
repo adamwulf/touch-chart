@@ -257,7 +257,13 @@
     return nil;
 }
 
-
+//
+// helper method to copy over all drawing properties
+-(void) matchDrawingPropertiesOf:(SYGeometry*)geometry{
+    [self setLineWidth:geometry.lineWidth];
+    [self setFillColor:geometry.fillColor];
+    [self setStrokeColor:geometry.strokeColor];
+}
 
 
 @end

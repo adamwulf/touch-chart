@@ -51,4 +51,6 @@ typedef enum {
 - (id) initArcWithMidPoint:(CGPoint) midPoint radius:(CGFloat) radius startAngle:(CGFloat) startAngle endAngle:(CGFloat) endAngle andClockWise:(BOOL) clockwise;
 
 
+-(void) matchDrawingPropertiesOf:(SYGeometry*)geometry;
+
 @end
