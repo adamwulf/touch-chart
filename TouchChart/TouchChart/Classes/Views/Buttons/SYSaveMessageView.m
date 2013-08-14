@@ -98,13 +98,13 @@
     // Title Drawing
     CGRect titleRect = CGRectMake(1, 24, 323, 32);
     [[UIColor whiteColor] setFill];
-    [titleContent drawInRect: titleRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 16] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
+    [titleContent drawInRect:titleRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 16] lineBreakMode: NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
     
     
     // Subtitle Drawing
     CGRect subtitleRect = CGRectMake(1, 52, 323, 32);
     [[UIColor whiteColor] setFill];
-    [subtitleContent drawInRect: subtitleRect withFont: [UIFont fontWithName: @"HelveticaNeue" size: [UIFont systemFontSize]] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
+    [subtitleContent drawInRect: subtitleRect withFont: [UIFont fontWithName: @"HelveticaNeue" size: [UIFont systemFontSize]] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
     
     
     // Button Normal Outter Stroke Drawing
@@ -131,7 +131,7 @@
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
     [[UIColor whiteColor] setFill];
-    [buttonNormalLabelContent drawInRect: buttonNormalLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
+    [buttonNormalLabelContent drawInRect: buttonNormalLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
     CGContextRestoreGState(context);
     
     
@@ -160,7 +160,7 @@
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
     [[UIColor whiteColor] setFill];
-    [buttonHighlightLabelContent drawInRect: buttonHighlightLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: UILineBreakModeWordWrap alignment: UITextAlignmentCenter];
+    [buttonHighlightLabelContent drawInRect: buttonHighlightLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
     CGContextRestoreGState(context);
     
     

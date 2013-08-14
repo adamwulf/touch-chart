@@ -69,16 +69,8 @@
     NSMutableString *string = [NSMutableString string];
     
     for (SYGeometry *geometry in geometriesArray) {
-        if (geometry.geometryType == SquareType)
-            [string appendString:@"type: Square\n"];
-        else if (geometry.geometryType == CircleType)
-            [string appendFormat:@"type: CircleType: (%f, %f)\n", geometry.rectGeometry.origin.x, geometry.rectGeometry.origin.y];
-        else if (geometry.geometryType == LinesType)
-            [string appendString:@"type: LinesType\n"];
-        else if (geometry.geometryType == BezierType)
-            [string appendString:@"type: BezierType\n"];
-        else if (geometry.geometryType == ArcType)
-            [string appendString:@"type: ArcType\n"];
+        [string appendString:[geometry description]];
+        [string appendString:@"\n"];
     }
     
     return [NSString stringWithString:string];
@@ -144,11 +136,8 @@
 
 - (void) addPoint:(CGPoint) keyPoint
 {
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
     // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = CGRectMake(keyPoint.x - 3.0, keyPoint.y - 3.0, 6.0, 6.0);
+    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:CGRectMake(keyPoint.x - 3.0, keyPoint.y - 3.0, 6.0, 6.0)];
     
     // Draw properties
     geometry.lineWidth = 2.0;
@@ -162,11 +151,8 @@
 
 - (void) addKeyPoint:(CGPoint) keyPoint
 {
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
     // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = CGRectMake(keyPoint.x - 8.0, keyPoint.y - 8.0, 16.0, 16.0);
+    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:CGRectMake(keyPoint.x - 8.0, keyPoint.y - 8.0, 16.0, 16.0)];
     
     // Draw properties
     geometry.lineWidth = 6.0;
@@ -231,11 +217,8 @@
         circleRect.size.height == .0)
         return;
     
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
     // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = circleRect;
+    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:circleRect];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -249,11 +232,8 @@
 
 - (void) addCircleWithRect:(CGRect) rect andTransform:(CGAffineTransform) transform
 {
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
     // Geometry parameters
-    geometry.geometryType = CircleType;
-    geometry.rectGeometry = rect;
+    SYGeometry *geometry = [[SYGeometry alloc] initCircleInRect:rect];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -295,17 +275,8 @@
 
 - (void) addRectangle:(CGRect)rect
 {
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
     // Geometry parameters
-    geometry.geometryType = SquareType;
-    [geometry setRectGeometry:rect];
-    geometry.pointArray = [NSArray arrayWithObjects:
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
-                           nil];
+    SYGeometry *geometry = [[SYGeometry alloc] initSquareInRect:rect];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -365,32 +336,6 @@
     
 }// addRotateRectangle:
 
-/*
-- (void) addRectangle:(CGRect) rect andTransform:(CGAffineTransform) transform
-{
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
-    // Geometry parameters
-    geometry.geometryType = SquareRotateType;
-    [geometry setRectGeometry:rect];
-    geometry.pointArray = [NSArray arrayWithObjects:
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
-                           [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
-                           nil];
-    geometry.transform = transform;
-    
-    // Draw properties
-    geometry.lineWidth = 4.0;
-    geometry.fillColor = [UIColor clearColor];
-    geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
-    
-    [geometriesArray addObject:geometry];
-    [geometry release];
-    
-}// addRotateRectangle:andTransform:
-*/
 
 #pragma mark - Replace Elements
 

@@ -12,7 +12,6 @@
 @implementation SYGeometry
 
 @synthesize geometryType;
-@synthesize rectGeometry;
 @synthesize pointArray;
 
 @synthesize lineWidth;
@@ -21,30 +20,23 @@
 
 @synthesize transform;
 
-// dealloc
-
 
 - (NSString *) description
 {
     NSMutableString *desc = [NSMutableString string];
+    
     if (self.geometryType == SquareType)
-         [desc appendString:@"\nGeometryType: Square"];
-    if (self.geometryType == CircleType)
-        [desc appendString:@"\nGeometryType: Circle"];
-    if (self.geometryType == LinesType)
-        [desc appendString:@"\nGeometryType: LinesType"];
-    if (self.geometryType == BezierType)
-        [desc appendString:@"\nGeometryType: BezierType"];
-    if (self.geometryType == ArcType)
-        [desc appendString:@"\nGeometryType: ArcType"];
+        [desc appendString:@"type: Square"];
+    else if (self.geometryType == CircleType)
+        [desc appendFormat:@"type: CircleType: (%f, %f)", rectGeometry.origin.x, rectGeometry.origin.y];
+    else if (self.geometryType == LinesType)
+        [desc appendString:@"type: LinesType"];
+    else if (self.geometryType == BezierType)
+        [desc appendString:@"type: BezierType"];
+    else if (self.geometryType == ArcType)
+        [desc appendString:@"type: ArcType"];
     
-    [desc appendFormat:@"\nPoint Array: %@", pointArray];
-    [desc appendFormat:@"\nLine Width: %f", lineWidth];
-    [desc appendFormat:@"\nColor fill: %@", fillColor];
-    [desc appendFormat:@"\nColor Stroke: %@", strokeColor];
-    
-    return desc;
-    
+    return [NSString stringWithString:desc];
 }// description
 
 
@@ -60,6 +52,36 @@
                 
         // Transforms
         transform = CGAffineTransformIdentity; 
+    }
+    
+    return self;
+    
+}// init
+
+- (id) initCircleInRect:(CGRect)rect
+{
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = CircleType;
+        rectGeometry = rect;
+    }
+    
+    return self;
+    
+}// init
+
+- (id) initSquareInRect:(CGRect)rect
+{
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = SquareType;
+        rectGeometry = rect;
+        self.pointArray = [NSArray arrayWithObjects:
+                               [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
+                               [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
+                               [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
+                               [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                               nil];
     }
     
     return self;
@@ -165,7 +187,7 @@
     }
     else if ([self geometryType] == CircleType) {
         // create a oval bezier path using the rect
-        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:[self rectGeometry]];
+        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:rectGeometry];
         [path setLineWidth:[self lineWidth]];
         [path applyTransform:[self transform]];
         
@@ -189,12 +211,15 @@
     else if ([self geometryType] == SquareType) {
         
         // Drawing code
-        UIBezierPath * path = [UIBezierPath bezierPathWithRect:[self rectGeometry]];
+        UIBezierPath * path = [UIBezierPath bezierPathWithRect:rectGeometry];
         [path setLineWidth:[self lineWidth]];
         
         return path;
     }
     return nil;
 }
+
+
+
 
 @end

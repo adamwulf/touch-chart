@@ -47,14 +47,18 @@ typedef enum {
 
 // helpers for init
 @property (nonatomic) GeometryType geometryType;
-@property (nonatomic) CGRect rectGeometry;
 @property (nonatomic, strong) NSArray *pointArray;
-@property (nonatomic) CGFloat lineWidth;
 
 // drawing and colors
+@property (nonatomic) CGFloat lineWidth;
 @property (nonatomic, strong) UIColor *fillColor;
 @property (nonatomic, strong) UIColor *strokeColor;
 @property (nonatomic) CGAffineTransform transform;
+
+
+// init
+- (id) initSquareInRect:(CGRect)rect;
+- (id) initCircleInRect:(CGRect)rect;
 
 // Setter
 - (void) setArcParametersWithMidPoint:(CGPoint) midPoint
