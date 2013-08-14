@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SYSegment.h"
 
 typedef enum {
 	SquareType,
@@ -47,7 +48,7 @@ typedef enum {
 
 // helpers for init
 @property (nonatomic) GeometryType geometryType;
-@property (nonatomic, strong) NSArray *pointArray;
+@property (nonatomic, readonly) NSArray *pointArray;
 
 // drawing and colors
 @property (nonatomic) CGFloat lineWidth;
@@ -57,8 +58,12 @@ typedef enum {
 
 
 // init
+- (id) initWithBezierCurves:(NSArray*)curves;
 - (id) initSquareInRect:(CGRect)rect;
 - (id) initCircleInRect:(CGRect)rect;
+- (id) initWithSegmentFrom:(CGPoint)point1 to:(CGPoint)point2;
+- (id) initWithRotatedRectangleFrom:(CGPoint)point1 to:(CGPoint)point2 to:(CGPoint)point3 to:(CGPoint)point4;
+- (id) initWithSegment:(SYSegment*) segment;
 
 // Setter
 - (void) setArcParametersWithMidPoint:(CGPoint) midPoint

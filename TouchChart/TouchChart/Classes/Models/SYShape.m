@@ -170,12 +170,8 @@
         return;
     
     // Draw the resulting shape
-    SYGeometry *geometry = [[SYGeometry alloc]init];
+    SYGeometry *geometry = [[SYGeometry alloc] initWithSegmentFrom:segment.pointSt to:segment.pointFn];
     
-    // Geometry parameters
-    geometry.geometryType = LinesType;
-    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:[segment pointSt]],
-                           [NSValue valueWithCGPoint:[segment pointFn]], nil];
     // Draw properties
     geometry.lineWidth = 4.0;
     geometry.fillColor = [UIColor clearColor];
@@ -195,11 +191,7 @@
     NSArray *curves = [bezierController buildBestBezierForListPoint:listPoints tolerance:toleranceBezier/*bezierTolerance*/];
     
     // Draw the resulting shape
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
-    // Geometry parameters
-    geometry.geometryType = BezierType;
-    geometry.pointArray = curves;
+    SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -318,14 +310,7 @@
                                     keyPointC.y + (sinf([segmentAB angleRad]) * [segmentAB longitude]));
     
     // Create geometry
-    SYGeometry *geometry = [[SYGeometry alloc]init];
-    
-    // Geometry parameters
-    geometry.geometryType = LinesType;
-    geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:keyPointA],
-                           [NSValue valueWithCGPoint:keyPointB],
-                           [NSValue valueWithCGPoint:keyPointC],
-                           [NSValue valueWithCGPoint:keyPointD], nil];
+    SYGeometry *geometry = [[SYGeometry alloc] initWithRotatedRectangleFrom:keyPointA to:keyPointB to:keyPointC to:keyPointD];
     
     // Draw properties
     geometry.lineWidth = 4.0;
@@ -361,11 +346,7 @@
             NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:curvePoints];
             
             // Draw the resulting shape
-            SYGeometry *geometry = [[SYGeometry alloc]init];
-            
-            // Geometry parameters
-            geometry.geometryType = BezierType;
-            geometry.pointArray = curves;
+            SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
             
             // Draw properties
             geometry.lineWidth = 4.0;
@@ -380,11 +361,7 @@
             NSArray *curves = [bezierController buildBestBezierForListPoint:curvePoints tolerance:toleranceBezier/*bezierTolerance*/];
             
             // Draw the resulting shape
-            SYGeometry *geometry = [[SYGeometry alloc]init];
-            
-            // Geometry parameters
-            geometry.geometryType = BezierType;
-            geometry.pointArray = curves;
+            SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
             
             // Draw properties
             geometry.lineWidth = 4.0;
@@ -402,12 +379,8 @@
             return;
         
         // Draw the resulting shape
-        SYGeometry *geometry = [[SYGeometry alloc]init];
+        SYGeometry *geometry = [[SYGeometry alloc] initWithSegmentFrom:[element pointSt] to:[element pointFn]];
         
-        // Geometry parameters
-        geometry.geometryType = LinesType;
-        geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:[element pointSt]],
-                               [NSValue valueWithCGPoint:[element pointFn]], nil];
         // Draw properties
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
@@ -455,11 +428,7 @@
             NSArray *curves = [bezierController buildCubicBezierPointsForListPoint:element];
             
             // Draw the resulting shape
-            SYGeometry *geometry = [[SYGeometry alloc]init];
-            
-            // Geometry parameters
-            geometry.geometryType = BezierType;
-            geometry.pointArray = curves;
+            SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
             
             // Draw properties
             geometry.lineWidth = 4.0;
@@ -474,11 +443,7 @@
             NSArray *curves = [bezierController buildBestBezierForListPoint:element tolerance:toleranceBezier/*bezierTolerance*/];
             
             // Draw the resulting shape
-            SYGeometry *geometry = [[SYGeometry alloc]init];
-            
-            // Geometry parameters
-            geometry.geometryType = BezierType;
-            geometry.pointArray = curves;
+            SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
             
             // Draw properties
             geometry.lineWidth = 4.0;
@@ -492,12 +457,8 @@
     else if ([element isKindOfClass:[SYSegment class]]) {
         
         // Draw the resulting shape
-        SYGeometry *geometry = [[SYGeometry alloc]init];
+        SYGeometry *geometry = [[SYGeometry alloc] initWithSegmentFrom:[element pointSt] to:[element pointFn]];
         
-        // Geometry parameters
-        geometry.geometryType = LinesType;
-        geometry.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:[element pointSt]],
-                               [NSValue valueWithCGPoint:[element pointFn]], nil];
         // Draw properties
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
@@ -533,8 +494,10 @@
                 SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
+                [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
+                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
+                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
+                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
             }
         }
         // Two o more lines
@@ -556,8 +519,10 @@
                 if ([segment isSnapAngle])
                     [segment snapAngleChangingStartPoint];
                 
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
+                [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
+                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
+                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
+                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
             }
             
             for (int i = 1 ; i < [geometriesArray count]-1 ; i++) {
@@ -583,10 +548,19 @@
                     SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
-                                                  [NSValue valueWithCGPoint:intersectionPoint], nil];
-                    geometryNext.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectionPoint],
-                                               [NSValue valueWithCGPoint:pointFnNext], nil];
+                    SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectionPoint];
+                    SYGeometry* replacementNext = [[SYGeometry alloc] initWithSegmentFrom:intersectionPoint to:pointFnNext];
+
+                    replacementCurrent.lineWidth = geometryCurrent.lineWidth;
+                    replacementCurrent.fillColor = geometryCurrent.fillColor;
+                    replacementCurrent.strokeColor = geometryCurrent.strokeColor;
+
+                    replacementNext.lineWidth = geometryNext.lineWidth;
+                    replacementNext.fillColor = geometryNext.fillColor;
+                    replacementNext.strokeColor = geometryNext.strokeColor;
+
+                    [geometriesArray replaceObjectAtIndex:i withObject:replacementCurrent];
+                    [geometriesArray replaceObjectAtIndex:i+1 withObject:replacementNext];
                 }
             }
             
@@ -601,8 +575,8 @@
                 SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
+                [geometriesArray removeLastObject];
+                [geometriesArray addObject:[[SYGeometry alloc] initWithSegment:segment]];
             }
         }
     }
@@ -620,8 +594,10 @@
                 SYSegment *segment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [segment snapAngleChangingFinalPoint];
                 
-                geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:segment.pointSt],
-                                              [NSValue valueWithCGPoint:segment.pointFn], nil];
+                [geometriesArray replaceObjectAtIndex:0 withObject:[[SYGeometry alloc] initWithSegment:segment]];
+                [[geometriesArray objectAtIndex:0] setLineWidth:geometryCurrent.lineWidth];
+                [[geometriesArray objectAtIndex:0] setFillColor:(__bridge CGColorRef)(geometryCurrent.fillColor)];
+                [[geometriesArray objectAtIndex:0] setStrokeColor:(__bridge CGColorRef)(geometryCurrent.strokeColor)];
             }
         }
         // Two o more lines
@@ -654,10 +630,19 @@
                     SYSegment *segmentNext = [[SYSegment alloc]initWithPoint:pointStNext andPoint:pointFnNext];
                     CGPoint intersectionPoint = [segment pointIntersectWithSegment:segmentNext];
                     
-                    geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:pointSt],
-                                                  [NSValue valueWithCGPoint:intersectionPoint], nil];
-                    geometryNext.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectionPoint],
-                                               [NSValue valueWithCGPoint:pointFnNext], nil];
+                    SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectionPoint];
+                    SYGeometry* replacementNext = [[SYGeometry alloc] initWithSegmentFrom:intersectionPoint to:pointFnNext];
+                    
+                    replacementCurrent.lineWidth = geometryCurrent.lineWidth;
+                    replacementCurrent.fillColor = geometryCurrent.fillColor;
+                    replacementCurrent.strokeColor = geometryCurrent.strokeColor;
+                    
+                    replacementNext.lineWidth = geometryNext.lineWidth;
+                    replacementNext.fillColor = geometryNext.fillColor;
+                    replacementNext.strokeColor = geometryNext.strokeColor;
+                    
+                    [geometriesArray replaceObjectAtIndex:i withObject:replacementCurrent];
+                    [geometriesArray replaceObjectAtIndex:i+1 withObject:replacementNext];
                 }
             }
            
@@ -690,11 +675,22 @@
                     // If exist intersectPoint
                     if (intersectPoint.x != 10000.0 || intersectPoint.y != 10000.0) {
                         // Update geometries
-                        geometryCurrent.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:intersectPoint],
-                                                      [NSValue valueWithCGPoint:firstSegment.pointFn], nil];
                         
-                        geometryLast.pointArray = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:lastSegment.pointSt],
-                                                   [NSValue valueWithCGPoint:intersectPoint], nil];
+                        
+                        SYGeometry* replacementCurrent = [[SYGeometry alloc] initWithSegmentFrom:pointSt to:intersectPoint];
+                        SYGeometry* replacementLast = [[SYGeometry alloc] initWithSegmentFrom:intersectPoint to:pointFn];
+                        
+                        replacementCurrent.lineWidth = geometryCurrent.lineWidth;
+                        replacementCurrent.fillColor = geometryCurrent.fillColor;
+                        replacementCurrent.strokeColor = geometryCurrent.strokeColor;
+                        
+                        replacementLast.lineWidth = geometryLast.lineWidth;
+                        replacementLast.fillColor = geometryLast.fillColor;
+                        replacementLast.strokeColor = geometryLast.strokeColor;
+                        
+                        [geometriesArray replaceObjectAtIndex:0 withObject:replacementCurrent];
+                        [geometriesArray removeLastObject];
+                        [geometriesArray addObject:replacementLast];
                     }
                 }
             }
@@ -742,9 +738,7 @@
         [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
-        SYGeometry *geometry = [[SYGeometry alloc]init];
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
+        SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
         geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
@@ -778,9 +772,7 @@
         [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
-        SYGeometry *geometry = [[SYGeometry alloc]init];
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
+        SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
         geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
@@ -805,9 +797,7 @@
         [curves replaceObjectAtIndex:0 withObject:bezierToChange];
         
         // Create the new bezier (modified the original)
-        SYGeometry *geometry = [[SYGeometry alloc]init];
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
+        SYGeometry *geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
         geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];
@@ -822,9 +812,7 @@
         [curves replaceObjectAtIndex:[curves count]-1 withObject:newBezier];
         
         // Create the new bezier (modified the original)
-        geometry = [[SYGeometry alloc]init];
-        geometry.geometryType = BezierType;
-        geometry.pointArray = curves;
+        geometry = [[SYGeometry alloc] initWithBezierCurves:curves];
         geometry.lineWidth = 4.0;
         geometry.fillColor = [UIColor clearColor];
         geometry.strokeColor = [UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0];

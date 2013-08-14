@@ -8,6 +8,7 @@
 
 #import "SYGeometry.h"
 #import "SYBezier.h"
+#import "SYSegment.h"
 
 @implementation SYGeometry
 
@@ -76,12 +77,62 @@
         // Draw properties
         geometryType = SquareType;
         rectGeometry = rect;
-        self.pointArray = [NSArray arrayWithObjects:
+        pointArray = [NSArray arrayWithObjects:
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
                                nil];
+    }
+    
+    return self;
+    
+}// init
+
+
+- (id) initWithSegmentFrom:(CGPoint)point1 to:(CGPoint)point2
+{
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = LinesType;
+        pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:point1],
+                           [NSValue valueWithCGPoint:point2],
+                           nil];
+    }
+    
+    return self;
+    
+}// init
+
+- (id) initWithSegment:(SYSegment*) segment
+{
+    return [self initWithSegmentFrom:segment.pointSt to:segment.pointFn];
+}// init
+
+- (id) initWithBezierCurves:(NSArray*)curves
+{
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = BezierType;
+        pointArray = curves;
+    }
+    
+    return self;
+    
+}// init
+
+- (id) initWithRotatedRectangleFrom:(CGPoint)point1 to:(CGPoint)point2 to:(CGPoint)point3 to:(CGPoint)point4
+{
+    if (self = [self init]) {
+        // Draw properties
+        geometryType = LinesType;
+        pointArray = [NSArray arrayWithObjects:
+                           [NSValue valueWithCGPoint:point1],
+                           [NSValue valueWithCGPoint:point2],
+                           [NSValue valueWithCGPoint:point3],
+                           [NSValue valueWithCGPoint:point4],
+                           nil];
     }
     
     return self;
