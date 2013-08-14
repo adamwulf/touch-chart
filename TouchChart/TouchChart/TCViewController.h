@@ -24,17 +24,11 @@
     IBOutlet SYVectorView *vectorView;
     
     // UI IBOutlets
-    IBOutlet UIButton *openShapeButton;
-    IBOutlet UIButton *closeShapeButton;
-    
     IBOutlet SYSaveMessageView *selectCaseNameView;
     IBOutlet UITextField *nameTextField;
     IBOutlet SYTableBase *tableBase;
 
 }
-
-// Button Draw Modes
-- (IBAction) switchDrawModes:(id)sender;
 
 // Unit Test Methods
 - (IBAction) switchShowTable:(id)sender;

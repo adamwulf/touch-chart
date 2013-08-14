@@ -68,10 +68,6 @@
     
     vectorView = nil;
     
-    openShapeButton = nil;
-    
-    closeShapeButton = nil;
-    
 }// viewDidUnload
 
 
@@ -200,28 +196,6 @@
 
 
 
-#pragma mark - Button Draw Modes
-
-- (IBAction) switchDrawModes:(id)sender
-{
-    switch ([sender tag]) {
-        case 1:
-            openShapeButton.selected = YES;
-            closeShapeButton.selected = NO;
-            break;
-        case 2:
-            openShapeButton.selected = NO;
-            closeShapeButton.selected = YES;
-            break;
-        case 3:
-            openShapeButton.selected = NO;
-            closeShapeButton.selected = NO;
-            break;
-        default:
-            break;
-    }
-    
-}// switchDrawModes
 
 
 #pragma mark - Unit Test Operations
