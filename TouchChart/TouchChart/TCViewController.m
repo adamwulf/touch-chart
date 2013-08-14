@@ -433,8 +433,8 @@
     }
     
     // Just snap
-    if ([self isRectangle])
-        [shape snapLinesAngles];
+//    if ([self isRectangle])
+//        [shape snapLinesAngles];
     
     // It's closed (almost closed), do closed perfectly
     if (isCloseShape)
@@ -453,6 +453,7 @@
 
 - (BOOL) isRectangle
 {
+    return NO;
     // Reduce Points
     // --------------------------------------------------------------------------
     NSDictionary *dataDict = [self reducePointsKey];
@@ -481,6 +482,7 @@
 
 - (BOOL) isRotateRectangle
 {
+    return NO;
     // Reduce Points
     // --------------------------------------------------------------------------
     NSDictionary *dataDict = [self reducePointsKey];
