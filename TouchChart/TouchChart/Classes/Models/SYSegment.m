@@ -726,8 +726,10 @@
 
     // Si no esta ajustado responde que no
     CGFloat resultAbs = fabsf(angleDeg);
-    if (resultAbs > 180.0)
+    if (resultAbs > 180.0){
+        // shouldn't this be resultAbs -= 180 ?
         resultAbs = resultAbs * 0.5;
+    }
     
     if (resultAbs < 10.0)
         return YES;
