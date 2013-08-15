@@ -98,6 +98,7 @@
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y)],
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y + rect.size.height)],
                                [NSValue valueWithCGPoint:CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height)],
+                               [NSValue valueWithCGPoint:CGPointMake(rect.origin.x, rect.origin.y)],
                                nil];
     }
     
@@ -148,6 +149,7 @@
                            [NSValue valueWithCGPoint:point2],
                            [NSValue valueWithCGPoint:point3],
                            [NSValue valueWithCGPoint:point4],
+                           [NSValue valueWithCGPoint:point1],
                            nil];
     }
     

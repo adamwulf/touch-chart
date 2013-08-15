@@ -16,7 +16,7 @@
 @class SYVectorView;
 @class SYTableBase;
 
-@interface TCViewController : TCShapeController <SYUnitTestDelegate> {
+@interface TCViewController : UIViewController <SYUnitTestDelegate> {
     
     // Views
     IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
@@ -41,5 +41,8 @@
 - (void) importCase:(NSArray *) allPoints;
 
 - (SYShape*) getFigurePainted;
+-(void) resetData;
 
+- (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+- (void) addLastPoint:(CGPoint) lastPoint;
 @end

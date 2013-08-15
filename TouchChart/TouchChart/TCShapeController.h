@@ -20,9 +20,6 @@
 
 -(BOOL) hasPointData;
 
-// Management Data Operations
-- (void) resetData;
-
 // Other Helper Methods
 - (NSDictionary *) reducePointsKey;
 

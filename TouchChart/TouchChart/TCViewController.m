@@ -21,7 +21,9 @@
 @end
 
 
-@implementation TCViewController
+@implementation TCViewController{
+    TCShapeController* shapeController;
+}
 
 #pragma mark - Lifecycle Methods
 
@@ -32,6 +34,8 @@
     // Hide table
     [tableBase setAlpha:.0];
     [tableBase setHidden:YES];
+    
+    [self resetData];
     
 }// viewDidLoad
 
@@ -86,7 +90,7 @@
 
 - (IBAction) selectName:(id)sender
 {
-    if (![self hasPointData]) {
+    if (![shapeController hasPointData]) {
         // Avisa del error obtenido
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Draw Something"
                                                         message:@"You must draw a valid shape before"
@@ -118,7 +122,7 @@
 - (IBAction) saveCase:(id)sender
 {
     // If the user doesn't write name
-    if ([[nameTextField text]length] == 0 || ![self hasPointData])
+    if ([[nameTextField text]length] == 0 || ![shapeController hasPointData])
         return;
     
     // Store new case
@@ -164,11 +168,11 @@
         // Add these new points
         CGPoint touchPreviousLocation = [[allPoints objectAtIndex:i-1]CGPointValue];
         CGPoint touchLocation = [[allPoints objectAtIndex:i]CGPointValue];
-        [self addPoint:touchPreviousLocation andPoint:touchLocation];
+        [shapeController addPoint:touchPreviousLocation andPoint:touchLocation];
     }
     
     CGPoint touchLocation = [[allPoints lastObject]CGPointValue];
-    [self addLastPoint:touchLocation];
+    [shapeController addLastPoint:touchLocation];
     
     // Analyze a recognize the figure
     [self getFigurePainted];
@@ -177,6 +181,10 @@
 
 
 #pragma mark - Calculate Shapes
+
+-(void) resetData{
+    shapeController = [[TCShapeController alloc] init];
+}
 
 - (IBAction) rebuildShape:(id)sender
 {
@@ -191,7 +199,7 @@
 
 - (SYShape*) getFigurePainted
 {
-    SYShape* possibleShape = [super getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
+    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
     if(possibleShape){
         [vectorView addShape:possibleShape];
         [vectorView setNeedsDisplay];
@@ -199,24 +207,38 @@
     return possibleShape;
 }
 
+//
+//- (NSDictionary *) reducePointsKey{
+//    NSDictionary* output = [shapeController reducePointsKey];
+//    // --------------------------------------------------------------------------
+//    
+//    // DEBUG DRAW
+//    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+//    for (NSValue *pointValue in [output objectForKey:@"listPoints"])
+//        [keyPointShape addPoint:[pointValue CGPointValue]];
+//    [vectorView addDebugShape:keyPointShape];
+//    
+//    // DEBUG DRAW
+//    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+//    for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
+//        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
+//    [vectorView addDebugShape:reducePointKeyArrayShape];
+//    
+//    return output;
+//}
 
-- (NSDictionary *) reducePointsKey{
-    NSDictionary* output = [super reducePointsKey];
-    // --------------------------------------------------------------------------
+#pragma mark - Cloud Points Methods
+
+- (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
+{
+    [shapeController addPoint:pointA andPoint:pointB];
+}// addPoint:andPoint:
+
+
+- (void) addLastPoint:(CGPoint) lastPoint
+{
+    [shapeController addLastPoint:lastPoint];
     
-    // DEBUG DRAW
-    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
-    for (NSValue *pointValue in [output objectForKey:@"listPoints"])
-        [keyPointShape addPoint:[pointValue CGPointValue]];
-    [vectorView addDebugShape:keyPointShape];
-    
-    // DEBUG DRAW
-    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
-    for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
-        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
-    [vectorView addDebugShape:reducePointKeyArrayShape];
-    
-    return output;
-}
+}// addLastPoint:
 
 @end

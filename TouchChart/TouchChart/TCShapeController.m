@@ -24,8 +24,6 @@
 // Geometric calculations
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2;
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
-- (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey;
-- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC;
 
 @end
 
@@ -54,23 +52,23 @@
 
 #pragma mark - Management Operations
 
-- (void) resetData
-{
-    // Init all the data and set ready them
-    maxX = CGPointZero;
-    maxY = CGPointZero;
-    minX = CGPointMake(10000, 10000);
-    minY = CGPointMake(10000, 10000);
-    
-    // Create new point list
-    listPoints = [[NSMutableArray alloc]init];
-    pointKeyArray = [[NSMutableArray alloc]init];
-    
-    isDeltaXPos = 0;
-    isDeltaYPos = 0;
-    
-}// resetData
-
+-(id) init{
+    if(self = [super init]){
+        // Init all the data and set ready them
+        maxX = CGPointZero;
+        maxY = CGPointZero;
+        minX = CGPointMake(10000, 10000);
+        minY = CGPointMake(10000, 10000);
+        
+        // Create new point list
+        listPoints = [[NSMutableArray alloc]init];
+        pointKeyArray = [[NSMutableArray alloc]init];
+        
+        isDeltaXPos = 0;
+        isDeltaYPos = 0;
+    }
+    return self;
+}
 
 -(BOOL) hasPointData{
     return [listPoints count] >= 5;
@@ -146,7 +144,7 @@
     }
     // If it's a rectangle 0 or 90º
     else if ([self isRectangle] && [indexKeyPoints count] == 5) {
-        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
+        SYShape *shape = [[SYShape alloc] init];
         [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
         
         return shape;
@@ -986,39 +984,6 @@
     return ret;
     
 }// getAngleBetweenVertex:andPointA:andPointB:
-
-
-- (CGFloat) distanceFrom:(CGPoint) pointTest toLineBuildForPoint:(CGPoint) pointKey andPoint:(CGPoint) pointNextKey
-{
-    // Calcula pendiente
-    CGFloat m = (pointNextKey.y - pointKey.y) / (pointNextKey.x - pointKey.x);
-    
-    // Calcula termino d
-    CGFloat d = pointKey.y - (m * pointKey.x);
-    
-    // Se calcula distancia
-    CGFloat dist = fabsf(pointTest.y - ((m * pointTest.x) + d)) / sqrtf(powf(m, 2) + 1);
-    
-    return dist;
-    
-}// distanceFrom:toLineBuildForPoint:andPoint:
-
-
-- (BOOL) point:(CGPoint)pointA andPoint:(CGPoint)pointB isAlignedWithPoint:(CGPoint)pointC
-{
-    // Ecuacion de la recta y = mx + d
-    // -------------------------------
-    // Se calcula distancia
-    float dist = [self distanceFrom:pointC toLineBuildForPoint:pointA andPoint:pointB];
-    
-    // Si esta alineado responde si
-    if (dist == 0)
-        return YES;
-    
-    // Si no NO
-    return NO;
-    
-}// point:andPoint:isAlignedWithPoint:
 
 
 
