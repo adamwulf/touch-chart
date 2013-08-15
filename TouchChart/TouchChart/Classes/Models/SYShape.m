@@ -678,7 +678,7 @@
 }// snapLinesAngles
 
 
-- (void) checkCloseShape
+- (void) closeShapeIfPossible
 {
     // Get the first and the last curve
     SYGeometry *firstShape = [self getElement:0];

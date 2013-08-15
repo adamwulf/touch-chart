@@ -47,7 +47,7 @@
 
 // Modify shape
 - (void) snapLinesAngles;
-- (void) checkCloseShape;
+- (void) closeShapeIfPossible;
 - (void) forceContinuity:(float) sliderValue;
 
 @end

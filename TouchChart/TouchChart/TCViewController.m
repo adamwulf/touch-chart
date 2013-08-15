@@ -33,12 +33,12 @@
 }
 
 // Calculate Shapes
-- (void) buildShapeClose:(BOOL) isCloseShape;
+- (SYShape*) buildShapeClose:(BOOL) isCloseShape;
 
 // Analyze Shape
 - (BOOL) isRectangle;
 - (BOOL) isRotateRectangle;
-- (BOOL) drawOvalCirclePainted;
+- (SYShape*) drawOvalCirclePainted;
 
 // Geometric calculations
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2;
@@ -266,24 +266,29 @@
         return;
     CGFloat ratioDistanceX = deltaX / maxDeltaX;
     CGFloat ratioDistanceY = deltaY / maxDeltaY;
-        
+    
+    
+    SYShape* possibleShape = nil;
     // It's open, do nothing, exit
     if (fabs(ratioDistanceX) > 0.22 || fabs(ratioDistanceY) > 0.22)
-        [self buildShapeClose:NO];
+        possibleShape = [self buildShapeClose:NO];
     else {
         // If the resulting points number is insufficient, exit
         if ([pointKeyArray count] <= 2)
             return;
         
-        [self buildShapeClose:YES];
+        possibleShape = [self buildShapeClose:YES];
     }
 
-    [vectorView setNeedsDisplay];
+    if(possibleShape){
+        [vectorView addShape:possibleShape];
+        [vectorView setNeedsDisplay];
+    }
     
 }// getFigurePainted
 
 
-- (void) buildShapeClose:(BOOL) isCloseShape
+- (SYShape*) buildShapeClose:(BOOL) isCloseShape
 {
     // Reduce Points
     // --------------------------------------------------------------------------
@@ -311,17 +316,14 @@
                                    [NSValue valueWithCGPoint:keyPointD],
                                    nil]];
         // Add shape to the canvas
-        [vectorView addShape:shape];
-        return;
+        return shape;
     }
     // If it's a rectangle 0 or 90º
     else if ([self isRectangle] && [indexKeyPoints count] == 5) {
         SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
         [shape addRectangle:CGRectMake(minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)];
         
-        // Add shape to the canvas
-        [vectorView addShape:shape];
-        return;
+        return shape;
     }
     
     // We have the correct keypoints now and its index into a points list.
@@ -339,7 +341,10 @@
         CGPoint lastPoint = [[pointsToFit objectAtIndex:toIndex]CGPointValue];
         
         // Get the points for that stretch
-        if (fromIndex > toIndex) { return; }
+        if (fromIndex > toIndex) {
+            // can't find a shape
+            return nil;
+        }
         NSRange theRange = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
         NSArray *stretch = [pointsToFit subarrayWithRange:theRange];
         
@@ -428,8 +433,11 @@
     }
     
     // Try to fit with a oval
-    if (isCloseShape && needsCheckOval && [self drawOvalCirclePainted]) {
-        return;
+    if (isCloseShape && needsCheckOval) {
+        SYShape* possibleOval = [self drawOvalCirclePainted];
+        if(possibleOval){
+            return possibleOval;
+        }
     }
     
     // Just snap
@@ -438,13 +446,13 @@
     
     // It's closed (almost closed), do closed perfectly
     if (isCloseShape)
-        [shape checkCloseShape];
+        [shape closeShapeIfPossible];
     
     // Force continuity modifying the control points
     [shape forceContinuity:[continuitySlider value]];
     
     // Add shape to the canvas
-    [vectorView addShape:shape];
+    return shape;
     
 }// buildShapeClose:
 
@@ -548,7 +556,7 @@
 }// isRotateRectangle
 
 
-- (BOOL) drawOvalCirclePainted
+- (SYShape*) drawOvalCirclePainted
 {
     // Get oval axis
     CGFloat axisDistance = .0;
@@ -629,16 +637,16 @@
         
         NSLog(@"Error: %f", error);
         // If the error is higher than tolerance, It isn't a oval
-        if (error > ovaltoleracetypeA)
-            return NO;
-                
+        if (error > ovaltoleracetypeA){
+            return nil;
+        }
+        
         // It's a oval and add to the shape list
         SYShape *shape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
         shape.openCurve = NO;
         [shape addCircle:ovalRect];
-        [vectorView addShape:shape];
         
-        return YES;
+        return shape;
     }
     
     // Looking for the small axis
@@ -694,7 +702,7 @@
         
         // It isn't a circle
         if (error > 30.0) {
-            return NO;
+            return nil;
         }
         
         // It's a circle and add to the shape list
@@ -705,10 +713,8 @@
            startAngle:.0
              endAngle:360.0
             clockwise:YES];
-        [vectorView addShape:shape];
         
-        
-        return YES;
+        return shape;
     }
     
     // Get max and min XY
@@ -751,7 +757,7 @@
     
     NSLog(@"ErrorB: %f", error);
     if (error > ovaltoleracetypeB) {
-        return NO;
+        return nil;
     }
     
     // Create arc
@@ -759,10 +765,8 @@
     shape.openCurve = NO;
     [shape addCircleWithRect:CGRectMake(minX.x, maxY.y, (maxX.x - minX.x), (maxY.y - minY.y))
                 andTransform:transform];
-    [vectorView addShape:shape];
-            
-     
-    return YES;
+    
+    return shape;
     
 }// drawOvalCirclePainted
 

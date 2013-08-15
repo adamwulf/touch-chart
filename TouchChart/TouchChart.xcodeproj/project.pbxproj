@@ -167,6 +167,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		665C58F317BD591B006DECBF /* Data Controller */ = {
+			isa = PBXGroup;
+			children = (
+				ED2592E615BECB4000DC1DF0 /* SYBezierController.h */,
+				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
+			);
+			name = "Data Controller";
+			sourceTree = "<group>";
+		};
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +216,7 @@
 			children = (
 				ED66A49316513D59002F427B /* Test Classes */,
 				ED92333E1561825D00B0F505 /* View Controllers */,
+				665C58F317BD591B006DECBF /* Data Controller */,
 				ED9233351561774000B0F505 /* Views */,
 				ED10585815640D9C00B10043 /* Model */,
 				6691AA85150DD1AB00D4A47A /* AppDelegate */,
@@ -328,8 +338,6 @@
 			children = (
 				6691AA47150DCFBC00D4A47A /* TCViewController.h */,
 				6691AA48150DCFBC00D4A47A /* TCViewController.m */,
-				ED2592E615BECB4000DC1DF0 /* SYBezierController.h */,
-				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
