@@ -27,8 +27,6 @@
 
 @implementation SYShape
 
-#define bezierTolerance 0.01
-
 @synthesize closeCurve;
 @synthesize openCurve;
 
