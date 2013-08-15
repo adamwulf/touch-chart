@@ -25,6 +25,9 @@
 - (CGFloat) distanceBetweenPoint:(CGPoint) point1 andPoint:(CGPoint) point2;
 - (CGFloat) getAngleBetweenVertex:(CGPoint) vertex andPointA:(CGPoint) pointA andPointB:(CGPoint) pointB;
 
+// Other Helper Methods
+- (NSDictionary *) reducePointsKey;
+
 @end
 
 @implementation TCShapeController{
@@ -49,6 +52,8 @@
 #define toleranceRect 0.16
 #define rotateRectangleAngleTolerance 10.0
 
+
+@synthesize recentlyReducedKeyPoints;
 
 #pragma mark - Management Operations
 
@@ -948,11 +953,12 @@
         [indexKeyPoints addObject:[NSNumber numberWithInteger:index]];
     }
     
-    return [NSDictionary dictionaryWithObjectsAndKeys:pointsToFit, @"pointsToFit",
+    recentlyReducedKeyPoints = [NSDictionary dictionaryWithObjectsAndKeys:pointsToFit, @"pointsToFit",
             indexKeyPoints, @"indexKeyPoints",
             [NSArray arrayWithArray:listPoints], @"listPoints",
             reducePointKeyArray, @"reducePointKeyArray", nil];
     
+    return recentlyReducedKeyPoints;
 }// reducePointsKey
 
 

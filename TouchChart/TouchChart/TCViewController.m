@@ -201,31 +201,30 @@
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
     if(possibleShape){
+        [self drawRecentlyReducedKeyPoints];
         [vectorView addShape:possibleShape];
         [vectorView setNeedsDisplay];
     }
     return possibleShape;
 }
 
-//
-//- (NSDictionary *) reducePointsKey{
-//    NSDictionary* output = [shapeController reducePointsKey];
-//    // --------------------------------------------------------------------------
-//    
-//    // DEBUG DRAW
-//    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
-//    for (NSValue *pointValue in [output objectForKey:@"listPoints"])
-//        [keyPointShape addPoint:[pointValue CGPointValue]];
-//    [vectorView addDebugShape:keyPointShape];
-//    
-//    // DEBUG DRAW
-//    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
-//    for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
-//        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
-//    [vectorView addDebugShape:reducePointKeyArrayShape];
-//    
-//    return output;
-//}
+
+- (void) drawRecentlyReducedKeyPoints{
+    NSDictionary* output = [shapeController recentlyReducedKeyPoints];
+    // --------------------------------------------------------------------------
+    
+    // DEBUG DRAW
+    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    for (NSValue *pointValue in [output objectForKey:@"listPoints"])
+        [keyPointShape addPoint:[pointValue CGPointValue]];
+    [vectorView addDebugShape:keyPointShape];
+    
+    // DEBUG DRAW
+    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
+        [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
+    [vectorView addDebugShape:reducePointKeyArrayShape];
+}
 
 #pragma mark - Cloud Points Methods
 

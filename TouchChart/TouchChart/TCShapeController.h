@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "SYShape.h"
 
-@interface TCShapeController : UIViewController
+@interface TCShapeController : NSObject{
+    NSDictionary *recentlyReducedKeyPoints;
+}
+
+@property (readonly) NSDictionary* recentlyReducedKeyPoints;
 
 // Calculate Shapes
 - (SYShape*) getFigurePaintedWithTolerance:(CGFloat)toleranceValue andContinuity:(CGFloat)continuityValue;
@@ -19,10 +23,5 @@
 - (void) addLastPoint:(CGPoint) lastPoint;
 
 -(BOOL) hasPointData;
-
-// Other Helper Methods
-- (NSDictionary *) reducePointsKey;
-
-
 
 @end
