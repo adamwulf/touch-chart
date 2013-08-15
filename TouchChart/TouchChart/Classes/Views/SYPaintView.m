@@ -150,9 +150,12 @@
     // Init list points
     self.allPoints = [NSMutableArray array];
     
-    // Unit Test: Add point
-    UITouch *touch = [touches anyObject];
+    // Pre-process point to draw in screen
+	UITouch *touch = [touches anyObject];
 	CGPoint touchLocation = [touch locationInView:self];
+    [self processPoint:touchLocation];
+    
+    // Unit Test: Add point
     [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
         
 }// touchesBegan:withEvent:
