@@ -13,8 +13,9 @@
 
 @interface SYShape : NSObject
 
-@property (readonly, assign) BOOL closeCurve;
-@property (readonly, assign) BOOL openCurve;
+@property (readonly) BOOL closeCurve;
+@property (readonly) BOOL openCurve;
+@property (readonly) UIBezierPath* bezierPath;
 
 // Init
 - (id) initWithBezierTolerance:(float) toleranceSlider;

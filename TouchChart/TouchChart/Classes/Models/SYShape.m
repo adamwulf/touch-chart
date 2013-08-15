@@ -130,6 +130,14 @@
 }// geometries
 
 
+-(UIBezierPath*) bezierPath{
+    UIBezierPath* output = [UIBezierPath bezierPath];
+    for(SYGeometry* geom in geometriesArray){
+        [output appendPath:[geom bezierPath]];
+    }
+    return output;
+}
+
 #pragma mark - Adding Elements
 
 - (void) addPoint:(CGPoint) keyPoint

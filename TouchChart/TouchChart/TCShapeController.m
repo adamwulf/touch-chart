@@ -127,7 +127,7 @@
     
     // Is a rotate rectangle?
     if ([self isRotateRectangle]) {
-        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
+        SYShape *shape = [[SYShape alloc] init];
         
         // Get the four segments
         NSUInteger indexA = [[indexKeyPoints objectAtIndex:0]integerValue];
