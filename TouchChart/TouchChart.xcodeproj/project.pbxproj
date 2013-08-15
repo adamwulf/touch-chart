@@ -31,6 +31,7 @@
 		665C592217BD726F006DECBF /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592117BD726F006DECBF /* CoreImage.framework */; };
 		665C592317BD728D006DECBF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA35150DCFBC00D4A47A /* UIKit.framework */; };
 		665C592417BD72D7006DECBF /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C590017BD7171006DECBF /* TouchShape.framework */; };
+		665C593117BD77B2006DECBF /* TouchShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 665C593017BD77B2006DECBF /* TouchShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6691AA36150DCFBC00D4A47A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA35150DCFBC00D4A47A /* UIKit.framework */; };
 		6691AA38150DCFBC00D4A47A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
 		6691AA3A150DCFBC00D4A47A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA39150DCFBC00D4A47A /* CoreGraphics.framework */; };
@@ -98,6 +99,7 @@
 		665C590617BD7171006DECBF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		665C590817BD7171006DECBF /* TouchShape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TouchShape-Prefix.pch"; sourceTree = "<group>"; };
 		665C592117BD726F006DECBF /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		665C593017BD77B2006DECBF /* TouchShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchShape.h; sourceTree = "<group>"; };
 		6691AA31150DCFBC00D4A47A /* TouchChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA35150DCFBC00D4A47A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6691AA37150DCFBC00D4A47A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -289,6 +291,7 @@
 				ED92333F1561827C00B0F505 /* XIB */,
 				6691AA3C150DCFBC00D4A47A /* Supporting Files */,
 				6691AA80150DD0BA00D4A47A /* Constants.h */,
+				665C593017BD77B2006DECBF /* TouchShape.h */,
 			);
 			path = TouchChart;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				665C593117BD77B2006DECBF /* TouchShape.h in Headers */,
 				665C591617BD71E4006DECBF /* TCShapeController.h in Headers */,
 				665C591717BD71E4006DECBF /* SYBezierController.h in Headers */,
 				665C591817BD71E4006DECBF /* SYPaintView.h in Headers */,
