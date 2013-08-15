@@ -90,8 +90,8 @@
 		6691AA62150DCFBD00D4A47A /* TouchChartTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchChartTests.h; sourceTree = "<group>"; };
 		6691AA63150DCFBD00D4A47A /* TouchChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchChartTests.m; sourceTree = "<group>"; };
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shape.png; sourceTree = "<group>"; };
-		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shape@2x.png"; sourceTree = "<group>"; };
+		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shape.png; path = ../shape.png; sourceTree = "<group>"; };
+		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shape@2x.png"; path = "../shape@2x.png"; sourceTree = "<group>"; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
 		ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitTestController.m; path = Classes/NSObject/SYUnitTestController.m; sourceTree = "<group>"; };
 		ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -182,8 +182,6 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
-				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
-				66A53A03163F1A1C003EAEC0 /* shape.png */,
 				6691AA3B150DCFBC00D4A47A /* TouchChart */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -233,6 +231,8 @@
 		6691AA3C150DCFBC00D4A47A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
+				66A53A03163F1A1C003EAEC0 /* shape.png */,
 				6691AA3D150DCFBC00D4A47A /* TouchChart-Info.plist */,
 				6691AA3E150DCFBC00D4A47A /* InfoPlist.strings */,
 				6691AA41150DCFBC00D4A47A /* main.m */,
