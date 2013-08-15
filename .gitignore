@@ -1,4 +1,6 @@
 *.DS_Store
+TouchChart/TouchChart.xcodeproj/xcuserdata/adam.xcuserdatad/xcschemes/xcschememanagement.plist
+TouchChart/TouchChart.xcodeproj/xcuserdata
 TouchChart/TouchChart.xcodeproj/project.xcworkspace/xcuserdata
 TouchChart/TouchChart.xcodeproj/project.xcworkspace/xcshareddata
 TouchChart/TouchChart.xcodeproj/xcuserdata/adam.xcuserdatad/xcdebugger/

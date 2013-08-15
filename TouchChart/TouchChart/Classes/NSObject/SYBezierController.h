@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <CoreImage/CoreImage.h>
+#import <UIKit/UIKit.h>
 
 @interface SYBezierController : NSObject
 
