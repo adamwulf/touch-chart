@@ -69,6 +69,7 @@
 /* Begin PBXFileReference section */
 		665C58F417BD5A19006DECBF /* TCShapeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCShapeController.h; sourceTree = "<group>"; };
 		665C58F517BD5A19006DECBF /* TCShapeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCShapeController.m; sourceTree = "<group>"; };
+		665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYPaintViewDelegate.h; sourceTree = "<group>"; };
 		6691AA31150DCFBC00D4A47A /* TouchChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA35150DCFBC00D4A47A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6691AA37150DCFBC00D4A47A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -330,6 +331,7 @@
 			children = (
 				EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */,
 				EDE9DE1E1573EF5D009CC5EA /* SYPaintView.m */,
+				665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */,
 				ED92334415618F9E00B0F505 /* SYVectorView.h */,
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
 			);

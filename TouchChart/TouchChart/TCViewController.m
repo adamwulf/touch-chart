@@ -238,6 +238,9 @@
 {
     [shapeController addLastPoint:lastPoint];
     
+    // Analyze a recognize the figure
+    [self getFigurePainted];
+    
 }// addLastPoint:
 
 @end

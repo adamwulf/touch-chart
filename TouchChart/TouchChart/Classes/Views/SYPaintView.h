@@ -7,17 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYPaintViewDelegate.h"
 
 @class TCViewController;
 @class SYUnitTestController;
 
 @interface SYPaintView : UIView {
-    
     // Controller
-    __weak IBOutlet TCViewController *viewController;
+    __weak IBOutlet NSObject<SYPaintViewDelegate> *delegate;
     IBOutlet SYUnitTestController *unitTestController;
-    
 }
+
+@property(nonatomic, weak) NSObject<SYPaintViewDelegate> *delegate;
 
 @property(nonatomic, strong) NSMutableArray *allPoints; // Unit test data
 

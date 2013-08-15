@@ -36,6 +36,7 @@
 
 @synthesize handwritingCoords = handwritingCoords_;
 @synthesize allPoints;
+@synthesize delegate;
 
 #pragma mark - Initializers
 
@@ -145,7 +146,7 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     // CGPoint to NSValue and add it to list
-    [viewController resetData];
+    [delegate resetData];
     
     // Init list points
     self.allPoints = [NSMutableArray array];
@@ -168,7 +169,7 @@
     CGPoint touchPreviousLocation = [touch previousLocationInView:self];
         
     // Add these new points
-    [viewController addPoint:touchPreviousLocation andPoint:touchLocation];
+    [delegate addPoint:touchPreviousLocation andPoint:touchLocation];
     
     // Pre-process point to draw in screen
     [self processPoint:touchLocation];
@@ -188,10 +189,7 @@
     CGPoint touchLocation = [touch locationInView:self];
     
     // Add the last point
-    [viewController addLastPoint:touchLocation];
-    
-    // Analyze a recognize the figure
-    [viewController getFigurePainted];
+    [delegate addLastPoint:touchLocation];
     
     // Unit Test: Add point
     [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];
@@ -208,10 +206,7 @@
     CGPoint touchLocation = [touch locationInView:self];
     
     // Add the last point
-    [viewController addLastPoint:touchLocation];
-    
-    // Analyze a recognize the figure
-    [viewController getFigurePainted];
+    [delegate addLastPoint:touchLocation];
     
     // Unit Test: Add point
     [self.allPoints addObject:[NSValue valueWithCGPoint:touchLocation]];

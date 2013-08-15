@@ -10,13 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SYUnitTestController.h"
 #import "TCShapeController.h"
+#import "SYPaintViewDelegate.h"
 
 @class SYSaveMessageView;
 @class SYPaintView;
 @class SYVectorView;
 @class SYTableBase;
 
-@interface TCViewController : UIViewController <SYUnitTestDelegate> {
+@interface TCViewController : UIViewController <SYUnitTestDelegate,SYPaintViewDelegate> {
     
     // Views
     IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
@@ -41,8 +42,10 @@
 - (void) importCase:(NSArray *) allPoints;
 
 - (SYShape*) getFigurePainted;
--(void) resetData;
 
+// SYPaintViewDelegate
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;
 - (void) addLastPoint:(CGPoint) lastPoint;
+-(void) resetData;
+
 @end
