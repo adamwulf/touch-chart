@@ -18,7 +18,7 @@
 		665C591217BD719F006DECBF /* SYSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3BD3015796AC70026B9C2 /* SYSegment.m */; };
 		665C591317BD719F006DECBF /* SYBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = EDA4E76D166789E2000802C1 /* SYBezier.m */; };
 		665C591617BD71E4006DECBF /* TCShapeController.h in Headers */ = {isa = PBXBuildFile; fileRef = 665C58F417BD5A19006DECBF /* TCShapeController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		665C591717BD71E4006DECBF /* SYBezierController.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2592E615BECB4000DC1DF0 /* SYBezierController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		665C591717BD71E4006DECBF /* SYBezierController.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2592E615BECB4000DC1DF0 /* SYBezierController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		665C591817BD71E4006DECBF /* SYPaintView.h in Headers */ = {isa = PBXBuildFile; fileRef = EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665C591917BD71E4006DECBF /* SYPaintViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665C591A17BD71E4006DECBF /* SYVectorView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92334415618F9E00B0F505 /* SYVectorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -445,7 +445,6 @@
 			files = (
 				665C593117BD77B2006DECBF /* TouchShape.h in Headers */,
 				665C591617BD71E4006DECBF /* TCShapeController.h in Headers */,
-				665C591717BD71E4006DECBF /* SYBezierController.h in Headers */,
 				665C591817BD71E4006DECBF /* SYPaintView.h in Headers */,
 				665C591917BD71E4006DECBF /* SYPaintViewDelegate.h in Headers */,
 				665C591A17BD71E4006DECBF /* SYVectorView.h in Headers */,
@@ -453,6 +452,7 @@
 				665C591C17BD71E4006DECBF /* SYGeometry.h in Headers */,
 				665C591E17BD71E4006DECBF /* SYBezier.h in Headers */,
 				665C591D17BD71E4006DECBF /* SYSegment.h in Headers */,
+				665C591717BD71E4006DECBF /* SYBezierController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
