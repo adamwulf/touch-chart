@@ -16,7 +16,6 @@
 
 @property (readonly) BOOL closeCurve;
 @property (readonly) BOOL openCurve;
-@property (readonly) UIBezierPath* bezierPath;
 
 // Init
 - (id) initWithBezierTolerance:(float) toleranceSlider;

@@ -302,15 +302,6 @@
             }
         }
         
-        //
-        // prove we can get a full bezier path from a single
-        // shape, combining all its geometries
-        UIBezierPath* fullShapePath = [shape bezierPath];
-        fullShapePath.lineCapStyle = kCGLineCapSquare;
-        fullShapePath.lineJoinStyle = kCGLineJoinMiter;
-        fullShapePath.lineWidth = 1;
-        [[UIColor redColor] setStroke];
-        [fullShapePath stroke];
     }
     
 }// drawRect:
