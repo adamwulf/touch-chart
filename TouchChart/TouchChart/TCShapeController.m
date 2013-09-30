@@ -539,8 +539,8 @@
         shape.openCurve = NO;
         [shape addArc:CGPointMake(center.x, center.y)
                radius:bigAxisLongitude*0.5
-           startAngle:.0
-             endAngle:360.0
+           startAngle:0.0
+             endAngle:2*M_PI
             clockwise:YES];
         
         return shape;
