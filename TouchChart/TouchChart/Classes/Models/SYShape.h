@@ -14,15 +14,14 @@
 
 @interface SYShape : NSObject
 
-@property (readonly) BOOL closeCurve;
-@property (readonly) BOOL openCurve;
+@property (readonly) BOOL isClosedCurve;
+@property (readonly) BOOL isOpenCurve;
 
 // Init
 - (id) initWithBezierTolerance:(float) toleranceSlider;
 
 // Setter Methods
-- (void) setCloseCurve: (BOOL) isCloseCurve;
-- (void) setOpenCurve:(BOOL)isOpenCurve;
+- (void) setIsClosedCurve: (BOOL) isCloseCurve;
 
 // Getter Methods
 - (NSUInteger) geometriesCount;

@@ -158,7 +158,7 @@
     // We have the correct keypoints now and its index into a points list.
     // We can start to study the stretch between key points (line or curve)
     SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-    [shape setCloseCurve:isCloseShape];
+    [shape setIsClosedCurve:isCloseShape];
     BOOL needsCheckOval = YES;
     
     for (NSUInteger i = 1; i < [indexKeyPoints count]; i++) {
@@ -472,7 +472,7 @@
         
         // It's a oval and add to the shape list
         SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-        shape.openCurve = NO;
+        shape.isClosedCurve = YES;
         [shape addCircle:ovalRect];
         
         return shape;
@@ -536,7 +536,7 @@
         
         // It's a circle and add to the shape list
         SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-        shape.openCurve = NO;
+        shape.isClosedCurve = YES;
         [shape addArc:CGPointMake(center.x, center.y)
                radius:bigAxisLongitude*0.5
            startAngle:0.0
@@ -591,7 +591,7 @@
     
     // Create arc
     SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-    shape.openCurve = NO;
+    shape.isClosedCurve = YES;
     [shape addCircleWithRect:CGRectMake(minX.x, maxY.y, (maxX.x - minX.x), (maxY.y - minY.y))
                 andTransform:transform];
     

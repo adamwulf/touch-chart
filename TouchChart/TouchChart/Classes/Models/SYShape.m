@@ -27,8 +27,8 @@
 
 @implementation SYShape
 
-@synthesize closeCurve;
-@synthesize openCurve;
+@synthesize isClosedCurve;
+@synthesize isOpenCurve;
 
 
 - (id) init
@@ -37,8 +37,8 @@
     
     if (self) {
         geometriesArray = [[NSMutableArray alloc]init];
-        openCurve = NO;
-        closeCurve = NO;
+        isOpenCurve = NO;
+        isClosedCurve = NO;
     }
     
     return self;
@@ -52,8 +52,8 @@
     
     if (self) {
         geometriesArray = [[NSMutableArray alloc]init];
-        openCurve = NO;
-        closeCurve = NO;
+        isOpenCurve = NO;
+        isClosedCurve = NO;
         toleranceBezier = toleranceSlider;
     }
     
@@ -78,20 +78,13 @@
 
 #pragma mark - Setter Methods
 
-- (void) setCloseCurve: (BOOL) isCloseCurve
+- (void) setIsClosedCurve: (BOOL) isCloseCurve
 {
-    closeCurve = isCloseCurve;
-    openCurve = !isCloseCurve;
+    isClosedCurve = isCloseCurve;
+    isOpenCurve = !isCloseCurve;
     
 }// setCloseCurve
 
-
-- (void) setOpenCurve:(BOOL)isOpenCurve
-{
-    openCurve = isOpenCurve;
-    closeCurve = !isOpenCurve;
-    
-}// setOpenCurve
 
 
 #pragma mark - Getter elements
@@ -467,7 +460,7 @@
 
 - (void) snapLinesAngles
 {
-    if (self.openCurve) {
+    if (self.isOpenCurve) {
         
         // Single line
         if ([geometriesArray count] == 1) {
@@ -641,7 +634,7 @@
                 SYSegment *firstSegment = [[SYSegment alloc]initWithPoint:pointSt andPoint:pointFn];
                 [firstSegment snapAngleChangingStartPoint];
                 
-                if (self.closeCurve) {
+                if (self.isClosedCurve) {
                     // Snap. Final point pivot
                     pointSt = [[geometryLast.pointArray objectAtIndex:0]CGPointValue];
                     pointFn = [[geometryLast.pointArray objectAtIndex:1]CGPointValue];
@@ -864,7 +857,7 @@
     }
     
     // And if it's a close shape, the first bezier with the last one
-    if ([self closeCurve]) {
+    if ([self isClosedCurve]) {
         // Get two contiguous shape and check if they're bezier
         SYGeometry *firstShape = [self getElement:0];
         SYGeometry *lastShape = [self getElement:[self geometriesCount]-1];
