@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		663DC6E7185F72C100FAFE29 /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */; };
 		665C590117BD7171006DECBF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
 		665C590717BD7171006DECBF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 665C590517BD7171006DECBF /* InfoPlist.strings */; };
 		665C590C17BD719F006DECBF /* TCShapeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C58F517BD5A19006DECBF /* TCShapeController.m */; };
@@ -18,7 +19,7 @@
 		665C591217BD719F006DECBF /* SYSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF3BD3015796AC70026B9C2 /* SYSegment.m */; };
 		665C591317BD719F006DECBF /* SYBezier.m in Sources */ = {isa = PBXBuildFile; fileRef = EDA4E76D166789E2000802C1 /* SYBezier.m */; };
 		665C591617BD71E4006DECBF /* TCShapeController.h in Headers */ = {isa = PBXBuildFile; fileRef = 665C58F417BD5A19006DECBF /* TCShapeController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		665C591717BD71E4006DECBF /* SYBezierController.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2592E615BECB4000DC1DF0 /* SYBezierController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		665C591717BD71E4006DECBF /* SYBezierController.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2592E615BECB4000DC1DF0 /* SYBezierController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665C591817BD71E4006DECBF /* SYPaintView.h in Headers */ = {isa = PBXBuildFile; fileRef = EDE9DE1D1573EF5D009CC5EA /* SYPaintView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665C591917BD71E4006DECBF /* SYPaintViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665C591A17BD71E4006DECBF /* SYVectorView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92334415618F9E00B0F505 /* SYVectorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -40,7 +41,7 @@
 		6691AA46150DCFBC00D4A47A /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA45150DCFBC00D4A47A /* TCAppDelegate.m */; };
 		6691AA49150DCFBC00D4A47A /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA48150DCFBC00D4A47A /* TCViewController.m */; };
 		6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */; };
-		6691AA4F150DCFBD00D4A47A /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */; };
+		66999068185F77AF005581D9 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = 66999067185F77AF005581D9 /* ListGlyphs.png */; };
 		66A53A04163F1A1C003EAEC0 /* shape.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A03163F1A1C003EAEC0 /* shape.png */; };
 		66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A06163F1A20003EAEC0 /* shape@2x.png */; };
 		ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */; };
@@ -74,6 +75,7 @@
 
 /* Begin PBXFileReference section */
 		663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TCTestApp copy-Info.plist"; path = "/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/touch-chart/TouchChart/TCTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
+		663DC6E6185F72C100FAFE29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
 		665C58F417BD5A19006DECBF /* TCShapeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCShapeController.h; sourceTree = "<group>"; };
 		665C58F517BD5A19006DECBF /* TCShapeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCShapeController.m; sourceTree = "<group>"; };
 		665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYPaintViewDelegate.h; sourceTree = "<group>"; };
@@ -96,9 +98,9 @@
 		6691AA47150DCFBC00D4A47A /* TCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCViewController.h; sourceTree = "<group>"; };
 		6691AA48150DCFBC00D4A47A /* TCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCViewController.m; sourceTree = "<group>"; };
 		6691AA4B150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPhone.xib; sourceTree = "<group>"; };
-		6691AA4E150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
 		6691AA56150DCFBD00D4A47A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = TouchChart/Constants.h; sourceTree = "<group>"; };
+		66999067185F77AF005581D9 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ListGlyphs.png; sourceTree = SOURCE_ROOT; };
 		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shape.png; path = ../shape.png; sourceTree = "<group>"; };
 		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shape@2x.png"; path = "../shape@2x.png"; sourceTree = "<group>"; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 		6691AA3C150DCFBC00D4A47A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66999067185F77AF005581D9 /* ListGlyphs.png */,
 				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
 				66A53A03163F1A1C003EAEC0 /* shape.png */,
 				6691AA3D150DCFBC00D4A47A /* TouchShape-Info.plist */,
@@ -364,7 +367,7 @@
 		ED92333F1561827C00B0F505 /* XIB */ = {
 			isa = PBXGroup;
 			children = (
-				6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */,
+				663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */,
 				6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */,
 				ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */,
 			);
@@ -474,11 +477,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6691AA40150DCFBC00D4A47A /* InfoPlist.strings in Resources */,
+				663DC6E7185F72C100FAFE29 /* TCViewController_iPad.xib in Resources */,
 				6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */,
-				6691AA4F150DCFBD00D4A47A /* TCViewController_iPad.xib in Resources */,
 				ED12DD2715F4C0B400FBDF00 /* UnitTestCell.xib in Resources */,
 				66A53A04163F1A1C003EAEC0 /* shape.png in Resources */,
 				66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */,
+				66999068185F77AF005581D9 /* ListGlyphs.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,6 +571,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				663DC6E6185F72C100FAFE29 /* en */,
+			);
+			name = TCViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
 		665C590517BD7171006DECBF /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -589,14 +601,6 @@
 				6691AA4B150DCFBD00D4A47A /* en */,
 			);
 			name = TCViewController_iPhone.xib;
-			sourceTree = "<group>";
-		};
-		6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6691AA4E150DCFBD00D4A47A /* en */,
-			);
-			name = TCViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

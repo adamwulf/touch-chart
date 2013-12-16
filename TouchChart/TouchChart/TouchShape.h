@@ -14,4 +14,5 @@
 #import <TouchShape/SYSegment.h>
 #import <TouchShape/SYBezier.h>
 #import <TouchShape/TCShapeController.h>
+#import <TouchShape/SYBezierController.h>
 
