@@ -91,6 +91,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TCTestApp copy-Info.plist"; path = "/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/touch-chart/TouchChart/TCTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		665C58F417BD5A19006DECBF /* TCShapeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCShapeController.h; sourceTree = "<group>"; };
 		665C58F517BD5A19006DECBF /* TCShapeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCShapeController.m; sourceTree = "<group>"; };
 		665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYPaintViewDelegate.h; sourceTree = "<group>"; };
@@ -100,23 +101,23 @@
 		665C590817BD7171006DECBF /* TouchShape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TouchShape-Prefix.pch"; sourceTree = "<group>"; };
 		665C592117BD726F006DECBF /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		665C593017BD77B2006DECBF /* TouchShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchShape.h; sourceTree = "<group>"; };
-		6691AA31150DCFBC00D4A47A /* TouchChart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TouchChart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6691AA31150DCFBC00D4A47A /* TSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA35150DCFBC00D4A47A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6691AA37150DCFBC00D4A47A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6691AA39150DCFBC00D4A47A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		6691AA3D150DCFBC00D4A47A /* TouchChart-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TouchChart-Info.plist"; sourceTree = "<group>"; };
+		6691AA3D150DCFBC00D4A47A /* TouchShape-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TouchShape-Info.plist"; sourceTree = "<group>"; };
 		6691AA3F150DCFBC00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6691AA41150DCFBC00D4A47A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6691AA43150DCFBC00D4A47A /* TouchChart-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TouchChart-Prefix.pch"; sourceTree = "<group>"; };
+		6691AA43150DCFBC00D4A47A /* TouchShape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TouchShape-Prefix.pch"; sourceTree = "<group>"; };
 		6691AA44150DCFBC00D4A47A /* TCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCAppDelegate.h; sourceTree = "<group>"; };
 		6691AA45150DCFBC00D4A47A /* TCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCAppDelegate.m; sourceTree = "<group>"; };
 		6691AA47150DCFBC00D4A47A /* TCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCViewController.h; sourceTree = "<group>"; };
 		6691AA48150DCFBC00D4A47A /* TCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCViewController.m; sourceTree = "<group>"; };
 		6691AA4B150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPhone.xib; sourceTree = "<group>"; };
 		6691AA4E150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
-		6691AA55150DCFBD00D4A47A /* TouchChartTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchChartTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchShapeTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA56150DCFBD00D4A47A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		6691AA5E150DCFBD00D4A47A /* TouchChartTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TouchChartTests-Info.plist"; sourceTree = "<group>"; };
+		6691AA5E150DCFBD00D4A47A /* TouchShapeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TouchShapeTests-Info.plist"; sourceTree = "<group>"; };
 		6691AA60150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6691AA62150DCFBD00D4A47A /* TouchChartTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchChartTests.h; sourceTree = "<group>"; };
 		6691AA63150DCFBD00D4A47A /* TouchChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchChartTests.m; sourceTree = "<group>"; };
@@ -246,19 +247,20 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
-				6691AA3B150DCFBC00D4A47A /* TouchChart */,
+				6691AA3B150DCFBC00D4A47A /* TouchShape */,
 				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
 				665C590217BD7171006DECBF /* TouchShape */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
 				6691AA32150DCFBC00D4A47A /* Products */,
+				663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
 		6691AA32150DCFBC00D4A47A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6691AA31150DCFBC00D4A47A /* TouchChart.app */,
-				6691AA55150DCFBD00D4A47A /* TouchChartTests.octest */,
+				6691AA31150DCFBC00D4A47A /* TSTestApp.app */,
+				6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */,
 				665C590017BD7171006DECBF /* TouchShape.framework */,
 			);
 			name = Products;
@@ -279,7 +281,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6691AA3B150DCFBC00D4A47A /* TouchChart */ = {
+		6691AA3B150DCFBC00D4A47A /* TouchShape */ = {
 			isa = PBXGroup;
 			children = (
 				ED66A49316513D59002F427B /* Test Classes */,
@@ -293,6 +295,7 @@
 				6691AA80150DD0BA00D4A47A /* Constants.h */,
 				665C593017BD77B2006DECBF /* TouchShape.h */,
 			);
+			name = TouchShape;
 			path = TouchChart;
 			sourceTree = "<group>";
 		};
@@ -301,10 +304,10 @@
 			children = (
 				66A53A06163F1A20003EAEC0 /* shape@2x.png */,
 				66A53A03163F1A1C003EAEC0 /* shape.png */,
-				6691AA3D150DCFBC00D4A47A /* TouchChart-Info.plist */,
+				6691AA3D150DCFBC00D4A47A /* TouchShape-Info.plist */,
 				6691AA3E150DCFBC00D4A47A /* InfoPlist.strings */,
 				6691AA41150DCFBC00D4A47A /* main.m */,
-				6691AA43150DCFBC00D4A47A /* TouchChart-Prefix.pch */,
+				6691AA43150DCFBC00D4A47A /* TouchShape-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -323,7 +326,7 @@
 		6691AA5D150DCFBD00D4A47A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6691AA5E150DCFBD00D4A47A /* TouchChartTests-Info.plist */,
+				6691AA5E150DCFBD00D4A47A /* TouchShapeTests-Info.plist */,
 				6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -480,9 +483,9 @@
 			productReference = 665C590017BD7171006DECBF /* TouchShape.framework */;
 			productType = "com.apple.product-type.framework.static";
 		};
-		6691AA30150DCFBC00D4A47A /* TouchChart */ = {
+		6691AA30150DCFBC00D4A47A /* TSTestApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6691AA67150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchChart" */;
+			buildConfigurationList = 6691AA67150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TSTestApp" */;
 			buildPhases = (
 				6691AA2D150DCFBC00D4A47A /* Sources */,
 				6691AA2E150DCFBC00D4A47A /* Frameworks */,
@@ -493,14 +496,14 @@
 			dependencies = (
 				665C591517BD71B9006DECBF /* PBXTargetDependency */,
 			);
-			name = TouchChart;
+			name = TSTestApp;
 			productName = TouchChart;
-			productReference = 6691AA31150DCFBC00D4A47A /* TouchChart.app */;
+			productReference = 6691AA31150DCFBC00D4A47A /* TSTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6691AA54150DCFBD00D4A47A /* TouchChartTests */ = {
+		6691AA54150DCFBD00D4A47A /* TouchShapeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchChartTests" */;
+			buildConfigurationList = 6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchShapeTests" */;
 			buildPhases = (
 				6691AA50150DCFBD00D4A47A /* Sources */,
 				6691AA51150DCFBD00D4A47A /* Frameworks */,
@@ -512,9 +515,9 @@
 			dependencies = (
 				6691AA5B150DCFBD00D4A47A /* PBXTargetDependency */,
 			);
-			name = TouchChartTests;
+			name = TouchShapeTests;
 			productName = TouchChartTests;
-			productReference = 6691AA55150DCFBD00D4A47A /* TouchChartTests.octest */;
+			productReference = 6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -526,7 +529,7 @@
 				CLASSPREFIX = TC;
 				LastUpgradeCheck = 0500;
 			};
-			buildConfigurationList = 6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchChart" */;
+			buildConfigurationList = 6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchShape" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -538,8 +541,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6691AA30150DCFBC00D4A47A /* TouchChart */,
-				6691AA54150DCFBD00D4A47A /* TouchChartTests */,
+				6691AA30150DCFBC00D4A47A /* TSTestApp */,
+				6691AA54150DCFBD00D4A47A /* TouchShapeTests */,
 				665C58FF17BD7171006DECBF /* TouchShape */,
 			);
 		};
@@ -686,7 +689,7 @@
 		};
 		6691AA5B150DCFBD00D4A47A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6691AA30150DCFBC00D4A47A /* TouchChart */;
+			target = 6691AA30150DCFBC00D4A47A /* TSTestApp */;
 			targetProxy = 6691AA5A150DCFBD00D4A47A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -875,10 +878,10 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				GCC_PREFIX_HEADER = "TouchChart/TouchShape-Prefix.pch";
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
+				INFOPLIST_FILE = "TouchChart/TouchShape-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -903,10 +906,10 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
+				GCC_PREFIX_HEADER = "TouchChart/TouchShape-Prefix.pch";
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = "TouchChart/TouchChart-Info.plist";
+				INFOPLIST_FILE = "TouchChart/TouchShape-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -934,8 +937,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
-				INFOPLIST_FILE = "TouchChartTests/TouchChartTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "TouchChartTests/TouchShapeTests-Info.plist";
+				PRODUCT_NAME = TouchShapeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -954,8 +957,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
-				INFOPLIST_FILE = "TouchChartTests/TouchChartTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "TouchChartTests/TouchShapeTests-Info.plist";
+				PRODUCT_NAME = TouchShapeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -973,7 +976,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchChart" */ = {
+		6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchShape" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6691AA65150DCFBD00D4A47A /* Debug */,
@@ -982,7 +985,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6691AA67150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchChart" */ = {
+		6691AA67150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TSTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6691AA68150DCFBD00D4A47A /* Debug */,
@@ -991,7 +994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchChartTests" */ = {
+		6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchShapeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6691AA6B150DCFBD00D4A47A /* Debug */,
