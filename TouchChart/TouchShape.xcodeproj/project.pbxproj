@@ -41,11 +41,6 @@
 		6691AA49150DCFBC00D4A47A /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA48150DCFBC00D4A47A /* TCViewController.m */; };
 		6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA4A150DCFBD00D4A47A /* TCViewController_iPhone.xib */; };
 		6691AA4F150DCFBD00D4A47A /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA4D150DCFBD00D4A47A /* TCViewController_iPad.xib */; };
-		6691AA57150DCFBD00D4A47A /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA56150DCFBD00D4A47A /* SenTestingKit.framework */; };
-		6691AA58150DCFBD00D4A47A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA35150DCFBC00D4A47A /* UIKit.framework */; };
-		6691AA59150DCFBD00D4A47A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
-		6691AA61150DCFBD00D4A47A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */; };
-		6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6691AA63150DCFBD00D4A47A /* TouchChartTests.m */; };
 		66A53A04163F1A1C003EAEC0 /* shape.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A03163F1A1C003EAEC0 /* shape.png */; };
 		66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A06163F1A20003EAEC0 /* shape@2x.png */; };
 		ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */; };
@@ -60,17 +55,11 @@
 		ED0BE5D415F0C8F700EBE866 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5D315F0C8F700EBE866 /* Parse.framework */; };
 		ED12DD2715F4C0B400FBDF00 /* UnitTestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */; };
 		ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */; };
-		ED12DD3515F5295200FBDF00 /* LoginPopupBottom.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */; };
-		ED12DD3615F5295200FBDF00 /* LoginPopupMiddle.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */; };
-		ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */; };
-		ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */; };
-		ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ED22E38D161D9AA20092B432 /* Default-568h@2x.png */; };
 		ED256D26160B44980009C871 /* SYTableBase.m in Sources */ = {isa = PBXBuildFile; fileRef = ED256D25160B44980009C871 /* SYTableBase.m */; };
 		ED646F1C15AED566006434F8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED646F1B15AED566006434F8 /* Accelerate.framework */; };
 		ED669884160A30B900115E68 /* SYSaveMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED669883160A30B900115E68 /* SYSaveMessageView.m */; };
 		ED92333B156177A600B0F505 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333A156177A600B0F505 /* OpenGLES.framework */; };
 		ED92333D156180F600B0F505 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92333C156180F600B0F505 /* QuartzCore.framework */; };
-		ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92334515618F9F00B0F505 /* SYVectorView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,13 +69,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 665C58FF17BD7171006DECBF;
 			remoteInfo = TouchShape;
-		};
-		6691AA5A150DCFBD00D4A47A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6691AA28150DCFBC00D4A47A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6691AA30150DCFBC00D4A47A;
-			remoteInfo = TouchChart;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -100,7 +82,7 @@
 		665C590617BD7171006DECBF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		665C590817BD7171006DECBF /* TouchShape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TouchShape-Prefix.pch"; sourceTree = "<group>"; };
 		665C592117BD726F006DECBF /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
-		665C593017BD77B2006DECBF /* TouchShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchShape.h; sourceTree = "<group>"; };
+		665C593017BD77B2006DECBF /* TouchShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchShape.h; path = TouchChart/TouchShape.h; sourceTree = "<group>"; };
 		6691AA31150DCFBC00D4A47A /* TSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA35150DCFBC00D4A47A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6691AA37150DCFBC00D4A47A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -115,13 +97,8 @@
 		6691AA48150DCFBC00D4A47A /* TCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCViewController.m; sourceTree = "<group>"; };
 		6691AA4B150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPhone.xib; sourceTree = "<group>"; };
 		6691AA4E150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
-		6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchShapeTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6691AA56150DCFBD00D4A47A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		6691AA5E150DCFBD00D4A47A /* TouchShapeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TouchShapeTests-Info.plist"; sourceTree = "<group>"; };
-		6691AA60150DCFBD00D4A47A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6691AA62150DCFBD00D4A47A /* TouchChartTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchChartTests.h; sourceTree = "<group>"; };
-		6691AA63150DCFBD00D4A47A /* TouchChartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TouchChartTests.m; sourceTree = "<group>"; };
-		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		6691AA80150DD0BA00D4A47A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = TouchChart/Constants.h; sourceTree = "<group>"; };
 		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shape.png; path = ../shape.png; sourceTree = "<group>"; };
 		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shape@2x.png"; path = "../shape@2x.png"; sourceTree = "<group>"; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
@@ -142,11 +119,6 @@
 		ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UnitTestCell.xib; path = XIB/UnitTestCell.xib; sourceTree = "<group>"; };
 		ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitPreview.h; path = Classes/Views/SYUnitPreview.h; sourceTree = "<group>"; };
 		ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitPreview.m; path = Classes/Views/SYUnitPreview.m; sourceTree = "<group>"; };
-		ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupBottom.png; path = TouchChart/Images/LoginPopupBottom.png; sourceTree = SOURCE_ROOT; };
-		ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupMiddle.png; path = TouchChart/Images/LoginPopupMiddle.png; sourceTree = SOURCE_ROOT; };
-		ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoginPopupTop.png; path = TouchChart/Images/LoginPopupTop.png; sourceTree = SOURCE_ROOT; };
-		ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ListGlyphs.png; path = TouchChart/Images/ListGlyphs.png; sourceTree = SOURCE_ROOT; };
-		ED22E38D161D9AA20092B432 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		ED256D24160B44980009C871 /* SYTableBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYTableBase.h; path = Classes/Views/Buttons/SYTableBase.h; sourceTree = "<group>"; };
 		ED256D25160B44980009C871 /* SYTableBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYTableBase.m; path = Classes/Views/Buttons/SYTableBase.m; sourceTree = "<group>"; };
 		ED2592E615BECB4000DC1DF0 /* SYBezierController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYBezierController.h; path = Classes/NSObject/SYBezierController.h; sourceTree = "<group>"; };
@@ -202,19 +174,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6691AA51150DCFBD00D4A47A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6691AA57150DCFBD00D4A47A /* SenTestingKit.framework in Frameworks */,
-				6691AA58150DCFBD00D4A47A /* UIKit.framework in Frameworks */,
-				6691AA59150DCFBD00D4A47A /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		663DC6C5185F6F6900FAFE29 /* TouchShape */ = {
+			isa = PBXGroup;
+			children = (
+				665C58F317BD591B006DECBF /* Data Controller */,
+				ED9233351561774000B0F505 /* Views */,
+				ED10585815640D9C00B10043 /* Model */,
+				665C590317BD7171006DECBF /* Supporting Files */,
+				6691AA80150DD0BA00D4A47A /* Constants.h */,
+				665C593017BD77B2006DECBF /* TouchShape.h */,
+			);
+			name = TouchShape;
+			sourceTree = "<group>";
+		};
 		665C58F317BD591B006DECBF /* Data Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,14 +199,7 @@
 				ED2592E715BECB4000DC1DF0 /* SYBezierController.m */,
 			);
 			name = "Data Controller";
-			sourceTree = "<group>";
-		};
-		665C590217BD7171006DECBF /* TouchShape */ = {
-			isa = PBXGroup;
-			children = (
-				665C590317BD7171006DECBF /* Supporting Files */,
-			);
-			path = TouchShape;
+			path = TouchChart;
 			sourceTree = "<group>";
 		};
 		665C590317BD7171006DECBF /* Supporting Files */ = {
@@ -242,14 +210,14 @@
 				665C590817BD7171006DECBF /* TouchShape-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			path = TouchShape;
 			sourceTree = "<group>";
 		};
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
-				6691AA3B150DCFBC00D4A47A /* TouchShape */,
-				6691AA5C150DCFBD00D4A47A /* TouchChartTests */,
-				665C590217BD7171006DECBF /* TouchShape */,
+				663DC6C5185F6F6900FAFE29 /* TouchShape */,
+				6691AA3B150DCFBC00D4A47A /* TSTestApp */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
 				6691AA32150DCFBC00D4A47A /* Products */,
 				663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */,
@@ -260,7 +228,6 @@
 			isa = PBXGroup;
 			children = (
 				6691AA31150DCFBC00D4A47A /* TSTestApp.app */,
-				6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */,
 				665C590017BD7171006DECBF /* TouchShape.framework */,
 			);
 			name = Products;
@@ -281,21 +248,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6691AA3B150DCFBC00D4A47A /* TouchShape */ = {
+		6691AA3B150DCFBC00D4A47A /* TSTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				ED66A49316513D59002F427B /* Test Classes */,
 				ED92333E1561825D00B0F505 /* View Controllers */,
-				665C58F317BD591B006DECBF /* Data Controller */,
-				ED9233351561774000B0F505 /* Views */,
-				ED10585815640D9C00B10043 /* Model */,
+				ED66A49316513D59002F427B /* Test Classes */,
+				ED12DD3815F537BA00FBDF00 /* Paint Code */,
 				6691AA85150DD1AB00D4A47A /* AppDelegate */,
 				ED92333F1561827C00B0F505 /* XIB */,
 				6691AA3C150DCFBC00D4A47A /* Supporting Files */,
-				6691AA80150DD0BA00D4A47A /* Constants.h */,
-				665C593017BD77B2006DECBF /* TouchShape.h */,
 			);
-			name = TouchShape;
+			name = TSTestApp;
 			path = TouchChart;
 			sourceTree = "<group>";
 		};
@@ -308,26 +271,6 @@
 				6691AA3E150DCFBC00D4A47A /* InfoPlist.strings */,
 				6691AA41150DCFBC00D4A47A /* main.m */,
 				6691AA43150DCFBC00D4A47A /* TouchShape-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		6691AA5C150DCFBD00D4A47A /* TouchChartTests */ = {
-			isa = PBXGroup;
-			children = (
-				6691AA62150DCFBD00D4A47A /* TouchChartTests.h */,
-				6691AA63150DCFBD00D4A47A /* TouchChartTests.m */,
-				ED923340156185D100B0F505 /* Images */,
-				6691AA5D150DCFBD00D4A47A /* Supporting Files */,
-			);
-			path = TouchChartTests;
-			sourceTree = "<group>";
-		};
-		6691AA5D150DCFBD00D4A47A /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				6691AA5E150DCFBD00D4A47A /* TouchShapeTests-Info.plist */,
-				6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -371,6 +314,7 @@
 				EDA4E76D166789E2000802C1 /* SYBezier.m */,
 			);
 			name = Model;
+			path = TouchChart;
 			sourceTree = "<group>";
 		};
 		ED12DD3815F537BA00FBDF00 /* Paint Code */ = {
@@ -391,7 +335,6 @@
 				ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */,
 				ED12DD2915F4CDFC00FBDF00 /* SYUnitPreview.h */,
 				ED12DD2A15F4CDFC00FBDF00 /* SYUnitPreview.m */,
-				ED12DD3815F537BA00FBDF00 /* Paint Code */,
 			);
 			name = "Test Classes";
 			sourceTree = "<group>";
@@ -406,6 +349,7 @@
 				ED92334515618F9F00B0F505 /* SYVectorView.m */,
 			);
 			name = Views;
+			path = TouchChart;
 			sourceTree = "<group>";
 		};
 		ED92333E1561825D00B0F505 /* View Controllers */ = {
@@ -425,18 +369,6 @@
 				ED12DD2615F4C0B400FBDF00 /* UnitTestCell.xib */,
 			);
 			name = XIB;
-			sourceTree = "<group>";
-		};
-		ED923340156185D100B0F505 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				ED22E38D161D9AA20092B432 /* Default-568h@2x.png */,
-				ED12DD3C15F539D100FBDF00 /* ListGlyphs.png */,
-				ED12DD3215F5295100FBDF00 /* LoginPopupBottom.png */,
-				ED12DD3315F5295100FBDF00 /* LoginPopupMiddle.png */,
-				ED12DD3415F5295100FBDF00 /* LoginPopupTop.png */,
-			);
-			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -501,25 +433,6 @@
 			productReference = 6691AA31150DCFBC00D4A47A /* TSTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6691AA54150DCFBD00D4A47A /* TouchShapeTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchShapeTests" */;
-			buildPhases = (
-				6691AA50150DCFBD00D4A47A /* Sources */,
-				6691AA51150DCFBD00D4A47A /* Frameworks */,
-				6691AA52150DCFBD00D4A47A /* Resources */,
-				6691AA53150DCFBD00D4A47A /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6691AA5B150DCFBD00D4A47A /* PBXTargetDependency */,
-			);
-			name = TouchShapeTests;
-			productName = TouchChartTests;
-			productReference = 6691AA55150DCFBD00D4A47A /* TouchShapeTests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -542,7 +455,6 @@
 			projectRoot = "";
 			targets = (
 				6691AA30150DCFBC00D4A47A /* TSTestApp */,
-				6691AA54150DCFBD00D4A47A /* TouchShapeTests */,
 				665C58FF17BD7171006DECBF /* TouchShape */,
 			);
 		};
@@ -565,21 +477,8 @@
 				6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */,
 				6691AA4F150DCFBD00D4A47A /* TCViewController_iPad.xib in Resources */,
 				ED12DD2715F4C0B400FBDF00 /* UnitTestCell.xib in Resources */,
-				ED12DD3515F5295200FBDF00 /* LoginPopupBottom.png in Resources */,
-				ED12DD3615F5295200FBDF00 /* LoginPopupMiddle.png in Resources */,
-				ED12DD3715F5295200FBDF00 /* LoginPopupTop.png in Resources */,
-				ED12DD3D15F539D100FBDF00 /* ListGlyphs.png in Resources */,
-				ED22E38E161D9AA20092B432 /* Default-568h@2x.png in Resources */,
 				66A53A04163F1A1C003EAEC0 /* shape.png in Resources */,
 				66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6691AA52150DCFBD00D4A47A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6691AA61150DCFBD00D4A47A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,19 +524,6 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nset +u\nif [[ $UFW_MASTER_SCRIPT_RUNNING ]]\nthen\n    # Nothing for the slave script to do\n    exit 0\nfi\nset -u\nexport UFW_MASTER_SCRIPT_RUNNING=1\n\n\n# Functions\n\n## List files in the specified directory, storing to the specified array.\n#\n# @param $1 The path to list\n# @param $2 The name of the array to fill\n#\n##\nlist_files ()\n{\n    filelist=$(ls \"$1\")\n    while read line\n    do\n        eval \"$2[\\${#$2[*]}]=\\\"\\$line\\\"\"\n    done <<< \"$filelist\"\n}\n\n\n# Sanity check\n\nif [[ ! -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]]\nthen\n    echo \"Framework target \\\"${TARGET_NAME}\\\" had no source files to build from. Make sure your source files have the correct target membership\"\n    exit 1\nfi\n\n\n# Gather information\n\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]\nthen\n    UFW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find platform name from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]\nthen\n    UFW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\n    echo \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\n    exit 1\nfi\n\nif [[ \"$UFW_SDK_PLATFORM\" = \"iphoneos\" ]]\nthen\n    UFW_OTHER_PLATFORM=iphonesimulator\nelse\n    UFW_OTHER_PLATFORM=iphoneos\nfi\n\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$UFW_SDK_PLATFORM$ ]]\nthen\n    UFW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${UFW_OTHER_PLATFORM}\"\nelse\n    echo \"Could not find $UFW_SDK_PLATFORM in $BUILT_PRODUCTS_DIR\"\n    exit 1\nfi\n\nONLY_ACTIVE_PLATFORM=${ONLY_ACTIVE_PLATFORM:-$ONLY_ACTIVE_ARCH}\n\n# Short-circuit if all binaries are up to date.\n# We already checked the other platform in the prerun script.\n\nif [[ -f \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" ]] && [[ -f \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]] && [[ ! \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -nt \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/${EXECUTABLE_PATH}\" ]]\nthen\n    exit 0\nfi\n\nif [ \"${ONLY_ACTIVE_PLATFORM}\" == \"YES\" ]\nthen\n    echo \"ONLY_ACTIVE_PLATFORM=${ONLY_ACTIVE_PLATFORM}: Skipping other platform build\"\nelse\n    # Make sure the other platform gets built\n    \n    echo \"Build other platform\"\n    \n    echo xcodebuild -project \"${PROJECT_FILE_PATH}\" -target \"${TARGET_NAME}\" -configuration \"${CONFIGURATION}\" -sdk ${UFW_OTHER_PLATFORM}${UFW_SDK_VERSION} BUILD_DIR=\"${BUILD_DIR}\" CONFIGURATION_TEMP_DIR=\"${PROJECT_TEMP_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\" $ACTION\n    xcodebuild -project \"${PROJECT_FILE_PATH}\" -target \"${TARGET_NAME}\" -configuration \"${CONFIGURATION}\" -sdk ${UFW_OTHER_PLATFORM}${UFW_SDK_VERSION} BUILD_DIR=\"${BUILD_DIR}\" CONFIGURATION_TEMP_DIR=\"${PROJECT_TEMP_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\" $ACTION\n    \n    \n    # Build the fat static library binary\n    \n    echo \"Create universal static library\"\n    \n    echo \"$PLATFORM_DEVELOPER_BIN_DIR/libtool\" -static \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -o \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\"\n    \"$PLATFORM_DEVELOPER_BIN_DIR/libtool\" -static \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" \"${UFW_OTHER_BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\" -o \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\"\n    \n    echo mv \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\" \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\n    mv \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}.temp\" \"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nfi\n\n# Build embedded framework structure\n\necho \"Build Embedded Framework\"\n\necho rm -rf \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\nrm -rf \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework\"\necho mkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources\"\necho cp -a \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/\"\ncp -a \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/\"\n\ndeclare -a UFW_FILE_LIST\nlist_files \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\" UFW_FILE_LIST\nfor filename in \"${UFW_FILE_LIST[@]}\"\ndo\n    if [[ \"${filename}\" != \"Info.plist\" ]] && [[ ! \"${filename}\" =~ .*\\.lproj$ ]]\n    then\n        echo ln -sfh \"../${WRAPPER_NAME}/Resources/${filename}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources/${filename}\"\n        ln -sfh \"../${WRAPPER_NAME}/Resources/${filename}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.embeddedframework/Resources/${filename}\"\n    fi\ndone\n\n\nif [ \"${ONLY_ACTIVE_PLATFORM}\" != \"YES\" ]\nthen\n    # Replace other platform's framework with a copy of this one (so that both have the same universal binary)\n    \n    echo \"Copy from $UFW_SDK_PLATFORM to $UFW_OTHER_PLATFORM\"\n    \n    echo rm -rf \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\n    rm -rf \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\n    echo cp -a \"${BUILD_DIR}/${CONFIGURATION}-${UFW_SDK_PLATFORM}\" \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\n    cp -a \"${BUILD_DIR}/${CONFIGURATION}-${UFW_SDK_PLATFORM}\" \"${BUILD_DIR}/${CONFIGURATION}-${UFW_OTHER_PLATFORM}\"\nfi\n";
 		};
-		6691AA53150DCFBD00D4A47A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -670,15 +556,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6691AA50150DCFBD00D4A47A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6691AA64150DCFBD00D4A47A /* TouchChartTests.m in Sources */,
-				ED92334715618F9F00B0F505 /* SYVectorView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -686,11 +563,6 @@
 			isa = PBXTargetDependency;
 			target = 665C58FF17BD7171006DECBF /* TouchShape */;
 			targetProxy = 665C591417BD71B9006DECBF /* PBXContainerItemProxy */;
-		};
-		6691AA5B150DCFBD00D4A47A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6691AA30150DCFBC00D4A47A /* TSTestApp */;
-			targetProxy = 6691AA5A150DCFBD00D4A47A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -725,14 +597,6 @@
 				6691AA4E150DCFBD00D4A47A /* en */,
 			);
 			name = TCViewController_iPad.xib;
-			sourceTree = "<group>";
-		};
-		6691AA5F150DCFBD00D4A47A /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6691AA60150DCFBD00D4A47A /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -924,46 +788,6 @@
 			};
 			name = Release;
 		};
-		6691AA6B150DCFBD00D4A47A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TouchChart.app/TouchChart";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-					"\"$(SRCROOT)/TouchChart/External Libraries\"",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
-				INFOPLIST_FILE = "TouchChartTests/TouchShapeTests-Info.plist";
-				PRODUCT_NAME = TouchShapeTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		6691AA6C150DCFBD00D4A47A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TouchChart.app/TouchChart";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-					"\"$(SRCROOT)/TouchChart/External Libraries\"",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TouchChart/TouchChart-Prefix.pch";
-				INFOPLIST_FILE = "TouchChartTests/TouchShapeTests-Info.plist";
-				PRODUCT_NAME = TouchShapeTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -990,15 +814,6 @@
 			buildConfigurations = (
 				6691AA68150DCFBD00D4A47A /* Debug */,
 				6691AA69150DCFBD00D4A47A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6691AA6A150DCFBD00D4A47A /* Build configuration list for PBXNativeTarget "TouchShapeTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6691AA6B150DCFBD00D4A47A /* Debug */,
-				6691AA6C150DCFBD00D4A47A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
