@@ -16,7 +16,7 @@
 @property (readonly) NSDictionary* recentlyReducedKeyPoints;
 
 // Calculate Shapes
-- (SYShape*) getFigurePaintedWithTolerance:(CGFloat)toleranceValue andContinuity:(CGFloat)continuityValue;
+- (SYShape*) getFigurePaintedWithTolerance:(CGFloat)toleranceValue andContinuity:(CGFloat)continuityValue forceOpen:(BOOL)forceOpen;
 
 // Cloud Points Methods
 - (void) addPoint:(CGPoint) pointA andPoint:(CGPoint) pointB;

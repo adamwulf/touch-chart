@@ -79,8 +79,7 @@
     return [listPoints count] >= 5;
 }
 
-- (SYShape*) getFigurePaintedWithTolerance:(CGFloat)toleranceValue andContinuity:(CGFloat)continuityValue
-{
+- (SYShape*) getFigurePaintedWithTolerance:(CGFloat)toleranceValue andContinuity:(CGFloat)continuityValue forceOpen:(BOOL)forceOpen{
     // If it doesn't draw, just touch, exit
     if ([listPoints count] < 5)
         return nil;
@@ -102,7 +101,7 @@
     
     SYShape* possibleShape = nil;
     // It's open, do nothing, exit
-    if (fabs(ratioDistanceX) > 0.22 || fabs(ratioDistanceY) > 0.22)
+    if (fabs(ratioDistanceX) > 0.22 || fabs(ratioDistanceY) > 0.22 || forceOpen)
         possibleShape = [self buildShapeClose:NO withTolerance:toleranceValue andContinuity:continuityValue];
     else {
         // If the resulting points number is insufficient, exit
