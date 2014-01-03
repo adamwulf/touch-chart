@@ -199,7 +199,7 @@
 
 - (SYShape*) getFigurePainted
 {
-    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
+    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:NO];
     if(possibleShape){
         [self drawRecentlyReducedKeyPoints];
         [vectorView addShape:possibleShape];
