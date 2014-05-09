@@ -180,13 +180,13 @@
     A[3] = a[2] * pow(cValue[2], 2) * (1 - cValue[2]);
     
     // Resolvemos la ecuacion
-    long N = 2;
-    long nrhs = 1;
-    long lda = 2;
-    long ipiv[2];
-    long ldb = 2;
-    long info;
-    dgesv_(&N, &nrhs, A, &lda, (long*)&ipiv, B, &ldb, &info);
+    __CLPK_integer N = 2;
+    __CLPK_integer nrhs = 1;
+    __CLPK_integer lda = 2;
+    __CLPK_integer ipiv[2];
+    __CLPK_integer ldb = 2;
+    __CLPK_integer info;
+    dgesv_(&N, &nrhs, A, &lda, (__CLPK_integer*) &ipiv, B, &ldb, &info);
     
     // Store solutions
     CGPoint P1 = CGPointMake(B[0], .0);
@@ -211,7 +211,7 @@
     nrhs = 1;
     lda = 2;
     ldb = 2;
-    dgesv_(&N, &nrhs, A, &lda, (long*)&ipiv, B, &ldb, &info);
+    dgesv_(&N, &nrhs, A, &lda, (__CLPK_integer*)&ipiv, B, &ldb, &info);
     
     // Store solutions
     P1 = CGPointMake(P1.x, B[0]);
