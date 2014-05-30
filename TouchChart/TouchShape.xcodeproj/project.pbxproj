@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		663DC6E7185F72C100FAFE29 /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */; };
+		6651820C1937C49400CBEAB4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6651820B1937C49400CBEAB4 /* Default-568h@2x.png */; };
 		665C590117BD7171006DECBF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
 		665C590717BD7171006DECBF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 665C590517BD7171006DECBF /* InfoPlist.strings */; };
 		665C590C17BD719F006DECBF /* TCShapeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C58F517BD5A19006DECBF /* TCShapeController.m */; };
@@ -76,6 +77,7 @@
 /* Begin PBXFileReference section */
 		663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TCTestApp copy-Info.plist"; path = "/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/touch-chart/TouchChart/TCTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		663DC6E6185F72C100FAFE29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
+		6651820B1937C49400CBEAB4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		665C58F417BD5A19006DECBF /* TCShapeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCShapeController.h; sourceTree = "<group>"; };
 		665C58F517BD5A19006DECBF /* TCShapeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCShapeController.m; sourceTree = "<group>"; };
 		665C58F717BD7046006DECBF /* SYPaintViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYPaintViewDelegate.h; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 		6691AA26150DCFBC00D4A47A = {
 			isa = PBXGroup;
 			children = (
+				6651820B1937C49400CBEAB4 /* Default-568h@2x.png */,
 				663DC6C5185F6F6900FAFE29 /* TouchShape */,
 				6691AA3B150DCFBC00D4A47A /* TSTestApp */,
 				6691AA34150DCFBC00D4A47A /* Frameworks */,
@@ -481,6 +484,7 @@
 				6691AA4C150DCFBD00D4A47A /* TCViewController_iPhone.xib in Resources */,
 				ED12DD2715F4C0B400FBDF00 /* UnitTestCell.xib in Resources */,
 				66A53A04163F1A1C003EAEC0 /* shape.png in Resources */,
+				6651820C1937C49400CBEAB4 /* Default-568h@2x.png in Resources */,
 				66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */,
 				66999068185F77AF005581D9 /* ListGlyphs.png in Resources */,
 			);
@@ -758,7 +762,6 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -786,8 +789,6 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6B91E141-F7BF-4795-BCFA-F4EBD8A570CC";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
