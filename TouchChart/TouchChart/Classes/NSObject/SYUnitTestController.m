@@ -113,7 +113,7 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %d scores.", objects.count);
+            NSLog(@"Successfully retrieved %d scores.", (int) objects.count);
             pfObjects = [[NSMutableArray alloc]initWithArray:objects];
             [myTableView reloadData];
         } else {
@@ -281,7 +281,7 @@
 
     // Number of points
     UILabel *points = (UILabel *)[cell viewWithTag:5];
-    points.text = [NSString stringWithFormat:@"%u points", [list count]];
+    points.text = [NSString stringWithFormat:@"%u points", (int) [list count]];
     
     return cell;
     

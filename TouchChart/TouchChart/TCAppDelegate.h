@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@class TCViewController;
+#import <TouchShape/TouchShape.h>
 
 @interface TCAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *_window;
+@property (strong, nonatomic) UIWindow* window;
 @property (strong, nonatomic) TCViewController *viewController;
 
 @end

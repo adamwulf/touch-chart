@@ -290,28 +290,28 @@
 - (BOOL) isRectangle
 {
     return NO;
-    // Reduce Points
-    // --------------------------------------------------------------------------
-    NSDictionary *dataDict = [self reducePointsKey];
-    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
-    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
-    
-    for (NSUInteger i = 0; i < [indexKeyPoints count]; i++) {
-        // Build stretch
-        NSUInteger index = [[indexKeyPoints objectAtIndex:i]integerValue];
-        CGPoint keyPoint = [[pointsToFit objectAtIndex:index]CGPointValue];
-        
-        // Check Rectangle 0 or 90 degree
-        float testXA = fabs((keyPoint.x - minX.x)/(maxX.x - minX.x));
-        float testYA = fabs((keyPoint.y - minY.y)/(maxY.y - minY.y));
-        
-        if (!(testXA < toleranceRect || testXA > 1-toleranceRect))
-            return NO;
-        if (!(testYA < toleranceRect || testYA > 1-toleranceRect))
-            return NO;
-    }
-    
-    return YES;
+//    // Reduce Points
+//    // --------------------------------------------------------------------------
+//    NSDictionary *dataDict = [self reducePointsKey];
+//    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
+//    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
+//    
+//    for (NSUInteger i = 0; i < [indexKeyPoints count]; i++) {
+//        // Build stretch
+//        NSUInteger index = [[indexKeyPoints objectAtIndex:i]integerValue];
+//        CGPoint keyPoint = [[pointsToFit objectAtIndex:index]CGPointValue];
+//        
+//        // Check Rectangle 0 or 90 degree
+//        float testXA = fabs((keyPoint.x - minX.x)/(maxX.x - minX.x));
+//        float testYA = fabs((keyPoint.y - minY.y)/(maxY.y - minY.y));
+//        
+//        if (!(testXA < toleranceRect || testXA > 1-toleranceRect))
+//            return NO;
+//        if (!(testYA < toleranceRect || testYA > 1-toleranceRect))
+//            return NO;
+//    }
+//    
+//    return YES;
     
 }// isRectangle
 
@@ -319,67 +319,67 @@
 - (BOOL) isRotateRectangle
 {
     return NO;
-    // Reduce Points
-    // --------------------------------------------------------------------------
-    NSDictionary *dataDict = [self reducePointsKey];
-    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
-    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
-    if ([indexKeyPoints count] != 5)
-        return NO;
-    
-    // Get the four segments
-    NSUInteger indexA = [[indexKeyPoints objectAtIndex:0]integerValue];
-    CGPoint keyPointA = [[pointsToFit objectAtIndex:indexA]CGPointValue];
-    NSUInteger indexB = [[indexKeyPoints objectAtIndex:1]integerValue];
-    CGPoint keyPointB = [[pointsToFit objectAtIndex:indexB]CGPointValue];
-    NSUInteger indexC = [[indexKeyPoints objectAtIndex:2]integerValue];
-    CGPoint keyPointC = [[pointsToFit objectAtIndex:indexC]CGPointValue];
-    NSUInteger indexD = [[indexKeyPoints objectAtIndex:3]integerValue];
-    CGPoint keyPointD = [[pointsToFit objectAtIndex:indexD]CGPointValue];
-    NSUInteger indexE = [[indexKeyPoints objectAtIndex:4]integerValue];
-    CGPoint keyPointE = [[pointsToFit objectAtIndex:indexE]CGPointValue];
-    
-    SYSegment *segmentAB = [[SYSegment alloc]initWithPoint:keyPointA andPoint:keyPointB];
-    SYSegment *segmentBC = [[SYSegment alloc]initWithPoint:keyPointB andPoint:keyPointC];
-    SYSegment *segmentCD = [[SYSegment alloc]initWithPoint:keyPointC andPoint:keyPointD];
-    SYSegment *segmentDE = [[SYSegment alloc]initWithPoint:keyPointD andPoint:keyPointE];
-    
-    CGFloat angleAB = [segmentAB angleDeg];
-    if (angleAB > 180.0)
-        angleAB -=180.0;
-    CGFloat angleBC = [segmentBC angleDeg];
-    if (angleBC > 180.0)
-        angleBC -=180.0;
-    CGFloat angleCD = [segmentCD angleDeg];
-    if (angleCD > 180.0)
-        angleCD -=180.0;
-    CGFloat angleDE = [segmentDE angleDeg];
-    if (angleDE > 180.0)
-        angleDE -=180.0;
-    
-    // Are the segments parallels?
-    if (fabs(angleAB - angleCD) > rotateRectangleAngleTolerance ||
-        fabs(angleBC - angleDE) > rotateRectangleAngleTolerance) {
-        return NO;
-    }
-    
-    // Are the angles in segment contiguous between 85/95 degrees?
-    if (angleAB > angleBC) {
-        if (fabs(angleAB - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
-    }
-    else {
-        if (fabs(angleBC - angleAB) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
-    }
-    
-    if (angleCD > angleDE) {
-        if (fabs(angleCD - angleDE) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
-    }
-    else {
-        if (fabs(angleDE - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
-    }
-    
-    // Angles correct, It's a rectangle
-    return YES;
+//    // Reduce Points
+//    // --------------------------------------------------------------------------
+//    NSDictionary *dataDict = [self reducePointsKey];
+//    NSMutableArray *pointsToFit = [dataDict valueForKey:@"pointsToFit"];            // Points to follow replacing keypoints for the final key points
+//    NSMutableArray *indexKeyPoints = [dataDict valueForKey:@"indexKeyPoints"];      // Index for all key points
+//    if ([indexKeyPoints count] != 5)
+//        return NO;
+//    
+//    // Get the four segments
+//    NSUInteger indexA = [[indexKeyPoints objectAtIndex:0]integerValue];
+//    CGPoint keyPointA = [[pointsToFit objectAtIndex:indexA]CGPointValue];
+//    NSUInteger indexB = [[indexKeyPoints objectAtIndex:1]integerValue];
+//    CGPoint keyPointB = [[pointsToFit objectAtIndex:indexB]CGPointValue];
+//    NSUInteger indexC = [[indexKeyPoints objectAtIndex:2]integerValue];
+//    CGPoint keyPointC = [[pointsToFit objectAtIndex:indexC]CGPointValue];
+//    NSUInteger indexD = [[indexKeyPoints objectAtIndex:3]integerValue];
+//    CGPoint keyPointD = [[pointsToFit objectAtIndex:indexD]CGPointValue];
+//    NSUInteger indexE = [[indexKeyPoints objectAtIndex:4]integerValue];
+//    CGPoint keyPointE = [[pointsToFit objectAtIndex:indexE]CGPointValue];
+//    
+//    SYSegment *segmentAB = [[SYSegment alloc]initWithPoint:keyPointA andPoint:keyPointB];
+//    SYSegment *segmentBC = [[SYSegment alloc]initWithPoint:keyPointB andPoint:keyPointC];
+//    SYSegment *segmentCD = [[SYSegment alloc]initWithPoint:keyPointC andPoint:keyPointD];
+//    SYSegment *segmentDE = [[SYSegment alloc]initWithPoint:keyPointD andPoint:keyPointE];
+//    
+//    CGFloat angleAB = [segmentAB angleDeg];
+//    if (angleAB > 180.0)
+//        angleAB -=180.0;
+//    CGFloat angleBC = [segmentBC angleDeg];
+//    if (angleBC > 180.0)
+//        angleBC -=180.0;
+//    CGFloat angleCD = [segmentCD angleDeg];
+//    if (angleCD > 180.0)
+//        angleCD -=180.0;
+//    CGFloat angleDE = [segmentDE angleDeg];
+//    if (angleDE > 180.0)
+//        angleDE -=180.0;
+//    
+//    // Are the segments parallels?
+//    if (fabs(angleAB - angleCD) > rotateRectangleAngleTolerance ||
+//        fabs(angleBC - angleDE) > rotateRectangleAngleTolerance) {
+//        return NO;
+//    }
+//    
+//    // Are the angles in segment contiguous between 85/95 degrees?
+//    if (angleAB > angleBC) {
+//        if (fabs(angleAB - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+//    }
+//    else {
+//        if (fabs(angleBC - angleAB) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+//    }
+//    
+//    if (angleCD > angleDE) {
+//        if (fabs(angleCD - angleDE) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+//    }
+//    else {
+//        if (fabs(angleDE - angleCD) > 90.0 + rotateRectangleAngleTolerance) {   return NO;  }
+//    }
+//    
+//    // Angles correct, It's a rectangle
+//    return YES;
     
 }// isRotateRectangle
 

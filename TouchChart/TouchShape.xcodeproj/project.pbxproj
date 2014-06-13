@@ -45,6 +45,7 @@
 		66999068185F77AF005581D9 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = 66999067185F77AF005581D9 /* ListGlyphs.png */; };
 		66A53A04163F1A1C003EAEC0 /* shape.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A03163F1A1C003EAEC0 /* shape.png */; };
 		66A53A07163F1A20003EAEC0 /* shape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A53A06163F1A20003EAEC0 /* shape@2x.png */; };
+		66FF81F1194AD48D000EF072 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66FF81F0194AD48D000EF072 /* CoreLocation.framework */; };
 		ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */; };
 		ED0BE5C315F0C7AE00EBE866 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */; };
 		ED0BE5C515F0C7C300EBE866 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0BE5C415F0C7C300EBE866 /* CFNetwork.framework */; };
@@ -105,6 +106,7 @@
 		66999067185F77AF005581D9 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ListGlyphs.png; sourceTree = SOURCE_ROOT; };
 		66A53A03163F1A1C003EAEC0 /* shape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shape.png; path = ../shape.png; sourceTree = "<group>"; };
 		66A53A06163F1A20003EAEC0 /* shape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shape@2x.png"; path = "../shape@2x.png"; sourceTree = "<group>"; };
+		66FF81F0194AD48D000EF072 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		ED0BE56615F0C1EC00EBE866 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYUnitTestController.h; path = Classes/NSObject/SYUnitTestController.h; sourceTree = "<group>"; };
 		ED0BE56715F0C1EC00EBE866 /* SYUnitTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SYUnitTestController.m; path = Classes/NSObject/SYUnitTestController.m; sourceTree = "<group>"; };
 		ED0BE5C215F0C7AE00EBE866 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -159,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66FF81F1194AD48D000EF072 /* CoreLocation.framework in Frameworks */,
 				665C592417BD72D7006DECBF /* TouchShape.framework in Frameworks */,
 				ED0BE5D415F0C8F700EBE866 /* Parse.framework in Frameworks */,
 				ED0BE5D115F0C81800EBE866 /* SystemConfiguration.framework in Frameworks */,
@@ -241,6 +244,7 @@
 		6691AA34150DCFBC00D4A47A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66FF81F0194AD48D000EF072 /* CoreLocation.framework */,
 				665C592117BD726F006DECBF /* CoreImage.framework */,
 				ED0BE5D215F0C81F00EBE866 /* Parse */,
 				ED646F1B15AED566006434F8 /* Accelerate.framework */,
@@ -446,7 +450,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = TC;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchShape" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -630,7 +634,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "TouchShape/TouchShape-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				ONLY_ACTIVE_PLATFORM = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -656,7 +660,7 @@
 				GCC_PREFIX_HEADER = "TouchShape/TouchShape-Prefix.pch";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = "TouchShape/TouchShape-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				ONLY_ACTIVE_PLATFORM = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -674,10 +678,12 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)\"",
 					"$(inherited)",
@@ -691,6 +697,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -714,16 +721,19 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)\"",
 					"$(inherited)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -751,16 +761,14 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchShape-Prefix.pch";
-				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchShape-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/TouchChart/External Libraries\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -778,16 +786,14 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TouchChart/TouchShape-Prefix.pch";
-				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "TouchChart/TouchShape-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/TouchChart/External Libraries\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
