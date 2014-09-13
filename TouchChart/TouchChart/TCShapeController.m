@@ -825,7 +825,7 @@
                     // Take the first index for the cloud points
                     NSUInteger indexToRemove = [pointsToFit indexOfObject:[pointKeyArray objectAtIndex:j]];
                     if (indexToRemove == NSNotFound)
-                        NSLog(@"error");
+                        NSLog(@"error reducing key points");
                     else {
                         [pointsToFit replaceObjectAtIndex:indexToRemove withObject:[NSNull null]];
                         if (firstIndex == -1)

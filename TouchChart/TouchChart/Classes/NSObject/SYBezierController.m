@@ -217,7 +217,7 @@
     P1 = CGPointMake(P1.x, B[0]);
     P2 = CGPointMake(P2.x, B[1]);
     if (P1.x==0 || P1.y==0 || P2.x==0 || P2.y==0)
-        NSLog(@"error");
+        NSLog(@"error building curve");
     
     // Statistics Curve Fit
     CGFloat ratio = .0;
