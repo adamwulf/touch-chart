@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		662B7D1A19E6718200C5529B /* SYVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1919E6718200C5529B /* SYVector.m */; };
+		662B7D1B19E7232E00C5529B /* SYVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1919E6718200C5529B /* SYVector.m */; };
 		663DC6E7185F72C100FAFE29 /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */; };
 		6651820C1937C49400CBEAB4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6651820B1937C49400CBEAB4 /* Default-568h@2x.png */; };
 		665C590117BD7171006DECBF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
@@ -553,6 +554,7 @@
 				665C590E17BD719F006DECBF /* SYPaintView.m in Sources */,
 				665C590F17BD719F006DECBF /* SYVectorView.m in Sources */,
 				665C591017BD719F006DECBF /* SYShape.m in Sources */,
+				662B7D1B19E7232E00C5529B /* SYVector.m in Sources */,
 				665C591117BD719F006DECBF /* SYGeometry.m in Sources */,
 				665C591217BD719F006DECBF /* SYSegment.m in Sources */,
 				665C591317BD719F006DECBF /* SYBezier.m in Sources */,
