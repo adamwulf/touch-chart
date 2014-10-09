@@ -48,8 +48,9 @@
 }
 
 #define limitDistace 2.99
-#define ovaltoleracetypeA 0.30
-#define ovaltoleracetypeB 0.30
+#define ovaltoleracetypeA 0.25
+#define ovaltoleracetypeB 0.25
+#define circletolerace 0.25
 #define toleranceRect 0.16
 #define rotateRectangleAngleTolerance 10.0
 
@@ -545,8 +546,8 @@
         }
         
         // It isn't a circle
-        NSLog(@"error %f <? 30.0 == oval", error);
-        if (error > 30.0) {
+        NSLog(@"error %f <? %f == oval", error, circletolerace);
+        if (error > circletolerace) {
             // nope, so let's see if we can get an
             // oval of any direction
         }else{
