@@ -9,6 +9,7 @@
 #import "TCShapeController.h"
 #import "SYSegment.h"
 #import "SYBezier.h"
+#import "SYVector.h"
 #import "SYBezierController.h"
 
 @interface TCShapeController ()
@@ -48,7 +49,7 @@
 
 #define limitDistace 2.99
 #define ovaltoleracetypeA 0.4
-#define ovaltoleracetypeB 0.73
+#define ovaltoleracetypeB 0.4
 #define toleranceRect 0.16
 #define rotateRectangleAngleTolerance 10.0
 
@@ -463,23 +464,25 @@
                 error = finalError;
         }
         
-        NSLog(@"Error: %f", error);
+        NSLog(@"ErrorA: %f <? %f == oval at 90deg to screen", error, ovaltoleracetypeA);
         // If the error is higher than tolerance, It isn't a oval
         if (error > ovaltoleracetypeA){
-            return nil;
+            // nope, let's see if a slightly
+            // offset oval is better...
+        }else{
+            // It's a oval and add to the shape list
+            SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
+            shape.isClosedCurve = YES;
+            [shape addCircle:ovalRect];
+            
+            return shape;
         }
-        
-        // It's a oval and add to the shape list
-        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-        shape.isClosedCurve = YES;
-        [shape addCircle:ovalRect];
-        
-        return shape;
     }
     
     // Looking for the small axis
     SYSegment *smallAxisSegment = nil; CGFloat angleMax = 10000.0;
     
+    CGFloat avgDistance = 0;
     for (NSValue *pointValue in listPoints) {
         CGPoint pointB = [pointValue CGPointValue];
         SYSegment *possibleAxis = [[SYSegment alloc]initWithPoint:center andPoint:pointB];
@@ -493,12 +496,25 @@
             smallAxisSegment = possibleAxis;
             angleMax = angle;
         }
+        
+        avgDistance += abs([bigAxisSegment distanceToPoint:pointB] / (float)[listPoints count]);
     }
+    NSLog(@"average distance from large axis: %f", avgDistance);
     
+    SYVector* vector = [SYVector vectorWithPoint:bigAxisSegment.startPoint andPoint:bigAxisSegment.endPoint];
+    vector = [[vector perpendicular] normal];
+    
+    smallAxisSegment = [[SYSegment alloc] initWithPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:-avgDistance*2]
+                                               andPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:avgDistance*2]];
+
+    NSLog(@"angle of large axis: %f", [bigAxisSegment angleDeg]);
+    NSLog(@"angle of small axis: %f", [smallAxisSegment angleDeg]);
+    
+
     
     // Maybe it's almost a circle
     float bigAxisLongitude = [bigAxisSegment longitude];
-    float smallAxisLongitude = [smallAxisSegment longitude] * 2.0;
+    float smallAxisLongitude = [smallAxisSegment longitude];
     
     if (smallAxisLongitude/bigAxisLongitude > 0.80) {
         
@@ -529,20 +545,22 @@
         }
         
         // It isn't a circle
+        NSLog(@"error %f <? 30.0 == oval", error);
         if (error > 30.0) {
-            return nil;
+            // nope, so let's see if we can get an
+            // oval of any direction
+        }else{
+            // It's a circle and add to the shape list
+            SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
+            shape.isClosedCurve = YES;
+            [shape addArc:CGPointMake(center.x, center.y)
+                   radius:bigAxisLongitude*0.5
+               startAngle:0.0
+                 endAngle:2*M_PI
+                clockwise:YES];
+            
+            return shape;
         }
-        
-        // It's a circle and add to the shape list
-        SYShape *shape = [[SYShape alloc]initWithBezierTolerance:toleranceValue];
-        shape.isClosedCurve = YES;
-        [shape addArc:CGPointMake(center.x, center.y)
-               radius:bigAxisLongitude*0.5
-           startAngle:0.0
-             endAngle:2*M_PI
-            clockwise:YES];
-        
-        return shape;
     }
     
     // Get max and min XY
@@ -566,7 +584,10 @@
     CGFloat error = .0;
     
     CGFloat a = [bigAxisSegment longitude] * 0.5;
-    CGFloat b = [smallAxisSegment longitude];
+    CGFloat b = [smallAxisSegment longitude] * 0.5;
+    
+    NSLog(@"big axis: %f", [bigAxisSegment longitude]);
+    NSLog(@"small axis: %f", [smallAxisSegment longitude]);
     
     for (NSValue *pointValue in listPoints) {
         
@@ -574,16 +595,22 @@
         
         // Project point over the axis
         SYSegment *lineToPoint = [[SYSegment alloc]initWithPoint:center andPoint:pointOrig];
-        CGFloat projBigAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
-        CGFloat projSmallAxis = [lineToPoint longitude] * cosf([lineToPoint angleRad]-[smallAxisSegment angleRad]);;
+        CGFloat projBigAxis = cosf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
+        CGFloat projSmallAxis = sinf([lineToPoint angleRad]-[bigAxisSegment angleRad]);
         
-        CGFloat errorTemp = (pow(projBigAxis, 2)/pow(a, 2)) + (pow(projSmallAxis, 2)/pow(b, 2));
-        CGFloat finalError = fabs(1 - errorTemp);
+        CGFloat errorTemp = sqrt(1/(pow(projBigAxis / a, 2) + pow(projSmallAxis / b, 2)));
+        
+//        NSLog(@"theta: %f", [lineToPoint angleRad]-[smallAxisSegment angleRad]);
+//        NSLog(@"dist to point: %f  dist to oval: %f   percErr: %f", [lineToPoint longitude], errorTemp, [lineToPoint longitude] / errorTemp);
+        
+        CGFloat errorPercent = [lineToPoint longitude] / errorTemp;
+        
+        CGFloat finalError = fabs(1 - errorPercent);
         if (finalError > error)
             error = finalError;
     }
     
-    NSLog(@"ErrorB: %f", error);
+    NSLog(@"ErrorB: %f <? %f == oval", error, ovaltoleracetypeB);
     if (error > ovaltoleracetypeB) {
         return nil;
     }

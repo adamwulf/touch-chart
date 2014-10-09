@@ -20,6 +20,9 @@
 
 @end
 
+#define kMinTolerance 0.0000001
+#define kMaxTolerance 0.01
+
 
 @implementation TCViewController{
     TCShapeController* shapeController;
@@ -164,6 +167,38 @@
     // Init Data
     [self resetData];
     
+
+//    //
+//    // test case of a perfect circle
+//    //
+//    float steps = 20.0;
+//    UIBezierPath* bezierPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-200, -200, 200, 200)];
+//    CGFloat theta = 2*M_PI / steps;
+//    
+//    CGPoint lastPoint = CGPointZero;
+//    for(int i=0;i<((int)steps);i++){
+//        [bezierPath applyTransform:CGAffineTransformMakeRotation(theta)];
+//        if(i > 0){
+//            
+//            CGPoint p1 = CGPointMake(lastPoint.x + 300, lastPoint.y + 300);
+//            CGPoint p2 = CGPointMake(bezierPath.currentPoint.x + 300, bezierPath.currentPoint.y + 300);
+//            
+//            NSLog(@"p1: %f %f   p2: %f %f", p1.x, p1.y, p2.x, p2.y);
+//            [shapeController addPoint:p1 andPoint:p2];
+//        }
+//        lastPoint = bezierPath.currentPoint;
+//    }
+//
+//    [bezierPath applyTransform:CGAffineTransformMakeRotation(theta)];
+//    CGPoint lastpoint = CGPointMake(bezierPath.currentPoint.x + 300, bezierPath.currentPoint.y + 300);
+//    NSLog(@"last point: %f %f", lastpoint.x, lastpoint.y);
+//    [shapeController addLastPoint:lastpoint];
+//    //
+//    // end test case of perfect circle
+//    //
+    
+    
+    
     for (NSUInteger i = 1 ; i < [allPoints count]-1 ; i++) {
         // Add these new points
         CGPoint touchPreviousLocation = [[allPoints objectAtIndex:i-1]CGPointValue];
@@ -184,12 +219,20 @@
 
 -(void) resetData{
     shapeController = [[TCShapeController alloc] init];
+    [self rebuildShape:nil];
+}
+
+-(float) valueOfToleranceSlider{
+    double perc = [toleranceSlider value] / 100.0;
+    double min = kMinTolerance;
+    double delta = (kMaxTolerance-kMinTolerance);
+    return (float) ((double)min + perc*delta);
 }
 
 - (IBAction) rebuildShape:(id)sender
 {
     continuityLabel.text = [NSString stringWithFormat:@"%4.2f",[continuitySlider value]];
-    toleranceLabel.text = [NSString stringWithFormat:@"%4.6f",[toleranceSlider value]*0.0001];
+    toleranceLabel.text = [NSString stringWithFormat:@"%4.7f",[self valueOfToleranceSlider]];
     
     [vectorView.shapeList removeLastObject];
     [self getFigurePainted];
@@ -199,7 +242,7 @@
 
 - (SYShape*) getFigurePainted
 {
-    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:NO];
+    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[self valueOfToleranceSlider] andContinuity:[continuitySlider value] forceOpen:NO];
     if(possibleShape){
         [self drawRecentlyReducedKeyPoints];
         [vectorView addShape:possibleShape];
@@ -214,13 +257,13 @@
     // --------------------------------------------------------------------------
     
     // DEBUG DRAW
-    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[self valueOfToleranceSlider]];
     for (NSValue *pointValue in [output objectForKey:@"listPoints"])
         [keyPointShape addPoint:[pointValue CGPointValue]];
     [vectorView addDebugShape:keyPointShape];
     
     // DEBUG DRAW
-    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[self valueOfToleranceSlider]];
     for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
         [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
     [vectorView addDebugShape:reducePointKeyArrayShape];

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		662B7D1A19E6718200C5529B /* SYVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1919E6718200C5529B /* SYVector.m */; };
 		663DC6E7185F72C100FAFE29 /* TCViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 663DC6E5185F72C100FAFE29 /* TCViewController_iPad.xib */; };
 		6651820C1937C49400CBEAB4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6651820B1937C49400CBEAB4 /* Default-568h@2x.png */; };
 		665C590117BD7171006DECBF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6691AA37150DCFBC00D4A47A /* Foundation.framework */; };
@@ -76,6 +77,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		662B7D1819E6718200C5529B /* SYVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYVector.h; sourceTree = "<group>"; };
+		662B7D1919E6718200C5529B /* SYVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYVector.m; sourceTree = "<group>"; };
 		663DC6C4185F6C9200FAFE29 /* TCTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TCTestApp copy-Info.plist"; path = "/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/touch-chart/TouchChart/TCTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		663DC6E6185F72C100FAFE29 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TCViewController_iPad.xib; sourceTree = "<group>"; };
 		6651820B1937C49400CBEAB4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -322,6 +325,8 @@
 				EDF3BD3015796AC70026B9C2 /* SYSegment.m */,
 				EDA4E76C166789E2000802C1 /* SYBezier.h */,
 				EDA4E76D166789E2000802C1 /* SYBezier.m */,
+				662B7D1819E6718200C5529B /* SYVector.h */,
+				662B7D1919E6718200C5529B /* SYVector.m */,
 			);
 			name = Model;
 			path = TouchChart;
@@ -560,6 +565,7 @@
 			files = (
 				6691AA42150DCFBC00D4A47A /* main.m in Sources */,
 				6691AA46150DCFBC00D4A47A /* TCAppDelegate.m in Sources */,
+				662B7D1A19E6718200C5529B /* SYVector.m in Sources */,
 				6691AA49150DCFBC00D4A47A /* TCViewController.m in Sources */,
 				ED0BE56815F0C1EC00EBE866 /* SYUnitTestController.m in Sources */,
 				ED12DD2B15F4CDFC00FBDF00 /* SYUnitPreview.m in Sources */,
