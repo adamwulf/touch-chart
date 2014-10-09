@@ -830,6 +830,15 @@
             CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
             
             if (alfa < 180.0) {
+//                if(alfa > 90){
+//                    // test code for allowing to keep cusps
+//                    // even when continuity is 1.0
+//                    CGFloat distFrom180 = alfa;
+//                    distFrom180 = abs(alfa - 180);
+//                    CGFloat otherBeta = fabsf((180.0 - alfa) * 0.5) * sliderValue * distFrom180/90.0;
+//                    NSLog(@"beta1: %f  vs otherBeta: %f", beta, otherBeta);
+//                }
+                
                 if (angleA > angleB) {
                     [segmentA setFinalPointToDegree:angleA+beta];
                     [segmentB setFinalPointToDegree:angleB-beta];
@@ -840,6 +849,15 @@
                 }
             }
             else {
+//                if(alfa > 270){
+//                // test code for allowing to keep cusps
+//                // even when continuity is 1.0
+//                    CGFloat distFrom180 = alfa;
+//                    CGFloat otherAlpha = alfa - 180;
+//                    distFrom180 = abs(otherAlpha - 180);
+//                    CGFloat otherBeta = fabsf((180.0 - otherAlpha) * 0.5) * sliderValue * distFrom180/90.0;
+//                    NSLog(@"beta2: %f  vs otherBeta: %f", beta, otherBeta);
+//                }
                 if (angleA > angleB) {
                     [segmentA setFinalPointToDegree:angleA-beta];
                     [segmentB setFinalPointToDegree:angleB+beta];
