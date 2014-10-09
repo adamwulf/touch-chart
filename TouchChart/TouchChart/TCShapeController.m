@@ -48,8 +48,8 @@
 }
 
 #define limitDistace 2.99
-#define ovaltoleracetypeA 0.4
-#define ovaltoleracetypeB 0.4
+#define ovaltoleracetypeA 0.30
+#define ovaltoleracetypeB 0.30
 #define toleranceRect 0.16
 #define rotateRectangleAngleTolerance 10.0
 
@@ -245,7 +245,7 @@
                 }
                 else if (alignedCPRatio > 0.18)
                     [shape addCurvesForListPoints:stretch];
-                else if (ratioTotalCurvature < 1.0)
+                else if (ratioTotalCurvature < 0.25)
                     [shape addPolygonalFromSegment:segment];
                 else
                     [shape addCurvesForListPoints:stretch];
