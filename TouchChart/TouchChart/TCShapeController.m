@@ -465,7 +465,7 @@
                 error = finalError;
         }
         
-        NSLog(@"ErrorA: %f <? %f == oval at 90deg to screen", error, ovaltoleracetypeA);
+//        NSLog(@"ErrorA: %f <? %f == oval at 90deg to screen", error, ovaltoleracetypeA);
         // If the error is higher than tolerance, It isn't a oval
         if (error > ovaltoleracetypeA){
             // nope, let's see if a slightly
@@ -500,7 +500,7 @@
         
         avgDistance += abs([bigAxisSegment distanceToPoint:pointB] / (float)[listPoints count]);
     }
-    NSLog(@"average distance from large axis: %f", avgDistance);
+//    NSLog(@"average distance from large axis: %f", avgDistance);
     
     SYVector* vector = [SYVector vectorWithPoint:bigAxisSegment.startPoint andPoint:bigAxisSegment.endPoint];
     vector = [[vector perpendicular] normal];
@@ -508,8 +508,8 @@
     smallAxisSegment = [[SYSegment alloc] initWithPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:-avgDistance*2]
                                                andPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:avgDistance*2]];
 
-    NSLog(@"angle of large axis: %f", [bigAxisSegment angleDeg]);
-    NSLog(@"angle of small axis: %f", [smallAxisSegment angleDeg]);
+//    NSLog(@"angle of large axis: %f", [bigAxisSegment angleDeg]);
+//    NSLog(@"angle of small axis: %f", [smallAxisSegment angleDeg]);
     
 
     
@@ -546,7 +546,7 @@
         }
         
         // It isn't a circle
-        NSLog(@"error %f <? %f == oval", error, circletolerace);
+//        NSLog(@"error %f <? %f == oval", error, circletolerace);
         if (error > circletolerace) {
             // nope, so let's see if we can get an
             // oval of any direction
@@ -587,8 +587,8 @@
     CGFloat a = [bigAxisSegment longitude] * 0.5;
     CGFloat b = [smallAxisSegment longitude] * 0.5;
     
-    NSLog(@"big axis: %f", [bigAxisSegment longitude]);
-    NSLog(@"small axis: %f", [smallAxisSegment longitude]);
+//    NSLog(@"big axis: %f", [bigAxisSegment longitude]);
+//    NSLog(@"small axis: %f", [smallAxisSegment longitude]);
     
     for (NSValue *pointValue in listPoints) {
         
@@ -611,7 +611,7 @@
             error = finalError;
     }
     
-    NSLog(@"ErrorB: %f <? %f == oval", error, ovaltoleracetypeB);
+//    NSLog(@"ErrorB: %f <? %f == oval", error, ovaltoleracetypeB);
     if (error > ovaltoleracetypeB) {
         return nil;
     }
