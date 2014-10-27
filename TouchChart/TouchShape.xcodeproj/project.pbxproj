@@ -456,7 +456,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = TC;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 			};
 			buildConfigurationList = 6691AA2B150DCFBC00D4A47A /* Build configuration list for PBXProject "TouchShape" */;
 			compatibilityVersion = "Xcode 3.2";
