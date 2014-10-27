@@ -11,6 +11,7 @@
 #import "SYBezier.h"
 #import "SYVector.h"
 #import "SYBezierController.h"
+#import "Constants.h"
 
 @interface TCShapeController ()
 
@@ -465,7 +466,7 @@
                 error = finalError;
         }
         
-//        NSLog(@"ErrorA: %f <? %f == oval at 90deg to screen", error, ovaltoleracetypeA);
+//        DebugLog(@"ErrorA: %f <? %f == oval at 90deg to screen", error, ovaltoleracetypeA);
         // If the error is higher than tolerance, It isn't a oval
         if (error > ovaltoleracetypeA){
             // nope, let's see if a slightly
@@ -500,7 +501,7 @@
         
         avgDistance += abs([bigAxisSegment distanceToPoint:pointB] / (float)[listPoints count]);
     }
-//    NSLog(@"average distance from large axis: %f", avgDistance);
+//    DebugLog(@"average distance from large axis: %f", avgDistance);
     
     SYVector* vector = [SYVector vectorWithPoint:bigAxisSegment.startPoint andPoint:bigAxisSegment.endPoint];
     vector = [[vector perpendicular] normal];
@@ -508,8 +509,8 @@
     smallAxisSegment = [[SYSegment alloc] initWithPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:-avgDistance*2]
                                                andPoint:[vector pointFromPoint:bigAxisSegment.midPoint distance:avgDistance*2]];
 
-//    NSLog(@"angle of large axis: %f", [bigAxisSegment angleDeg]);
-//    NSLog(@"angle of small axis: %f", [smallAxisSegment angleDeg]);
+//    DebugLog(@"angle of large axis: %f", [bigAxisSegment angleDeg]);
+//    DebugLog(@"angle of small axis: %f", [smallAxisSegment angleDeg]);
     
 
     
@@ -546,7 +547,7 @@
         }
         
         // It isn't a circle
-//        NSLog(@"error %f <? %f == oval", error, circletolerace);
+//        DebugLog(@"error %f <? %f == oval", error, circletolerace);
         if (error > circletolerace) {
             // nope, so let's see if we can get an
             // oval of any direction
@@ -587,8 +588,8 @@
     CGFloat a = [bigAxisSegment longitude] * 0.5;
     CGFloat b = [smallAxisSegment longitude] * 0.5;
     
-//    NSLog(@"big axis: %f", [bigAxisSegment longitude]);
-//    NSLog(@"small axis: %f", [smallAxisSegment longitude]);
+//    DebugLog(@"big axis: %f", [bigAxisSegment longitude]);
+//    DebugLog(@"small axis: %f", [smallAxisSegment longitude]);
     
     for (NSValue *pointValue in listPoints) {
         
@@ -601,8 +602,8 @@
         
         CGFloat errorTemp = sqrt(1/(pow(projBigAxis / a, 2) + pow(projSmallAxis / b, 2)));
         
-//        NSLog(@"theta: %f", [lineToPoint angleRad]-[smallAxisSegment angleRad]);
-//        NSLog(@"dist to point: %f  dist to oval: %f   percErr: %f", [lineToPoint longitude], errorTemp, [lineToPoint longitude] / errorTemp);
+//        DebugLog(@"theta: %f", [lineToPoint angleRad]-[smallAxisSegment angleRad]);
+//        DebugLog(@"dist to point: %f  dist to oval: %f   percErr: %f", [lineToPoint longitude], errorTemp, [lineToPoint longitude] / errorTemp);
         
         CGFloat errorPercent = [lineToPoint longitude] / errorTemp;
         
@@ -611,7 +612,7 @@
             error = finalError;
     }
     
-//    NSLog(@"ErrorB: %f <? %f == oval", error, ovaltoleracetypeB);
+//    DebugLog(@"ErrorB: %f <? %f == oval", error, ovaltoleracetypeB);
     if (error > ovaltoleracetypeB) {
         return nil;
     }
@@ -853,7 +854,7 @@
                     // Take the first index for the cloud points
                     NSUInteger indexToRemove = [pointsToFit indexOfObject:[pointKeyArray objectAtIndex:j]];
                     if (indexToRemove == NSNotFound)
-                        NSLog(@"error reducing key points");
+                        DebugLog(@"error reducing key points");
                     else {
                         [pointsToFit replaceObjectAtIndex:indexToRemove withObject:[NSNull null]];
                         if (firstIndex == -1)

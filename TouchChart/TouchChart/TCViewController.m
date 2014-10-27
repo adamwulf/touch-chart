@@ -183,7 +183,7 @@
 //            CGPoint p1 = CGPointMake(lastPoint.x + 300, lastPoint.y + 300);
 //            CGPoint p2 = CGPointMake(bezierPath.currentPoint.x + 300, bezierPath.currentPoint.y + 300);
 //            
-//            NSLog(@"p1: %f %f   p2: %f %f", p1.x, p1.y, p2.x, p2.y);
+//            DebugLog(@"p1: %f %f   p2: %f %f", p1.x, p1.y, p2.x, p2.y);
 //            [shapeController addPoint:p1 andPoint:p2];
 //        }
 //        lastPoint = bezierPath.currentPoint;
@@ -191,7 +191,7 @@
 //
 //    [bezierPath applyTransform:CGAffineTransformMakeRotation(theta)];
 //    CGPoint lastpoint = CGPointMake(bezierPath.currentPoint.x + 300, bezierPath.currentPoint.y + 300);
-//    NSLog(@"last point: %f %f", lastpoint.x, lastpoint.y);
+//    DebugLog(@"last point: %f %f", lastpoint.x, lastpoint.y);
 //    [shapeController addLastPoint:lastpoint];
 //    //
 //    // end test case of perfect circle

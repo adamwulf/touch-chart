@@ -10,9 +10,9 @@
 #define TouchChart_Constants_h
 
 #ifdef DEBUG
-#define debug_NSLog(format, ...) NSLog(format, ## __VA_ARGS__)
+#define DebugLog(format, ...) NSLog(format, ## __VA_ARGS__)
 #else
-#define debug_NSLog(format, ...)
+#define DebugLog(format, ...)
 #endif
 
 

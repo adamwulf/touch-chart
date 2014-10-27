@@ -836,7 +836,7 @@
 //                    CGFloat distFrom180 = alfa;
 //                    distFrom180 = abs(alfa - 180);
 //                    CGFloat otherBeta = fabsf((180.0 - alfa) * 0.5) * sliderValue * distFrom180/90.0;
-//                    NSLog(@"beta1: %f  vs otherBeta: %f", beta, otherBeta);
+//                    DebugLog(@"beta1: %f  vs otherBeta: %f", beta, otherBeta);
 //                }
                 
                 if (angleA > angleB) {
@@ -856,7 +856,7 @@
 //                    CGFloat otherAlpha = alfa - 180;
 //                    distFrom180 = abs(otherAlpha - 180);
 //                    CGFloat otherBeta = fabsf((180.0 - otherAlpha) * 0.5) * sliderValue * distFrom180/90.0;
-//                    NSLog(@"beta2: %f  vs otherBeta: %f", beta, otherBeta);
+//                    DebugLog(@"beta2: %f  vs otherBeta: %f", beta, otherBeta);
 //                }
                 if (angleA > angleB) {
                     [segmentA setFinalPointToDegree:angleA-beta];

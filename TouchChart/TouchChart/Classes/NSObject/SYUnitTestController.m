@@ -113,12 +113,12 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded.
-            NSLog(@"Successfully retrieved %d scores.", (int) objects.count);
+            DebugLog(@"Successfully retrieved %d scores.", (int) objects.count);
             pfObjects = [[NSMutableArray alloc]initWithArray:objects];
             [myTableView reloadData];
         } else {
             // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            DebugLog(@"Error: %@ %@", error, [error userInfo]);
             pfObjects = nil;
         }
     }];

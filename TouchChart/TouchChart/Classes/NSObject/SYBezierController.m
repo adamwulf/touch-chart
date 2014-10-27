@@ -10,6 +10,7 @@
 #import "SYSegment.h"
 #import <Accelerate/Accelerate.h>
 #import "SYBezier.h"
+#import "Constants.h"
 
 @implementation SYBezierController
 
@@ -217,7 +218,7 @@
     P1 = CGPointMake(P1.x, B[0]);
     P2 = CGPointMake(P2.x, B[1]);
     if (P1.x==0 || P1.y==0 || P2.x==0 || P2.y==0)
-        NSLog(@"error building curve");
+        DebugLog(@"error building curve");
     
     // Statistics Curve Fit
     CGFloat ratio = .0;
@@ -284,7 +285,7 @@
         if ([splitList count] == 3)
             splitList = [NSMutableArray arrayWithArray:[self addPointBasedQuadraticBezier:splitList]];
         else if ([splitList count] < 4)
-            NSLog(@"Error");
+            DebugLog(@"Error");
         
         NSArray *array = [self buildCubicBezierPointsForListPoint:splitList];
         
