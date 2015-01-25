@@ -10,6 +10,7 @@
 #import "SYUnitPreview.h"
 #import "SYPaintView.h"
 #import "SYTableBase.h"
+#import "Constants.h"
 
 @interface SYUnitTestController () {
 
