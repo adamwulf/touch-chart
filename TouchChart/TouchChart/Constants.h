@@ -3,7 +3,7 @@
 //  TouchChart
 //
 //  Created by Adam Wulf on 3/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #ifndef TouchChart_Constants_h

@@ -3,7 +3,7 @@
 //  TouchChart
 //
 //  Created by Fernando Garcia Torcelly on 16/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #import "SYGeometry.h"
