@@ -499,7 +499,7 @@
             angleMax = angle;
         }
         
-        avgDistance += abs([bigAxisSegment distanceToPoint:pointB] / (float)[listPoints count]);
+        avgDistance += fabs([bigAxisSegment distanceToPoint:pointB] / (float)[listPoints count]);
     }
 //    DebugLog(@"average distance from large axis: %f", avgDistance);
     

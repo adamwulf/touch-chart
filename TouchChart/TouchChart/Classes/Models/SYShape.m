@@ -827,7 +827,7 @@
             else
                 alfa  = angleB - angleA;
             
-            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            CGFloat beta = fabs((180.0 - alfa) * 0.5) * sliderValue;
             
             if (alfa < 180.0) {
 //                if(alfa > 90){
@@ -903,7 +903,7 @@
             else
                 alfa  = angleB - angleA;
             
-            CGFloat beta = fabsf((180.0 - alfa) * 0.5) * sliderValue;
+            CGFloat beta = fabs((180.0 - alfa) * 0.5) * sliderValue;
             
             if (alfa < 180.0) {
                 if (angleA > angleB) {
