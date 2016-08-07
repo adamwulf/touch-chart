@@ -28,7 +28,7 @@
     [Parse setApplicationId:@"AnWkxCZfCOPVzPXD8tWNFVsL3Mie5qwOWueRS9xW"
                   clientKey:@"YPmL7zoIPvU5JAbiM3X080eRNljPjtYfhW62XVMM"];
 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[UIWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
     
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
