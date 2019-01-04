@@ -22,6 +22,7 @@
 {
     self.shapeList = [NSMutableArray array];
     
+    [super awakeFromNib];
 }// awakeFromNib
 
 

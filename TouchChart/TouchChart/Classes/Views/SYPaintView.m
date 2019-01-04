@@ -69,6 +69,7 @@
     // Import cases from the cloud
     [unitTestController updateListPointStored];
     
+    [super awakeFromNib];
 }// awakeFromNib
 
 
